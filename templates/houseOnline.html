@@ -1,0 +1,539 @@
+<div class="easyui-layout" data-options="fit:true">
+    <div data-options="region:'center'">
+        <div class="easyui-layout" data-options="fit:true">
+            <div data-options="region:'north',split:true" style="height:70px;">
+                <form>
+                    <table>
+                        <tr>
+                            <td><input type="button" value="签约收房(5)" class="btn btn-danger" style="width:120px;height:50px;"></input></td>
+                            <td><input type="button" value="信息交接(4)" class="btn btn-warning" style="width:120px;height:50px;"></input></td>
+                            <td><input type="button" value="装修方案(6)" class="btn btn-info" style="width:120px;height:50px;"></input></td>
+                            <td><input type="button" value="拍照上传(0)" class="btn btn-success" style="width:120px;height:50px;"></input></td>
+                            <td><input type="button" value="定价上线(1)" class="btn btn-primary" style="width:120px;height:50px;"></input></td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+            <div data-options="region:'center'"><table class="main"></table></div>
+            <div data-options="region:'south',split:true" style="height:300px;">
+                <div class="easyui-tabs" data-options="fit:true,border:false,plain:true">
+                    <div title="签约收房"><table class="contract"></table></div>
+                    <div title="信息交接"><table class="cost"></table></div>
+                    <div title="装修方案"><table class="renovation"></table></div>
+                    <div title="拍照上传"><table class="upImg"></table></div>
+                    <div title="定价上线"><table class="roomPrice"></table></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div data-options="region:'west',split:true" style="width:280px;">
+        <ul class="easyui-tree" data-options="
+					url:'/YSService/BaseInfoService/GetTree3',
+					onSelect: ys.modules.HouseOnline.loadMainData,
+					method:'get',
+					animate:true
+				">
+        </ul>
+    </div>
+</div>
+
+<div id="editHouseRenovationDlg" class="easyui-dialog" style="width:600px;padding:10px 20px"  modal="true"
+     closed="true" buttons="#editHouseRenovationDlgBtns">
+    <form id="fm" method="post" novalidate>
+        <input name="RoomID" type="hidden">
+        <input name="HouseID" type="hidden">
+        <div class="fitem">
+            <label>房间编号:</label>
+            <input name="RoomNo" class="easyui-textbox" data-options="required:true">
+        </div>
+        <div class="fitem">
+            <label>朝向:</label>
+            <input name="Direction" class="easyui-textbox" data-options="required:true"
+        </div>
+        <div class="fitem">
+            <label>面积（平方米）:</label>
+            <input name="RoomArae" class="easyui-numberbox" data-options="required:true">
+        </div>
+        <div class="fitem">
+            <label>配套设施:</label>
+            <input type="checkbox" name="PayRentID" style="display:inline;">转账
+            <input type="checkbox" name="PayRentID" style="display:inline;">现金
+            <input type="checkbox" name="PayRentID" style="display:inline;">代付转账
+        </div>
+    </form>
+</div>
+<div id="editHouseRenovationDlgBtns">
+    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="ys.modules.HouseOnline.saveHouseRenovation()" style="width:90px">保存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('.easyui-dialog').dialog('close')" style="width:90px">取消</a>
+</div>
+
+<script>
+ys.modules.HouseOnline =  (function(){
+    function loadMainData(){
+        var node = $('#contractTabLeftTree').tree('getSelected'), params = {};
+        if(node){
+            if(node.type=='community'){
+                params.CommunityID = node.id;
+            } if(node.type=='village'){
+                params.VillageID = node.id;
+            } if(node.type=='house'){
+                params.HouseID = node.id;
+            }
+        }
+        $.ajax({
+            url: '/YSService/HouseService/GetDataList',
+            method: 'POST',
+            data: JSON.stringify(params),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (resp) {
+                $('#houseOnlineTab').find('table.main').datagrid('loadData', {
+                    total: resp.length,
+                    rows: resp
+                });
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    function saveMainItem(){
+        var dlg = $('#editHouseDlg'), form = dlg.find('form');
+        if(!form.form('validate'))return;
+        var formData =  form.serializeArray();
+        var data = {};
+        $.each(formData, function(i, v) {
+            data[v.name] = v.value;
+        });
+        var url = '/YSService/HouseService/Add';
+        if(data['HouseID']){
+            url = '/YSService/HouseService/Update';
+        }
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: JSON.stringify(data),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (msg) {
+                loadMainData();
+                dlg.dialog('close');
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    function loadHouseContract(params){
+        $.ajax({
+            url: '/YSService/ContractService/GetDataList',
+            method: 'POST',
+            data: JSON.stringify({HouseID:params.HouseID}),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (resp) {
+                $.each(resp, function(i,item){
+                    item['BeginDate'] = $.wcfDate2JsDateStr(item['BeginDate']);
+                    item['EndDate'] = $.wcfDate2JsDateStr(item['EndDate']);
+                    item['CreateDate'] = $.wcfDate2JsDateStr(item['CreateDate']);
+                });
+                $('#houseOnlineTab').find('table.contract').datagrid('loadData', {
+                    total: resp.length,
+                    rows: resp
+                });
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    function confirmContract(params){
+        $.ajax({
+            url: '/YSService/OnLineService/ConfirmContract',
+            method: 'POST',
+            data: JSON.stringify({HouseID:params.HouseID}),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (resp) {
+                $.messager.alert('提示','已完成签约收房！','success');
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    function loadHouseCost(params){
+        $.ajax({
+            url: '/YSService/HouseCostService/GetDataList',
+            method: 'POST',
+            data: JSON.stringify({HouseID:params.HouseID}),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (resp) {
+                $('#houseOnlineTab').find('table.cost').datagrid('loadData', {
+                    total: resp.length,
+                    rows: resp
+                });
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    function confirmInterfacing(params){
+        $.ajax({
+            url: '/YSService/OnLineService/ConfirmInterfacing',
+            method: 'POST',
+            data: JSON.stringify({HouseID:params.HouseID}),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (resp) {
+                $.messager.alert('提示','已完成交接信息！','success');
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    function loadHouseRenovation(params){
+        $.ajax({
+            url: '/YSService/OnLineService/GetRoomInfo',
+            method: 'POST',
+            data: JSON.stringify({HouseID:params.HouseID}),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (resp) {
+                $('#houseOnlineTab').find('table.renovation').datagrid('loadData', {
+                    total: resp.length,
+                    rows: resp
+                });
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    function saveHouseRenovation(){
+        var dlg = $('#editHouseRenovationDlg'), form = dlg.find('form');
+        if(!form.form('validate'))return;
+        var formData =  form.serializeArray();
+        var data = {};
+        $.each(formData, function(i, v) {
+            data[v.name] = v.value;
+        });
+        var url = '/YSService/OnLineService/AddRoomInfo';
+        if(data['HouseID']){
+            url = '/YSService/OnLineService/UpdateRoomInfo';
+        }
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: JSON.stringify(data),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (msg) {
+                loadHouseRenovation($('#houseOnlineTab').find('table.main').datagrid('getSelected'));
+                dlg.dialog('close');
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    function confirmRenovation(){
+        $.ajax({
+            url: '/YSService/OnLineService/ConfirmRenovation',
+            method: 'POST',
+            data: JSON.stringify({HouseID:params.HouseID}),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (resp) {
+                $.messager.alert('提示','已提交装修方案！','success');
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    function confirmUpImag(){
+        $.ajax({
+            url: '/YSService/OnLineService/ConfirmUpImag',
+            method: 'POST',
+            data: JSON.stringify({HouseID:params.HouseID}),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (resp) {
+                $.messager.alert('提示','已完成拍照上传！','success');
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    function onLineRoom(){
+        $.ajax({
+            url: '/YSService/OnLineService/OnLine',
+            method: 'POST',
+            data: JSON.stringify({RoomID:params.RoomID}),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (resp) {
+                $.messager.alert('提示','已完成房间上线！','success');
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    function downLineRoom(){
+        $.ajax({
+            url: '/YSService/OnLineService/DownLine',
+            method: 'POST',
+            data: JSON.stringify({RoomID:params.RoomID}),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (resp) {
+                $.messager.alert('提示','已完成房间下线！','success');
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    return {
+        loadMainData: loadMainData,
+        saveMainItem: saveMainItem,
+        loadHouseContract: loadHouseContract,
+        confirmContract: confirmContract,
+        loadHouseCost: loadHouseCost,
+        confirmInterfacing:confirmInterfacing,
+        loadHouseRenovation: loadHouseRenovation,
+        saveHouseRenovation: saveHouseRenovation,
+        confirmRenovation: confirmRenovation,
+        confirmUpImag: confirmUpImag,
+        onLineRoom: onLineRoom,
+        downLineRoom: downLineRoom
+    };
+})();
+
+
+window.grid.cfg.houseOnline = {
+    singleSelect:true,
+    columns:[[
+        {field:'HouseNO',title:'编号',width:100},
+        {field:'CommunityName',title:'社区',width:100},
+        {field:'VillageName',title:'小区',width:100},
+        {field:'OwnerName',title:'业主',width:100},
+        {field:'Address',title:'地址',width:100},
+        {field:'HouseStatusName',title:'状态',width:100},
+        {field:'price',title:'备注',width:100}
+    ]],
+    onSelect:function(i, data){
+        ys.modules.HouseOnline.loadHouseContract(data);
+        ys.modules.HouseOnline.loadHouseCost(data);
+        ys.modules.HouseOnline.loadHouseRenovation(data);
+    }
+};
+
+window.grid.cfg.houseOnline.contract = {
+    singleSelect:true,
+    rownumbers: true,
+    pagination: true,
+    columns:[[
+        {field:'ContractNo',title:'合同编号',width:100},
+        {field:'ContractStatusName',title:'状态',width:100},
+        {field:'HouseID',title:'房源名称',width:100},
+        {field:'code',title:'业主姓名',width:100},
+        {field:'code',title:'业主电话',width:100},
+        {field:'Rent',title:'房屋租金',width:100},
+        {field:'Deposit',title:'房屋押金',width:100},
+        {field:'code',title:'付款方式',width:100},
+        {field:'BeginDate',title:'开始时间',width:100},
+        {field:'EndDate',title:'结束时间',width:100},
+        {field:'SendeeName',title:'房屋接收人',width:100},
+        {field:'CreateDate',title:'创建时间',width:100},
+        {field:'Creater',title:'创建人',width:100}
+    ]],
+    toolbar: [{
+        id: '',
+        text: '签约收房',
+        iconCls: 'icon-ok',
+        handler: function () {
+            var mainTbl = $('#houseOnlineTab').find('table.main');
+            if(mainTbl.datagrid('getSelections').length < 1){
+                $.messager.alert('提示','请先选择一条房源记录','info');
+                return;
+            }
+            var mainData = mainTbl.datagrid('getSelected');
+            ys.modules.HouseOnline.confirmContract(mainData);
+        }
+    }]
+};
+
+window.grid.cfg.houseOnline.cost = {
+    singleSelect:true,
+    rownumbers: true,
+    columns:[[
+        {field:'HouseCostTypeName',title:'费用类型',width:100},
+        {field:'AccountNO',title:'账号',width:100},
+        {field:'AccountCompanyName',title:'账号所属公司',width:100},
+        {field:'QueryPhone',title:'查询电话',width:100}
+    ]],
+    toolbar: [{
+        id: '',
+        text: '信息交接',
+        iconCls: 'icon-ok',
+        handler: function () {
+            var mainTbl = $('#houseOnlineTab').find('table.main');
+            if(mainTbl.datagrid('getSelections').length < 1){
+                $.messager.alert('提示','请先选择一条房源记录','info');
+                return;
+            }
+            var mainData = mainTbl.datagrid('getSelected');
+            ys.modules.HouseOnline.confirmInterfacing(mainData);
+        }
+    }]
+};
+
+window.grid.cfg.houseOnline.renovation = {
+    singleSelect:true,
+    rownumbers: true,
+    columns:[[
+        {field:'RoomNo',title:'房间号',width:100},
+        {field:'Direction',title:'朝向',width:100},
+        {field:'RoomArae',title:'面积',width:100},
+        {field:'RommRenovation',title:'配套设施',width:100, formatter: function(v){
+            var result = '';
+            for(var i = 0; v && i < v.length; ++i){
+                result += i == v.length - 1? (v[i].RenovationName + ', ') : v[i].RenovationName;
+            }
+        }}
+    ]],
+    toolbar: [{
+        id: '',
+        text: '新增',
+        iconCls: 'icon-add',
+        handler: function () {
+            var mainTbl = $('#houseOnlineTab').find('table.main');
+            if(mainTbl.datagrid('getSelections').length < 1){
+                $.messager.alert('提示','请先选择一条房源记录','info');
+                return;
+            }
+            var dlg = $('#editHouseRenovationDlg'), form = dlg.find('form');
+            var mainData = mainTbl.datagrid('getSelected');
+            dlg.dialog('open').dialog('center').dialog('setTitle','新增装修方案');
+            form.form('clear');
+            form.form('load', {HouseID: mainData.HouseID});
+        }
+    }, "-", {
+        id: '',
+        text: '编辑',
+        iconCls: 'icon-edit',
+        handler: function () {
+            var dlg = $('#editHouseRenovationDlg'), form = dlg.find('form'), tbl = $('#houseOnlineTab').find('table.renovation');
+            if(tbl.datagrid('getSelections').length < 1){
+                $.messager.alert('提示','请先选择要编辑的数据','info');
+                return;
+            }
+            dlg.dialog('open').dialog('center').dialog('setTitle','编辑装修方案');
+            form.form('load', tbl.datagrid('getSelected'));
+        }
+    }, "-", {
+        id: '',
+        text: '删除',
+        iconCls: 'icon-cancel',
+        handler: confirmCancelCrontract
+    }, {
+        id: '',
+        text: '提交装修方案',
+        iconCls: 'icon-ok',
+        handler: function () {
+            var mainTbl = $('#houseOnlineTab').find('table.main');
+            if(mainTbl.datagrid('getSelections').length < 1){
+                $.messager.alert('提示','请先选择一条房源记录','info');
+                return;
+            }
+            var mainData = mainTbl.datagrid('getSelected');
+            ys.modules.HouseOnline.onfirmRenovation(mainData);
+        }
+    }]
+};
+
+window.grid.cfg.houseOnline.upImg = {
+    singleSelect:true,
+    columns:[[
+    ]],
+    toolbar: [{
+        id: '',
+        text: '完成拍照上传',
+        iconCls: 'icon-ok',
+        handler: function () {
+            var mainTbl = $('#houseOnlineTab').find('table.main');
+            if(mainTbl.datagrid('getSelections').length < 1){
+                $.messager.alert('提示','请先选择一条房源记录','info');
+                return;
+            }
+            var mainData = mainTbl.datagrid('getSelected');
+            ys.modules.HouseOnline.confirmUpImag(mainData);
+        }
+    }]
+};
+
+window.grid.cfg.houseOnline.roomPrice = {
+    singleSelect:true,
+    rownumbers: true,
+    columns:[[
+        {field: 'code', title: '房间编号', width: 100},
+        {field: 'code', title: '状态', width: 100},
+        {field: 'code', title: '价格', width: 100},
+        {field: 'code', title: '操作', width: 100}
+    ]],
+    toolbar: [{
+        text: '上线',
+        iconCls: 'icon-ok',
+        handler: function () {
+            var tbl = $('#houseOnlineTab').find('table.roomPrice');
+            if(tbl.datagrid('getSelections').length < 1){
+                $.messager.alert('提示','请先选择一间房间','info');
+                return;
+            }
+            var data = tbl.datagrid('getSelected');
+            ys.modules.HouseOnline.onLineRoom(data);
+        }
+    }, '-', {
+        text: '下线',
+        iconCls: 'icon-cancel',
+        handler: function () {
+            var tbl = $('#houseOnlineTab').find('table.roomPrice');
+            if(tbl.datagrid('getSelections').length < 1){
+                $.messager.alert('提示','请先选择一间房间','info');
+                return;
+            }
+            var data = tbl.datagrid('getSelected');
+            ys.modules.HouseOnline.downLineRoom(data);
+        }
+    }]
+};
+
+(function(){
+    ys.modules.HouseOnline.loadMainData();
+
+    $('#houseOnlineTab').find('table.contract').datagrid(window.grid.cfg.houseOnline.contract);
+    $('#houseOnlineTab').find('table.cost').datagrid(window.grid.cfg.houseOnline.cost);
+    $('#houseOnlineTab').find('table.upImg').datagrid(window.grid.cfg.houseOnline.renovation);
+    $('#houseOnlineTab').find('table.renovation').datagrid(window.grid.cfg.houseOnline.renovation);
+    $('#houseOnlineTab').find('table.roomPrice').datagrid(window.grid.cfg.houseOnline.roomPrice);
+})();
+</script>

@@ -1,0 +1,170 @@
+<div class="easyui-layout" data-options="fit:true">
+    <div data-options="region:'center'" style="overflow: auto;">
+        <div style="padding:10px 60px 20px 60px">
+            <h5>房间信息</h5>
+            <form  method="post" novalidate>
+                <input name="RoomID" type="hidden">
+                <table cellpadding="5">
+                    <tr>
+                        <td>房间编号:</td>
+                        <td><input name="RoomNo" class="easyui-textbox" style="width:150px;" readonly></td>
+                        <td>朝向:</td>
+                        <td>
+                            <input name="Direction" class="easyui-textbox" style="width:150px;" readonly>
+                        <td>面积:</td>
+                        <td>
+                            <input name="RoomArae" class="easyui-textbox" style="width:150px;" readonly>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>配套设施:</td>
+                        <td colspan="5">
+                            <input name="RommRenovation" class="easyui-textbox" style="width:100%;" readonly>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+            <h5>预定人信息</h5>
+            <form method="post" novalidate>
+                <input name="RoomID" type="hidden" data-options="required:true">
+                <table cellpadding="5">
+                    <tr>
+                        <td>入住人姓名:</td>
+                        <td><input name="TenName" class="easyui-textbox" style="width:150px;"  data-options="required:true"></td>
+                        <td>预计入住日期:</td>
+                        <td><input name="Sdate" class="easyui-datebox" data-options="required:true"></input></td>
+                    </tr>
+                    <tr>
+                        <td>入住人手机:</td>
+                        <td><input name="Phone" class="easyui-textbox" style="width:150px;"  data-options="required:true"></td>
+                        <td>预计签约日期:</td>
+                        <td><input name="Edate" class="easyui-datebox" data-options="required:true"></input></td>
+                    </tr>
+                    <tr>
+                        <td>入住人性别:</td>
+                        <td><input name="Gender" type="radio" value="1">男<input name="Gender" type="radio" value="0">女</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>订金金额:</td>
+                        <td><input name="Deposit" class="easyui-textbox" style="width:150px;" data-options="required:true"></td>
+                        <td>支付方式:</td>
+                        <td><input name="PayTypeID" class="easyui-textbox" style="width:150px;" data-options="required:true"></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </table>
+            </form>
+            <div id="reserveTenantContractDlgBtns">
+                <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="ys.modules.PreserveRoom.confirm()" style="width:90px">确认</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="ys.modules.PreserveRoom.cancel()" style="width:90px">取消</a>
+            </div>
+        </div>
+    </div>
+    <div data-options="region:'west',split:true" style="width:280px;">
+        <ul class="easyui-tree" data-options="
+					url:'/YSService/BaseInfoService/GetTree4',
+					method:'get',
+					animate:true,
+					onClick: ys.modules.PreserveRoom.loadRoom
+				">
+        </ul>
+    </div>
+</div>
+
+<script>
+ys.modules.PreserveRoom =  (function(){
+    function loadRoom(node){
+        var form = $('#preserveRoomTab').find('form');
+        form.form('clear');
+        if(node.type != 'room'){
+            return;
+        }
+        form.form('load', {RoomID: node.id});
+        $.ajax({
+            url: '/YSService/OnLineService/GetRoomInfo',
+            method: 'POST',
+            data: JSON.stringify({RoomID: node.id}),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (resp) {
+                var room = resp[0];
+                var result = '', v = room.RommRenovation;
+                for(var i = 0; v && i < v.length; ++i){
+                    result += i == v.length - 1? (v[i].RenovationName + ', ') : v[i].RenovationName;
+                }
+                room.RenovationName = result;
+                form.form('load', room);
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    function confirm(){
+        var form = $($('#preserveRoomTab').find('form').get(1));
+        if(!form.form('validate'))return;
+        var formData =  form.serializeArray();
+        var data = {};
+        $.each(formData, function(i, v) {
+            if (v.name == 'Edate' || v.name == 'Sdate') {
+                data[v.name] = $.jsDateStr2WcfDate(v.value);
+            } else {
+                data[v.name] = v.value;
+            }
+        });
+        var url = '/YSService/TenantContractService/AddOrder';
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: JSON.stringify(data),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (msg) {
+                $.messager.alert('提示','房间预订成功！','success');
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    function cancel(){
+        var form = $('#preserveRoomTab').find('form');
+        if(!form.form('validate'))return;
+        var formData =  form.serializeArray();
+        var data = {};
+        $.each(formData, function(i, v) {
+            data[v.name] = v.value;
+        });
+        var url = '/YSService/TenantContractService/CancelOrder';
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: JSON.stringify(data),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (msg) {
+                $.messager.alert('提示','已取消预约！','success');
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    return {
+        loadRoom: loadRoom,
+        confirm: confirm,
+        cancel: cancel
+    };
+})();
+</script>
+
+

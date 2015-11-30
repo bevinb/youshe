@@ -1,0 +1,157 @@
+<div class="easyui-layout" data-options="fit:true">
+    <div data-options="region:'center'"><table class="main"></table></div>
+</div>
+
+<div id="editDiscountDlg" class="easyui-dialog" style="width:600px;padding:10px 20px"  modal="true"
+     closed="true" buttons="#editDiscountDlgBtns">
+    <form id="fm" method="post" novalidate>
+        <input type="hidden" name="DiscountID">
+        <div class="fitem">
+            <label>活动名称:</label>
+            <input name="DiscountName" class="easyui-textbox" data-options="required:true">
+        </div>
+        <div class="fitem">
+            <label>开始时间:</label>
+            <input name="DiscountBegin" class="easyui-datebox" data-options="required:true">
+        </div>
+        <div class="fitem">
+            <label>结束时间:</label>
+            <input name="DiscountEnd" class="easyui-datebox" data-options="required:true">
+        </div>
+        <div class="fitem">
+            <label>首次减免数:</label>
+            <input name="FristAmount" class="easyui-numberbox">
+        </div>
+        <div class="fitem">
+            <label>每月折扣:</label>
+            <input name="MonthDiscount" class="easyui-numberbox">
+        </div>
+        <div class="fitem">
+            <label>每月减免数:</label>
+            <input name="MonthAmount" class="easyui-numberbox">
+        </div>
+        <div class="fitem">
+            <label>状态:</label>
+            <select class="easyui-combobox" name="DiscountStatus" data-options="required:true">
+                <option value="1">上线</option>
+                <option value="0">下线</option>
+            </select>
+        </div>
+    </form>
+</div>
+<div id="editDiscountDlgBtns">
+    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="ys.modules.Discount.saveMainItem()" style="width:90px">保存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('.easyui-dialog').dialog('close')" style="width:90px">取消</a>
+</div>
+
+<script>
+ys.modules.Discount =  (function(){
+    function loadMainData(){
+        $.ajax({
+            url: '/YSService/DiscountService/GetDataList',
+            method: 'POST',
+            data: JSON.stringify({}),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (resp) {
+                $.each(resp, function(i,item){
+                    item['DiscountBegin'] = $.wcfDate2JsDateStr(item['DiscountBegin']);
+                    item['DiscountEnd'] = $.wcfDate2JsDateStr(item['DiscountEnd']);
+                    item['CreateDate'] = $.wcfDate2JsDateStr(item['CreateDate']);
+                });
+                $('#discountTab').find('table.main').datagrid('loadData', {
+                    total: resp.length,
+                    rows: resp
+                });
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    function saveMainItem(){
+        var dlg = $('#editDiscountDlg'), form = dlg.find('form');
+        if(!form.form('validate'))return;
+        var formData =  form.serializeArray();
+        var data = {};
+        $.each(formData, function(i, v) {
+            if (v.name == 'DiscountBegin' || v.name == 'DiscountEnd' || v.name == 'CreateDate') {
+                data[v.name] = $.jsDateStr2WcfDate(v.value);
+            } else {
+                data[v.name] = v.value;
+            }
+        });
+        var url = '/YSService/DiscountService/Add';
+        if(data['DiscountID'] != '0'){
+            url = '/YSService/DiscountService/Update';
+        }
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: JSON.stringify(data),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (msg) {
+                loadMainData();
+                dlg.dialog('close');
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    return {
+        loadMainData: loadMainData,
+        saveMainItem: saveMainItem
+    };
+})();
+
+window.grid.cfg.discount = {
+    singleSelect:true,
+    rownumbers: true,
+    pagination: true,
+    columns:[[
+        {field:'DiscountID',title:'编号',width:70},
+        {field:'DiscountName',title:'活动名称',width:100},
+        {field:'DiscountBegin',title:'开始时间',width:100},
+        {field:'DiscountEnd',title:'结束时间',width:100},
+        {field:'FristAmount',title:'首次减免数:',width:100},
+        {field:'MonthDiscount',title:'每月折扣',width:100},
+        {field:'MonthAmount',title:'每月减免数',width:100},
+        {field:'DiscountStatusName',title:'状态',width:70}
+    ]],
+    toolbar: [{
+        id: '',
+        text: '新增',
+        iconCls: 'icon-add',
+        handler: function () {
+            var dlg = $('#editDiscountDlg'), form = dlg.find('form');
+            dlg.dialog('open').dialog('center').dialog('setTitle','新增营销信息');
+            form.form('clear');
+            form.form('load', {DiscountID:0,DiscountStatus:1});
+        }
+    }, "-", {
+        id: '',
+        text: '编辑',
+        iconCls: 'icon-edit',
+        handler: function () {
+            var dlg = $('#editDiscountDlg'), form = dlg.find('form'), mainTbl = $('#discountTab').find('table.main');
+            if(mainTbl.datagrid('getSelections').length < 1){
+                $.messager.alert('提示','请先选择要编辑的数据','info');
+                return;
+            }
+            dlg.dialog('open').dialog('center').dialog('setTitle','编辑营销信息');
+            form.form('load', mainTbl.datagrid('getSelected'));
+        }
+    }, "-", {
+        id: '',
+        text: '删除',
+        iconCls: 'icon-remove',
+        handler: confirmRemove
+    }, "-"]
+};
+
+ys.modules.Discount.loadMainData();
+</script>

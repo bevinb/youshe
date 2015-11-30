@@ -1,0 +1,157 @@
+<div class="easyui-layout" data-options="fit:true">
+    <div data-options="region:'center'"><table class="main"></table></div>
+</div>
+
+<div id="editVillageDlg" class="easyui-dialog" style="width:500px;" modal="true"
+     closed="true" data-options="buttons: '#editVillageDlgBtns'">
+    <div style="padding:10px 60px 20px 60px">
+        <form id="fm" method="post" novalidate>
+            <input name="VillageID" type="hidden">
+            <table cellpadding="5">
+                <tr>
+                    <td>小区名称:</td>
+                    <td><input name="VillageName" class="easyui-textbox" data-options="required:true"></td>
+                </tr>
+                <tr>
+                    <td>小区地址:</td>
+                    <td><input name="VillageAddress" class="easyui-textbox" data-options="required:true"></td>
+                </tr>
+                <tr class="fitem">
+                    <td>物业公司:</td>
+                    <td><input class="easyui-combobox"
+                           name="PropertyID"
+                           style="width:300px"
+                           data-options="
+                            loader: ys.loaders.propertyLoader,
+                            valueField:'PropertyID',
+                            textField:'PropertyName',
+                            panelHeight:'auto',
+                            required:true
+                    "></td>
+                </tr><tr class="fitem">
+                <td>所属社区:</td>
+                <td><input class="easyui-combobox"
+                           name="CommunityID"
+                           style="width:300px"
+                           data-options="
+                            loader: ys.loaders.communityLoader,
+                            valueField:'CommunityID',
+                            textField:'CommunityName',
+                            panelHeight:'auto',
+                            required:true
+                    "></td>
+                </tr>
+                <tr>
+                    <td>备注:</td>
+                    <td><textarea name="Remarks" class="easyui-textarea"></textarea></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+<div id="editVillageDlgBtns">
+    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="ys.modules.Village.saveMainItem()" style="width:90px">保存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('.easyui-dialog').dialog('close')" style="width:90px">取消</a>
+</div>
+
+<script>
+ys.modules.Village =  (function(){
+    function loadMainData(){
+        $.ajax({
+            url: '/YSService/VillageService/GetDataList',
+            method: 'POST',
+            data: JSON.stringify({}),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (resp) {
+                $('#villageTab').find('table.main').datagrid('loadData', {
+                    total: resp.length,
+                    rows: resp
+                });
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    function saveMainItem(){
+        var dlg = $('#editVillageDlg'), form = dlg.find('form');
+        if(!form.form('validate'))return;
+        var formData =  form.serializeArray();
+        var data = {};
+        $.each(formData, function(i, v) {
+            data[v.name] = v.value;
+        });
+        var url = '/YSService/VillageService/Add';
+        if(data['VillageID'] != '0'){
+            url = '/YSService/VillageService/Update';
+        }
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: JSON.stringify(data),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (msg) {
+                loadMainData();
+                dlg.dialog('close');
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    return {
+        loadMainData: loadMainData,
+        saveMainItem: saveMainItem
+    };
+})();
+
+window.grid.cfg.village = {
+    singleSelect:true,
+    rownumbers: true,
+    pagination: true,
+    columns:[[
+        {field:'VillageID',title:'编号',width:100},
+        {field:'VillageName',title:'小区名称',width:100},
+        {field:'VillageAddress',title:'小区地址',width:100},
+        {field:'PropertyName',title:'物业公司',width:100, formatter:function(v,r){return r.PropertyInfo.PropertyName;}},
+        {field:'PropertyPhone',title:'物业联系电话:',width:100, formatter:function(v,r){return r.PropertyInfo.Phone;}},
+        {field:'PropertyAddress',title:'物业地址',width:100, formatter:function(v,r){return r.PropertyInfo.Address;}},
+        {field:'Remarks',title:'备注',width:100}
+    ]],
+    toolbar: [{
+        id: '',
+        text: '新增',
+        iconCls: 'icon-add',
+        handler: function () {
+            var dlg = $('#editVillageDlg'), form = dlg.find('form');
+            dlg.dialog('open').dialog('center').dialog('setTitle','新增小区');
+            form.form('clear');
+            form.form('load', {VillageID:0});
+        }
+    }, "-", {
+        id: '',
+        text: '编辑',
+        iconCls: 'icon-edit',
+        handler: function () {
+            var dlg = $('#editVillageDlg'), form = dlg.find('form'), mainTbl = $('#villageTab').find('table.main');
+            if(mainTbl.datagrid('getSelections').length < 1){
+                $.messager.alert('提示','请先选择要编辑的数据','info');
+                return;
+            }
+            dlg.dialog('open').dialog('center').dialog('setTitle','编辑小区');
+            form.form('load', mainTbl.datagrid('getSelected'));
+        }
+    }, "-", {
+        id: '',
+        text: '删除',
+        iconCls: 'icon-remove',
+        handler: confirmRemove
+    }, "-"]
+};
+
+ys.modules.Village.loadMainData();
+</script>

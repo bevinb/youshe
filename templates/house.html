@@ -1,0 +1,205 @@
+<div class="easyui-layout" data-options="fit:true">
+    <div data-options="region:'center'"><table class="main"></table></div>
+</div>
+
+<div id="editHouseDlg" class="easyui-dialog" style="width:750px;" modal="true"
+     closed="true" data-options="buttons: '#editHouseDlgBtns'">
+    <div style="padding:10px 60px 20px 60px">
+        <form id="fm" method="post" novalidate>
+            <input name="HouseID" type="hidden">
+            <table cellpadding="5">
+                <tr>
+                    <td>房源编号:</td>
+                    <td colspan=5><input name="HouseNO" class="easyui-textbox" data-options="required:true"></td>
+                </tr>
+                <tr>
+                    <td>所属社区:</td>
+                    <td><input class="easyui-combobox"
+                               name="CommunityID"
+                               style="width:300px"
+                               data-options="
+                            loader: ys.loaders.communityLoader,
+                            onSelect: ys.modules.House.onCommunityChange,
+                            valueField:'CommunityID',
+                            textField:'CommunityName',
+                            panelHeight:'auto',
+                            required:true
+                    "></td>
+                </tr>
+                <tr>
+                    <td>所属小区:</td>
+                    <td><input class="easyui-combobox"
+                               id=""
+                               name="VillageID"
+                               style="width:300px"
+                               data-options="
+                            valueField:'VillageID',
+                            textField:'VillageName',
+                            panelHeight:'auto',
+                            required:true
+                    "></td>
+                </tr>
+                <tr>
+                    <td>详细地址:</td>
+                    <td colspan=5><input name="Address" class="easyui-textbox"></td>
+                </tr>
+                <tr>
+                    <td>所在楼层:</td>
+                    <td>
+                        <input name="Floor" class="easyui-numberbox" style="width:70px;"><span class="label">楼</span>
+                        <span class="label">共</span><input name="FloorCount" class="easyui-numberbox" style="width:70px;"><span class="label">楼</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>房屋面积:</td>
+                    <td>
+                        <input name="Room" class="easyui-numberbox" style="width:70px;"><span class="label">室</span>
+                        <input name="Hall" class="easyui-numberbox" style="width:70px;"><span class="label">厅</span>
+                        <input name="Kitchen" class="easyui-numberbox" style="width:70px;"><span class="label">厨</span>
+                        <input name="Toilet" class="easyui-numberbox" style="width:70px;"><span class="label">卫</span>
+                        <span class="label">面积</span><input name="Area" class="easyui-numberbox" data-options="precision:2" style="width:70px;"><span class="label">平方米</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>业主:</td>
+                    <td><input class="easyui-combobox"
+                               name="OwnerID"
+                               style="width:300px"
+                               data-options="
+                               loader: ys.loaders.ownersLoader,
+                                valueField:'OwnerID',
+                                textField:'OwnerName',
+                                panelHeight:'auto',
+                                required:true
+                    "></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+<div id="editHouseDlgBtns">
+    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="ys.modules.House.saveMainItem()" style="width:90px">保存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('.easyui-dialog').dialog('close')" style="width:90px">取消</a>
+</div>
+
+<script>
+ys.modules.House =  (function(){
+    function loadMainData(){
+        $.ajax({
+            url: '/YSService/HouseService/GetDataList',
+            method: 'POST',
+            data: JSON.stringify({}),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (resp) {
+                $('#houseTab').find('table.main').datagrid('loadData', {
+                    total: resp.length,
+                    rows: resp
+                });
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    function saveMainItem(){
+        var dlg = $('#editHouseDlg'), form = dlg.find('form');
+        if(!form.form('validate'))return;
+        var formData =  form.serializeArray();
+        var data = {};
+        $.each(formData, function(i, v) {
+            data[v.name] = v.value;
+        });
+        var url = '/YSService/HouseService/Add';
+        if(data['HouseID'] != '0'){
+            url = '/YSService/HouseService/Update';
+        }
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: JSON.stringify(data),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (msg) {
+                loadMainData();
+                dlg.dialog('close');
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    function onCommunityChange(o){
+        var combo = $('#editHouseDlg form').find('input[comboname=VillageID]');
+        combo.combobox('setValue', '');
+        combo.combobox('loadData', []);
+        $.ajax({
+            url: '/YSService/VillageService/GetDataList',
+            method: 'POST',
+            data: JSON.stringify({CommunityID: o.CommunityID}),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (resp) {
+                combo.combobox('loadData', resp);
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    return {
+        loadMainData: loadMainData,
+        saveMainItem: saveMainItem,
+        onCommunityChange: onCommunityChange
+    };
+})();
+
+
+window.grid.cfg.house = {
+    singleSelect:true,
+    rownumbers: true,
+    pagination: true,
+    columns:[[
+        {field:'HouseNO',title:'编号',width:100},
+        {field:'CommunityName',title:'社区',width:100},
+        {field:'VillageName',title:'小区',width:100},
+        {field:'OwnerName',title:'业主',width:100},
+        {field:'Address',title:'地址',width:100},
+        {field:'HouseStatusName',title:'状态',width:100}
+    ]],
+    toolbar: [{
+        id: '',
+        text: '新增',
+        iconCls: 'icon-add',
+        handler: function () {
+            var dlg = $('#editHouseDlg'), form = dlg.find('form');
+            dlg.dialog('open').dialog('center').dialog('setTitle','新增房源');
+            form.form('clear');
+            form.form('load', {HouseID:0});
+        }
+    }, "-", {
+        id: '',
+        text: '编辑',
+        iconCls: 'icon-edit',
+        handler: function () {
+            var dlg = $('#editHouseDlg'), form = dlg.find('form'), mainTbl = $('#houseTab').find('table.main');
+            if(mainTbl.datagrid('getSelections').length < 1){
+                $.messager.alert('提示','请先选择要编辑的数据','info');
+                return;
+            }
+            dlg.dialog('open').dialog('center').dialog('setTitle','编辑房源');
+            form.form('load', mainTbl.datagrid('getSelected'));
+        }
+    }, "-", {
+        id: '',
+        text: '删除',
+        iconCls: 'icon-remove',
+        handler: confirmRemove
+    }, "-"]
+};
+
+ys.modules.House.loadMainData();
+</script>

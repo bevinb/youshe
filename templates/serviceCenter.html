@@ -1,0 +1,134 @@
+<div class="easyui-layout" data-options="fit:true">
+    <div data-options="region:'center'"><table class="main"></table></div>
+</div>
+
+<div id="editServiceCenterDlg" class="easyui-dialog" style="width:500px;padding:10px 20px"  modal="true"
+     closed="true" data-options="buttons: '#editServiceCenterDlgBtns'">
+    <form id="fm" method="post" novalidate>
+        <input name="ServiceCenterID" type="hidden">
+        <div class="fitem">
+            <label>名称:</label>
+            <input name="ServiceCenterName" class="easyui-textbox" data-options="required:true">
+        </div>
+        <div class="fitem">
+            <label>联系电话:</label>
+            <input name="Phone" class="easyui-textbox" data-options="required:true">
+        </div>
+        <div class="fitem">
+            <label>地址:</label>
+            <input name="Adress" class="easyui-textbox" data-options="required:true">
+        </div>
+        <div class="fitem">
+            <label>状态:</label>
+            <select class="easyui-combobox" name="IsActive" style="width:300px;" data-options="required:true">
+                <option value="1">启用</option>
+                <option value="0">禁用</option>
+            </select>
+        </div>
+    </form>
+</div>
+<div id="editServiceCenterDlgBtns">
+    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="ys.modules.ServiceCenter.saveMainItem()" style="width:90px">保存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('.easyui-dialog').dialog('close')" style="width:90px">取消</a>
+</div>
+
+<script>
+ys.modules.ServiceCenter =  (function(){
+    function loadMainData(){
+        $.ajax({
+            url: '/YSService/ServiceCenterService/GetDataList',
+            method: 'POST',
+            data: JSON.stringify({}),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (resp) {
+                $('#serviceCenterTab').find('table.main').datagrid('loadData', {
+                    total: resp.length,
+                    rows: resp
+                });
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    function saveMainItem(){
+        var dlg = $('#editServiceCenterDlg'), form = dlg.find('form');
+        if(!form.form('validate'))return;
+        var formData =  form.serializeArray();
+        var data = {};
+        $.each(formData, function(i, v) {
+            data[v.name] = v.value;
+        });
+        var url = '/YSService/ServiceCenterService/Add';
+        if(data['ServiceCenterID'] != '0'){
+            url = '/YSService/ServiceCenterService/Update';
+        }
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: JSON.stringify(data),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (msg) {
+                loadMainData();
+                $('.easyui-dialog').dialog('close');
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    return {
+        loadMainData: loadMainData,
+        saveMainItem: saveMainItem
+    };
+})();
+
+window.grid.cfg.serviceCenter = {
+    singleSelect:true,
+    rownumbers: true,
+    pagination: true,
+    columns:[[
+        {field:'ServiceCenterName',title:'名称',width:100},
+        {field:'Phone',title:'联系电话',width:100},
+        {field:'Adress',title:'地址',width:100},
+        {field:'IsActive',title:'状态',width:100, formatter:function(value){
+            return value?'启用':'禁用';
+        }},
+    ]],
+    toolbar: [{
+        id: '',
+        text: '新增',
+        iconCls: 'icon-add',
+        handler: function () {
+            var dlg = $('#editServiceCenterDlg'), form = dlg.find('form');
+            dlg.dialog('open').dialog('center').dialog('setTitle','新增服务中心');
+            form.form('clear');
+            form.form('load', {ServiceCenterID:0, IsActive:1});
+        }
+    }, "-", {
+        id: '',
+        text: '编辑',
+        iconCls: 'icon-edit',
+        handler: function () {
+            var dlg = $('#editServiceCenterDlg'), form = dlg.find('form'), mainTbl = $('#serviceCenterTab').find('table.main');
+            if(mainTbl.datagrid('getSelections').length < 1){
+                $.messager.alert('提示','请先选择要编辑的数据','info');
+                return;
+            }
+            dlg.dialog('open').dialog('center').dialog('setTitle','编辑服务中心');
+            form.form('load', mainTbl.datagrid('getSelected'));
+        }
+    }, "-", {
+        id: '',
+        text: '删除',
+        iconCls: 'icon-remove',
+        handler: confirmRemove
+    }, "-"]
+};
+
+ys.modules.ServiceCenter.loadMainData();
+</script>

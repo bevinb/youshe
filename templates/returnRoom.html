@@ -1,0 +1,210 @@
+<div class="easyui-layout" data-options="fit:true">
+    <div data-options="region:'center'">
+        <div class="easyui-layout" data-options="fit:true" style="overflow: auto;">
+            <div style="padding:10px 60px 20px 60px">
+                <h5>入住人信息</h5>
+                <form id="fm" method="post" novalidate>
+                    <table cellpadding="5">
+                        <tr>
+                            <td>入住人姓名:</td>
+                            <td><input name="firstname" class="easyui-textbox" style="width:150px;" ></td>
+                            <td>房屋租金:</td>
+                            <td><input name="firstname" class="easyui-textbox" style="width:150px;" >元/月</td>
+                            <td>纸质合同编号:</td>
+                            <td><input name="firstname" class="easyui-textbox" style="width:150px;" ></td>
+                        </tr>
+                        <tr>
+                            <td>入住人手机:</td>
+                            <td><input name="firstname" class="easyui-textbox" style="width:150px;" ></td>
+                            <td>服务费:</td>
+                            <td><input name="firstname" class="easyui-textbox" style="width:150px;" >元/月</td>
+                            <td>租期:</td>
+                            <td><input name="firstname" class="easyui-textbox" style="width:150px;" ></td>
+                        </tr>
+                        <tr>
+                            <td>入住人性别:</td>
+                            <td><input name="firstname" type="radio" >男<input name="firstname" type="radio" >女</td>
+                            <td>起租日:</td>
+                            <td><input class="easyui-datebox"></input></td>
+                            <td>入住日期:</td>
+                            <td><input class="easyui-datebox"></input></td>
+                        </tr>
+                        <tr>
+                            <td>紧急联系人:</td>
+                            <td>
+                                <input name="firstname" class="easyui-textbox" style="width:150px;" >
+                            </td>
+                            <td>出生日期:</td>
+                            <td><input class="easyui-datebox"></input></td>
+                            <td>租金付款方式:</td>
+                            <td>
+                                <select name="lastname" class="easyui-select" style="width:150px;"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>销售管家:</td>
+                            <td><input name="firstname" class="easyui-textbox" style="width:150px;" ></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </form>
+                <div style="width:100%;">
+                    <div id="p" class="easyui-panel" title="财务收支" style="width:100%;height:200px;padding:10px;">
+                        <table class="easyui-datagrid"
+                               data-options="singleSelect:true,fit:true,fitColumns:true">
+                            <thead>
+                            <tr>
+                                <th data-options="field:'productid'" width="50">期数</th>
+                                <th data-options="field:'productid'" width="50">月租金</th>
+                                <th data-options="field:'productid'" width="50">服务费</th>
+                                <th data-options="field:'productid'" width="50">押金</th>
+                                <th data-options="field:'productid'" width="50">优惠项</th>
+                                <th data-options="field:'productid'" width="50">其它</th>
+                                <th data-options="field:'productid'" width="50">总额</th>
+                                <th data-options="field:'productid'" width="50">实收</th>
+                                <th data-options="field:'productid'" width="50">财务审核</th>
+                                <th data-options="field:'productid'" width="50">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td data-options="field:'productid'" width="50">第一期<br>20150601-20150701</td>
+                                <td data-options="field:'productid'" width="50">1650.0</td>
+                                <td data-options="field:'productid'" width="50">300</td>
+                                <td data-options="field:'productid'" width="50">0.0</td>
+                                <td data-options="field:'productid'" width="50">无</td>
+                                <td data-options="field:'productid'" width="50">无</td>
+                                <td data-options="field:'productid'" width="50"></td>
+                                <td data-options="field:'productid'" width="50"></td>
+                                <td data-options="field:'productid'" width="50">已到账</td>
+                                <td data-options="field:'productid'" width="50"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div style="width:100%;">
+                    <div id="p" class="easyui-panel" title="水电煤缴费" style="width:100%;height:200px;padding:10px;">
+                        <table class="easyui-datagrid"
+                               data-options="url:'datagrid_data1.json',method:'get',singleSelect:true,fit:true,fitColumns:true">
+                            <thead>
+                            <tr>
+                                <th data-options="field:'productid'" width="50">付款编号</th>
+                                <th data-options="field:'productid'" width="50">类型</th>
+                                <th data-options="field:'productid'" width="50">应付日期</th>
+                                <th data-options="field:'productid'" width="50">应付金额</th>
+                                <th data-options="field:'productid'" width="50">实付日期</th>
+                                <th data-options="field:'productid'" width="50">实付金额</th>
+                                <th data-options="field:'productid'" width="50">付款方式</th>
+                                <th data-options="field:'productid'" width="50">付款人</th>
+                                <th data-options="field:'productid'" width="50">备注</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td data-options="field:'productid'" width="50">0000001</td>
+                                <td data-options="field:'productid'" width="50">煤气费</td>
+                                <td data-options="field:'productid'" width="50">20150701</td>
+                                <td data-options="field:'productid'" width="50">30.0</td>
+                                <td data-options="field:'productid'" width="50">20150701</td>
+                                <td data-options="field:'productid'" width="50">30.0</td>
+                                <td data-options="field:'productid'" width="50">银行转账</td>
+                                <td data-options="field:'productid'" width="50">张三</td>
+                                <td data-options="field:'productid'" width="50"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <h5>退房信息录入</h5>
+                <form>
+                    <table cellpadding="5">
+                        <input type="hidden" name="RoomID" data-options="required:true">
+                        <tr>
+                            <td>退款金额:</td>
+                            <td><input name="ReturnCount" class="easyui-numberbox" style="width:150px;" data-options="required:true,precision:2">元/月</td>
+                        </tr>
+                    </table>
+                </form>
+                <div id="signTenantContractDlgBtns">
+                    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="ys.modules.ReturnRoom.confirm()" style="width:90px">确认</a>
+                    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('.easyui-dialog').dialog('close')" style="width:90px">取消</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div data-options="region:'west',split:true" style="width:280px;">
+        <ul class="easyui-tree" data-options="
+					url:'/YSService/BaseInfoService/GetTree4',
+					method:'get',
+					animate:true,
+					onClick: ys.modules.ReturnRoom.loadRoom
+				">
+        </ul>
+    </div>
+</div>
+
+<script>
+    ys.modules.ReturnRoom =  (function(){
+        function loadRoom(node){
+            var form = $('#returnRoomTab').find('form');
+            form.form('clear');
+            if(node.type != 'room'){
+                return;
+            }
+            form.form('load', {RoomID: node.id});
+            $.ajax({
+                url: '/YSService/OnLineService/GetRoomInfo',
+                method: 'POST',
+                data: JSON.stringify({RoomID: node.id}),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (resp) {
+                    var room = resp[0];
+                    var result = '', v = room.RommRenovation;
+                    for(var i = 0; v && i < v.length; ++i){
+                        result += i == v.length - 1? (v[i].RenovationName + ', ') : v[i].RenovationName;
+                    }
+                    room.RenovationName = result;
+                    form.form('load', room);
+                },
+                error: function (XMLHttpRequest, textStatus, thrownError) {
+                    alert("Error Occured!");
+                }
+            });
+        };
+
+        function confirm(){
+            var form = $($('#returnRoomTab').find('form').get(1));
+            if(!form.form('validate'))return;
+            var formData =  form.serializeArray();
+            var data = {};
+            $.each(formData, function(i, v) {
+                data[v.name] = v.value;
+            });
+
+            $.ajax({
+                url: '/YSService/TenantContractService/StopContract',
+                type: "POST",
+                data: JSON.stringify(data),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (msg) {
+                    $.messager.alert('提示','退房成功！','success');
+                },
+                error: function (XMLHttpRequest, textStatus, thrownError) {
+                    alert("Error Occured!");
+                }
+            });
+        };
+
+        return {
+            loadRoom: loadRoom,
+            confirm: confirm
+        };
+    })();
+</script>

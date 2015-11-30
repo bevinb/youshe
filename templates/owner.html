@@ -1,0 +1,150 @@
+<div class="easyui-layout" data-options="fit:true">
+    <div data-options="region:'north',split:true" style="height:60px;padding:10px;">
+        <form class="top-search-form">
+            <table>
+                <tr>
+                    <td>姓名:<input name="OwnerName" class="f1 easyui-textbox" style="width:100px"></td>
+                    <td>电话：<input name="Phone" class="f1 easyui-textbox" style="width:100px"></td>
+                    <td>身份证号：<input name="IDNO" class="f1 easyui-textbox" style="width:100px"></td>
+                    <td><input type="button" value="查询"></input></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <div data-options="region:'center'"><table class="main"></table></div>
+</div>
+
+<div id="editOwnerDlg" class="easyui-dialog" style="width:500px;padding:10px 20px"  modal="true"
+     closed="true" buttons="#editOwnerDlgBtns">
+    <form id="fm" method="post" novalidate>
+        <input name="OwnerID" type="hidden">
+        <div class="fitem">
+            <label>业主姓名:</label>
+            <input name="OwnerName" class="easyui-textbox">
+        </div>
+        <div class="fitem">
+            <label>联系电话:</label>
+            <input name="Phone" class="easyui-textbox">
+        </div>
+        <div class="fitem">
+            <label>证件类型:</label>
+            <input class="easyui-combobox"
+                   name="IDTypeID"
+                   style="width:300px"
+                   data-options="
+                    loader: ys.loaders.idTypeLoader,
+                    valueField:'IDTypeID',
+                    textField:'IDTypeIDName',
+                    panelHeight:'auto',
+                    required: true
+            ">
+        </div>
+        <div class="fitem">
+            <label>证件号码:</label>
+            <input name="IDNO" class="easyui-textbox">
+        </div>
+    </form>
+</div>
+<div id="editOwnerDlgBtns">
+    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="ys.modules.Owner.saveMainItem()" style="width:90px">保存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('.easyui-dialog').dialog('close')" style="width:90px">取消</a>
+</div>
+
+<script>
+ys.modules.Owner =  (function(){
+    function loadMainData(){
+        $.ajax({
+            url: '/YSService/OwnerService/GetDataList',
+            method: 'POST',
+            data: JSON.stringify({}),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (resp) {
+                $('#ownerTab').find('table.main').datagrid('loadData', {
+                    total: resp.length,
+                    rows: resp
+                });
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    function saveMainItem(){
+        var dlg = $('#editOwnerDlg'), form = dlg.find('form');
+        if(!form.form('validate'))return;
+        var formData =  form.serializeArray();
+        var data = {};
+        $.each(formData, function(i, v) {
+            data[v.name] = v.value;
+        });
+        var url = '/YSService/OwnerService/Add';
+        if(data['OwnerID'] != '0'){
+            url = '/YSService/OwnerService/Update';
+        }
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: JSON.stringify(data),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (msg) {
+                loadMainData();
+                dlg.dialog('close');
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    return {
+        loadMainData: loadMainData,
+        saveMainItem: saveMainItem
+    };
+})();
+
+window.grid.cfg.owner = {
+    singleSelect:true,
+    rownumbers: true,
+    pagination: true,
+    columns:[[
+        {field:'OwnerName',title:'业主姓名',width:100},
+        {field:'Phone',title:'联系电话',width:100},
+        {field:'IDTypeName',title:'证件类型',width:100},
+        {field:'IDNO',title:'证件号码',width:100}
+    ]],
+    toolbar: [{
+        id: '',
+        text: '新增',
+        iconCls: 'icon-add',
+        handler: function () {
+            var dlg = $('#editOwnerDlg'), form = dlg.find('form');
+            dlg.dialog('open').dialog('center').dialog('setTitle','新增业主');
+            form.form('clear');
+            form.form('load', {OwnerID:0})
+        }
+    }, "-", {
+        id: '',
+        text: '编辑',
+        iconCls: 'icon-edit',
+        handler: function () {
+            var dlg = $('#editOwnerDlg'), form = dlg.find('form'), mainTbl = $('#ownerTab').find('table.main');
+            if(mainTbl.datagrid('getSelections').length < 1){
+                $.messager.alert('提示','请先选择要编辑的数据','info');
+                return;
+            }
+            dlg.dialog('open').dialog('center').dialog('setTitle','编辑业主');
+            form.form('load', mainTbl.datagrid('getSelected'));
+        }
+    }, "-", {
+        id: '',
+        text: '删除',
+        iconCls: 'icon-remove',
+        handler: confirmRemove
+    }, "-"]
+};
+
+ys.modules.Owner.loadMainData();
+</script>

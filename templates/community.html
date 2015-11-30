@@ -1,0 +1,162 @@
+<div class="easyui-layout" data-options="fit:true">
+    <div data-options="region:'center'"><table class="main"></table></div>
+</div>
+
+<div id="editCommunityDlg" class="easyui-dialog" style="width:500px;padding:10px 20px"  modal="true"
+     closed="true" data-options="buttons: '#editCommunityDlgBtns'">
+    <form id="fm" method="post" novalidate>
+        <input name="CommunityID" type="hidden">
+        <input name="CityID" type="hidden">
+        <div class="fitem">
+            <label>社区名称:</label>
+            <input name="CommunityName" class="easyui-textbox" data-options="required:true">
+        </div>
+        <div class="fitem">
+            <label>区位信息:</label>
+            <input name="AddressInfo" class="easyui-textbox" data-options="required:true">
+        </div>
+        <div class="fitem">
+            <label>服务中心:</label>
+            <input class="easyui-combobox"
+                   name="ServiceCenterID"
+                   style="width:300px;"
+                   data-options="
+					loader: ys.loaders.serviceCenterLoader,
+					valueField:'ServiceCenterID',
+					textField:'ServiceCenterName',
+					panelHeight:'auto',
+					required:true,
+					readOnly: true
+			">
+        </div>
+        <div class="fitem">
+            <label>社区简介:</label>
+            <textarea name="CommunityInfo" class="easyui-textarea" data-options="required:true"></textarea>
+        </div>
+        <div class="fitem">
+            <label>交通信息:</label>
+            <textarea name="Transportation" class="easyui-textarea" data-options="required:true"></textarea>
+        </div>
+        <div class="fitem">
+            <label>备注信息:</label>
+            <textarea name="Remarks" class="easyui-textarea"></textarea>
+        </div>
+        <div class="fitem">
+            <label>社区图片:</label>
+            <div>
+                <img src="img/b.jpg" style="width:80px;height:80px;vertical-align:middle;">
+                <img src="img/b.jpg" style="width:80px;height:80px;vertical-align:middle;">
+                <img src="img/b.jpg" style="width:80px;height:80px;vertical-align:middle;">
+                <span style="width:80px;height:80px;display:inline-block;border:1px solid gray;font-size:64px;text-align:center;vertical-align:middle;line-height:80px;color:gray;">+</span>
+            </div>
+        </div>
+    </form>
+</div>
+<div id="editCommunityDlgBtns">
+    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="ys.modules.Community.saveMainItem()" style="width:90px">保存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('.easyui-dialog').dialog('close')" style="width:90px">取消</a>
+</div>
+
+<script>
+ys.modules.Community =  (function(){
+    function loadMainData(){
+        $.ajax({
+            url: '/YSService/CommunityService/GetDataList',
+            method: 'POST',
+            data: JSON.stringify({CityID: ys.Session.currentCity}),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (resp) {
+                $('#communityTab').find('table.main').datagrid('loadData', {
+                    total: resp.length,
+                    rows: resp
+                });
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    function saveMainItem(){
+        var dlg = $('#editCommunityDlg'), form = dlg.find('form');
+        if(!form.form('validate'))return;
+        var formData =  form.serializeArray();
+        var data = {};
+        $.each(formData, function(i, v) {
+            data[v.name] = v.value;
+        });
+        var url = '/YSService/CommunityService/Add';
+        if(data['CommunityID'] != '0'){
+            url = '/YSService/CommunityService/Update';
+        }
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: JSON.stringify(data),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (msg) {
+                loadMainData();
+                dlg.dialog('close');
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    return {
+        loadMainData: loadMainData,
+        saveMainItem: saveMainItem
+    };
+})();
+
+window.grid.cfg.community = {
+    singleSelect:true,
+    rownumbers: true,
+    pagination: true,
+    columns:[[
+        {field:'CommunityName',title:'社区名称',width:100},
+        {field:'list_CommunityImgPath',title:'社区图片',width:100, formatter: function(v){
+            return v && v.length > 0? v[0].ImgPath : '';
+        }},
+        {field:'AddressInfo',title:'区位信息',width:100},
+        {field:'ServiceCenterName',title:'服务中心',width:100},
+        {field:'CommunityInfo',title:'社区简介',width:100},
+        {field:'Transportation',title:'交通信息',width:100},
+        {field:'Remarks',title:'备注信息',width:100}
+    ]],
+    toolbar: [{
+        id: '',
+        text: '新增',
+        iconCls: 'icon-add',
+        handler: function () {
+            var dlg = $('#editCommunityDlg'), form = dlg.find('form');
+            dlg.dialog('open').dialog('center').dialog('setTitle','新增社区');
+            form.form('clear')
+            form.form('load', {CommunityID: '0', CityID: ys.Session.currentCity});
+        }
+    }, "-", {
+        id: '',
+        text: '编辑',
+        iconCls: 'icon-edit',
+        handler: function () {
+            var dlg = $('#editCommunityDlg'), form = dlg.find('form'), mainTbl = $('#communityTab').find('table.main');
+            if(mainTbl.datagrid('getSelections').length < 1){
+                $.messager.alert('提示','请先选择要编辑的数据','info');
+                return;
+            }
+            dlg.dialog('open').dialog('center').dialog('setTitle','编辑社区');
+            form.form('load', mainTbl.datagrid('getSelected'));
+        }
+    }, "-", {
+        id: '',
+        text: '删除',
+        iconCls: 'icon-remove',
+        handler: confirmRemove
+    }, "-"]
+};
+
+ys.modules.Community.loadMainData();
+</script>

@@ -1,0 +1,131 @@
+<div class="easyui-layout" data-options="fit:true">
+    <div data-options="region:'center'"><table class="main"></table></div>
+</div>
+
+<div id="editPropertyDlg" class="easyui-dialog" style="width:500px;padding:10px 20px" modal="true"
+     closed="true" buttons="#editPropertyDlgBtns">
+    <form id="fm" method="post" novalidate>
+        <input name="PropertyID" type="hidden">
+        <div class="fitem">
+            <label>名称:</label>
+            <input name="PropertyName" class="easyui-textbox" data-options="required:true">
+        </div>
+        <div class="fitem">
+            <label>电话:</label>
+            <input name="Phone" class="easyui-textbox" data-options="required:true">
+        </div>
+        <div class="fitem">
+            <label>地址:</label>
+            <input name="Address" class="easyui-textbox" data-options="required:true">
+        </div>
+        <div class="fitem">
+            <label>备注:</label>
+            <textarea name="Remarks" class="easyui-textarea"></textarea>
+        </div>
+    </form>
+</div>
+<div id="editPropertyDlgBtns">
+    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="ys.modules.Owner.saveMainItem()" style="width:90px">保存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('.easyui-dialog').dialog('close')" style="width:90px">取消</a>
+</div>
+
+<script>
+ys.modules.Owner =  (function(){
+    function loadMainData(){
+        $.ajax({
+            url: '/YSService/PropertyService/GetDataList',
+            method: 'POST',
+            data: JSON.stringify({}),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (resp) {
+                $('#propertyTab').find('table.main').datagrid('loadData', {
+                    total: resp.length,
+                    rows: resp
+                });
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    function saveMainItem(){
+        var dlg = $('#editPropertyDlg'), form = dlg.find('form');
+        if(!form.form('validate'))return;
+        var formData =  form.serializeArray();
+        var data = {};
+        $.each(formData, function(i, v) {
+            data[v.name] = v.value;
+        });
+        var url = '/YSService/PropertyService/Add';
+        if(data['PropertyID'] != '0'){
+            url = '/YSService/PropertyService/Update';
+        }
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: JSON.stringify(data),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (msg) {
+                loadMainData();
+                dlg.dialog('close');
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    return {
+        loadMainData: loadMainData,
+        saveMainItem: saveMainItem
+    };
+})();
+
+window.grid.cfg.property =  {
+    singleSelect:true,
+    rownumbers: true,
+    pagination: true,
+    columns:[[
+        {field:'PropertyID',title:'编号',width:100},
+        {field:'PropertyName',title:'名称',width:100},
+        {field:'code',title:'联系人',width:100},
+        {field:'Phone',title:'电话',width:100},
+        {field:'Address',title:'地址',width:100},
+        {field:'Remarks',title:'备注',width:100}
+    ]],
+    toolbar: [{
+        id: '',
+        text: '新增',
+        iconCls: 'icon-add',
+        handler: function () {
+            var dlg = $('#editPropertyDlg'), form = dlg.find('form');
+            dlg.dialog('open').dialog('center').dialog('setTitle','新增物业公司');
+            form.form('clear');
+            form.form('load', {PropertyID:0});
+        }
+    }, "-", {
+        id: '',
+        text: '编辑',
+        iconCls: 'icon-edit',
+        handler: function () {
+            var dlg = $('#editPropertyDlg'), form = dlg.find('form'), mainTbl = $('#propertyTab').find('table.main');
+            if(mainTbl.datagrid('getSelections').length < 1){
+                $.messager.alert('提示','请先选择要编辑的数据','info');
+                return;
+            }
+            dlg.dialog('open').dialog('center').dialog('setTitle','编辑物业公司');
+            form.form('load', mainTbl.datagrid('getSelected'));
+        }
+    }, "-", {
+        id: '',
+        text: '删除',
+        iconCls: 'icon-remove',
+        handler: confirmRemove
+    }, "-"]
+};
+
+ys.modules.Owner.loadMainData();
+</script>

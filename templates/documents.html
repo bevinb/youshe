@@ -1,0 +1,152 @@
+<div class="easyui-layout" data-options="fit:true">
+    <div data-options="region:'north',split:true" style="height:180px;padding:10px;">
+        <p><span>本月应收：<span class="btn-link">3500</span>元</span><span style="margin-left:20px;">本月已收：<span class="btn-link">30000</span>元</span><span style="margin-left:20px;">本月应支：<span class="btn-link">17000</span>元</span><span style="margin-left:20px;">本月已支：<span class="btn-link">3000</span>元</span></p>
+        <p><span>起止时间：</span><input class="easyui-datebox"></input> ~ <input class="easyui-datebox"></input></p>
+        <p><span>交易类型：</span><span class="btn-link">租金</span><span class="btn-link" style="margin-left:20px;">押金</span><span class="btn-link" style="margin-left:20px;">水费</span><span class="btn-link" style="margin-left:20px;">电费</span><span class="btn-link" style="margin-left:20px;">气费</span><span class="btn-link" style="margin-left:20px;">物业费</span><span class="btn-link" style="margin-left:20px;">服务费</span><span class="btn-link" style="margin-left:20px;">保洁费</span><span class="btn-link" style="margin-left:20px;">欠费</span><span class="btn-link" style="margin-left:20px;">网费</span></p>
+        <p><span>资金流向：</span><span class="btn-link">全选</span><span class="btn-link" style="margin-left:20px;">收入</span><span class="btn-link" style="margin-left:20px;">支出</span></p>
+        <p><span>  关键词：</span><input name="lastname" class="easyui-textbox" style="width:70px;"><input type="submit" value="查询"></input></p>
+    </div>
+    <div data-options="region:'center'"><table class="main"></table></div>
+</div>
+
+<div id="documentsDlg" class="easyui-dialog" style="width:610px;padding:10px 20px"
+     closed="true" data-options="buttons: '#documentsDlgBtns'">
+    <form id="fm" method="post" novalidate>
+        <div class="fitem">
+            <label>房间:</label>
+            <input name="firstname" class="easyui-textbox" style="width:345px;">
+            <input type="checkbox" checked>非房间产生的流水
+        </div>
+        <div class="fitem">
+            <label>费用类型:</label>
+            <input name="lastname" class="easyui-textbox" style="width:150px;">
+            <label style="margin-left:10px;width:auto;">费用:</label>
+            <input name="lastname" class="easyui-textbox" style="width:150px;">元
+            <a class="btn-link" style="margin-left:10px;"><span class="l-btn-icon icon-remove" style="position: static;margin-right:10px;">&nbsp;</span>删除</a>
+        </div>
+        <div class="fitem">
+            <a class="btn-link"><span class="l-btn-icon icon-add" style="position: static;margin-right:10px;">&nbsp;</span>添加费用</a>
+        </div>
+        <div class="fitem">
+            <label>交易时间:</label>
+            <input class="easyui-datebox" style="width:150px;"></input>
+            <label style="margin-left:10px;width:auto;">支付方式:</label>
+            <input name="lastname" class="easyui-textbox" style="width:150px;">元
+        </div>
+        <div class="fitem">
+            <label>备注:</label>
+            <textarea name="email" class="easyui-textarea" style="width:345px;"></textarea>
+        </div>
+        <div class="fitem">
+            <label>共计应收:</label>
+            <span>20000元</span>
+            <label style="margin-left:10px;width:auto;">已收:</label>
+            <input name="lastname" class="easyui-textbox" style="width:150px;">元
+        </div>
+    </form>
+</div>
+<div id="documentsDlgBtns">
+    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="javascript:$('.easyui-dialog').dialog('close')" style="width:90px">确认</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('.easyui-dialog').dialog('close')" style="width:90px">取消</a>
+</div>
+
+<script>
+ys.modules.House =  (function(){
+    function loadMainData(){
+        $.ajax({
+            url: '/YSService/HouseService/GetDataList',
+            method: 'POST',
+            data: JSON.stringify({}),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (resp) {
+                $('#communityTab').find('table.main').datagrid('loadData', {
+                    total: resp.length,
+                    rows: resp
+                });
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    function saveMainItem(){
+        var dlg = $('#editHouseDlg'), form = dlg.find('form');
+        if(!form.form('validate'))return;
+        var formData =  form.serializeArray();
+        var data = {};
+        $.each(formData, function(i, v) {
+            data[v.name] = v.value;
+        });
+        var url = '/YSService/HouseService/Add';
+        if(data['HouseID'] != '0'){
+            url = '/YSService/HouseService/Update';
+        }
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: JSON.stringify(data),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (msg) {
+                loadMainData();
+                dlg.dialog('close');
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    return {
+        loadMainData: loadMainData,
+        saveMainItem: saveMainItem
+    };
+})();
+
+
+window.grid.cfg.house = {
+    singleSelect:true,
+    columns:[[
+        {field:'HouseNO',title:'编号',width:100},
+        {field:'CommunityName',title:'社区',width:100},
+        {field:'VillageName',title:'小区',width:100},
+        {field:'OwnerName',title:'业主',width:100},
+        {field:'Address',title:'地址',width:100},
+        {field:'HouseStatusName',title:'状态',width:100},
+        {field:'price',title:'备注',width:100}
+    ]],
+    toolbar: [{
+        id: '',
+        text: '新增',
+        iconCls: 'icon-add',
+        handler: function () {
+            var dlg = $('#editHouseDlg'), form = dlg.find('form');
+            dlg.dialog('open').dialog('center').dialog('setTitle','新增房源');
+            form.form('clear');
+            form.form('load', {HouseID:0});
+        }
+    }, "-", {
+        id: '',
+        text: '编辑',
+        iconCls: 'icon-edit',
+        handler: function () {
+            var dlg = $('#editHouseDlg'), form = dlg.find('form'), mainTbl = $('#houseTab').find('table.main');
+            if(mainTbl.datagrid('getSelections').length < 1){
+                $.messager.alert('提示','请先选择要编辑的数据','info');
+                return;
+            }
+            dlg.dialog('open').dialog('center').dialog('setTitle','编辑房源');
+            form.form('load', mainTbl.datagrid('getSelected'));
+        }
+    }, "-", {
+        id: '',
+        text: '删除',
+        iconCls: 'icon-remove',
+        handler: confirmRemove
+    }, "-"]
+};
+
+ys.modules.House.loadMainData();
+</script>

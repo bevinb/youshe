@@ -1,0 +1,50 @@
+html{height:100%;}
+body {
+    font-family: "Microsoft YaHei","微软雅黑","宋体",Helvetica,Tahoma,Arial,sans-serif;
+    font-size:12px;
+    margin:0;
+	height:100%;
+}
+.logo {
+	float:left;
+    margin-left: 20px;
+    font-size:18px;
+    font-weight:bold;
+	color:#fff;
+	line-height:48px;
+}
+.demo-info{
+	padding:0 0 12px 0;
+}
+.demo-tip{
+	display:none;
+}
+
+
+#Headermenu{float:right;margin-right:0px;}
+#topnav ul{position:relative;}
+#topnav li.list{float:left;display:inline;margin:0px 12px 0px 0px;}
+#topnav li a{cursor:pointer;display:inline;float:left;width:55px;text-align:center;height:56px;padding:5px 7px 0px;text-decoration:none;color:#fff;text-shadow:0px -1px rgba(0,0,0,0.2);-webkit-border-radius:3px;border-radius:3px;overflow:hidden;-moz-border-radius:5px;/* Gecko browsers */ -webkit-border-radius:5px;/* Webkit browsers */ border-radius:5px;/* W3C syntax */}
+#topnav li a:hover{background:rgba(0, 0, 0, 0.25);}
+#topnav li a.onnav{background:rgba(0, 0, 0, 0.25);}
+#topnav li a span{display:block;margin:0px auto 3px;width:32px;height:32px;overflow:hidden;}
+#topnav li a span.c1{background:url(../img/n1.png) no-repeat;}
+#topnav li a span.c2{background:url(../img/n2.png) no-repeat;}
+#topnav li a span.c3{background:url(../img/n3.png) no-repeat;}
+#topnav li a span.c4{background:url(../img/n4.png) no-repeat;}
+#topnav li a span.c5{background:url(../img/n5.png) no-repeat;}
+#topnav li a span.c6{background:url(../img/n6.png) no-repeat;}
+#topnav li a span.c7{background:url(../img/n7.png) no-repeat;}
+
+.submenu{background: #FFF;font-size: 14px;overflow:auto;margin:0;paddig:0 !important;}
+.submenu li{border-bottom: 1px solid #ccc;display: block;position: relative;cursor: pointer;}
+.submenu li img{position: absolute;top: 10px;left: 15px;font-size: 18px;color: #595959;cursor: pointer;}
+.submenu li.open{border-bottom:none;}
+.submenu li.open .link{border-bottom: 1px solid #ccc;}
+.submenu .link{cursor: pointer;display: block;border-bottom:none;}
+.submenu .link i.submenu-chevron-down{position: absolute;right: 10px;top: 9px;width: 16px;height: 16px;display: block;background: url(../Images/layout_arrows.png) repeat-x;background-position-x: 500%;}
+.submenu .link:hover i.submenu-chevron-down{background: url(../Images/layout_arrows_white.png) repeat-x;background-position-x: 500%;}
+.submenu .action i.submenu-chevron-down{background: url(../Images/layout_arrows_white.png) repeat-x;background-position-x: 500%;background-position-y: 97%;}
+.submenu a{cursor: pointer;display: block;text-decoration: none;-moz-user-select: none;outline:none;blr:expression(this.onFocus=this.blur());height: 35px;line-height: 35px;padding-left: 42px;}
+.submenu a:hover{background: #4A5B79;color: #FFF;}
+.submenu .action{background: #4A5B79;color: #FFF;}
