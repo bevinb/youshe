@@ -331,6 +331,9 @@ ys.modules.HouseOnline =  (function(){
 
 window.grid.cfg.houseOnline = {
     singleSelect:true,
+    rownumbers: true,
+    pagination: true,
+    fit: true,
     columns:[[
         {field:'HouseNO',title:'编号',width:100},
         {field:'CommunityName',title:'社区',width:100},
@@ -349,8 +352,7 @@ window.grid.cfg.houseOnline = {
 
 window.grid.cfg.houseOnline.contract = {
     singleSelect:true,
-    rownumbers: true,
-    pagination: true,
+    fit: true,
     columns:[[
         {field:'ContractNo',title:'合同编号',width:100},
         {field:'ContractStatusName',title:'状态',width:100},
@@ -385,6 +387,7 @@ window.grid.cfg.houseOnline.contract = {
 window.grid.cfg.houseOnline.cost = {
     singleSelect:true,
     rownumbers: true,
+    fit: true,
     columns:[[
         {field:'HouseCostTypeName',title:'费用类型',width:100},
         {field:'AccountNO',title:'账号',width:100},
@@ -410,6 +413,7 @@ window.grid.cfg.houseOnline.cost = {
 window.grid.cfg.houseOnline.renovation = {
     singleSelect:true,
     rownumbers: true,
+    fit: true,
     columns:[[
         {field:'RoomNo',title:'房间号',width:100},
         {field:'Direction',title:'朝向',width:100},
@@ -473,6 +477,7 @@ window.grid.cfg.houseOnline.renovation = {
 
 window.grid.cfg.houseOnline.upImg = {
     singleSelect:true,
+    fit: true,
     columns:[[
     ]],
     toolbar: [{
@@ -494,6 +499,7 @@ window.grid.cfg.houseOnline.upImg = {
 window.grid.cfg.houseOnline.roomPrice = {
     singleSelect:true,
     rownumbers: true,
+    fit: true,
     columns:[[
         {field: 'code', title: '房间编号', width: 100},
         {field: 'code', title: '状态', width: 100},
