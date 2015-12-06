@@ -17,6 +17,46 @@ span.label {
 	padding:0 5px;
 }
 
+.masonry-grid {
+  width:100%;
+}
+.masonry-grid .card {
+  width:22.5%;
+  margin:1%;
+  border: 1px solid #95B8E7;
+}
+.card > h5{
+  padding:0 10px;
+  margin:0;
+  line-height:30px;
+  border-bottom: 1px solid #95B8E7;
+}
+.card .card-content{
+  padding:10px;
+}
+.card .card-content .card-content-item  {
+  height:48px;
+}
+.card .card-content .card-content-item p {
+  margin:0;
+  line-height:20px;
+}
+.card .card-content .item-head {
+  background: gray;
+  text-align: center;
+  margin-right:10px;
+  padding:4px 2px;
+}
+.card .card-content .item-head.status0 {
+  background: green;
+}
+
+.pull-left {
+  float:left;
+}
+.pull-right {
+  float:left;
+}
 .clearfix:after {
 	content: " "; /* Older browser do not support empty content */
 	visibility: hidden;

@@ -1,32 +1,33 @@
 <div class="easyui-layout" data-options="fit:true">
-    <div data-options="region:'center'">
-        <div class="easyui-layout" data-options="fit:true" style="overflow: auto;">
-            <div style="padding:10px 60px 20px 60px;">
-                <h5>房间信息</h5>
-                <form  method="post" novalidate>
-                    <input name="RoomID" type="hidden">
-                    <table cellpadding="5">
-                        <tr>
-                            <td>房间编号:</td>
-                            <td><input name="RoomNo" class="easyui-textbox" style="width:150px;" readonly></td>
-                            <td>朝向:</td>
-                            <td>
-                                <input name="Direction" class="easyui-textbox" style="width:150px;" readonly>
-                            <td>面积:</td>
-                            <td>
-                                <input name="RoomArae" class="easyui-textbox" style="width:150px;" readonly>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>配套设施:</td>
-                            <td colspan="5">
-                                <input name="RommRenovation" class="easyui-textbox" style="width:100%;" readonly>
-                            </td>
-                        </tr>
-                    </table>
-                </form>
+    <div data-options="region:'north',split:true" style="height:60px;padding:10px;">
+        <form class="top-search-form">
+            <input type="hidden" name="CommunityID">
+            <input type="hidden" name="VillageID">
+            <input type="hidden" name="HouseID">
+            <input type="hidden" name="RoomID">
+            <table>
+                <tr>
+                    <td>房间：<input class="easyui-combotree" data-options="
+                    					url:'/YSService/BaseInfoService/GetTree3',
+                                        method:'get',
+                                        animate:true,
+                                        panelHeight: 'auto',
+                                        panelWidth: 300,
+                                        valueField:'id',
+                                        textField:'text',
+                                        onClick: ys.modules.SignRoom.onRoomTreeChange
+                             " style="width:200px;">
+                    </td>
+                    <td><input type="button" value="查询" onclick="ys.modules.SignRoom.loadMainData()"></input></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <div data-options="region:'center'"><table class="main"></table></div>
+    <div data-options="region:'south',split:true" style="height:260px;padding:10px;">
+            <div>
                 <h5>入住人信息</h5>
-                <form  method="post" novalidate>
+                <form class="signForm" method="post" novalidate>
                     <input name="RoomID" type="hidden">
                     <table cellpadding="5">
                         <tr>
@@ -153,26 +154,11 @@
                             <td></td>
                         </tr>
                     </table>
-                    <div style="width:100%;">
-                        <div class="easyui-panel" title="优惠项" style="width:100%;height:200px;padding:10px;">
-                            <table id="signRoomTabDiscountGrid" class="easyui-datagrid"
-                                   data-options="singleSelect:true,fit:true,fitColumns:true">
-                                <thead>
-                                <tr>
-                                    <th data-options="field:'DiscountName'" width="80">编号</th>
-                                    <th data-options="field:'DiscountName'" width="100">活动名称</th>
-                                    <th data-options="field:'DiscountBegin'" width="100">开始时间</th>
-                                    <th data-options="field:'DiscountEnd'" width="100">结束时间</th>
-                                    <th data-options="field:'FristAmount'" width="100">首次减免数</th>
-                                    <th data-options="field:'MonthDiscount'" width="100">每月折扣</th>
-                                    <th data-options="field:'MonthAmount'" width="100">每月减免数</th>
-                                </tr>
-                                </thead>
-                            </table>
-                        </div>
-                    </div>
+                    <h5>优惠项 <a href="javascript:void(0)" class="easyui-link c6" iconCls="icon-edit" onclick="ys.modules.SignRoom.openDiscountDlg()" style="width:90px">修改</a></h5>
+                    <input type="hidden" name="DiscountID">
+                    <div id="signRoomTabFormDiscountInfo"></div>
                     <h5>签约备注</h5>
-                    <div><textarea name="Remarks" style="width:100%;height:90px;"></textarea></div>
+                    <div><textarea name="Remarks" style="width:100%;" rows="3"></textarea></div>
                 </form>
                 <div id="signTenantContractDlgBtns">
                     <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="ys.modules.SignRoom.confirm()" style="width:90px">确认</a>
@@ -181,40 +167,49 @@
             </div>
         </div>
     </div>
-    <div data-options="region:'west',split:true" style="width:280px;">
-        <ul id="signRoomTabLeftTree" class="easyui-tree" data-options="
-					url:'/YSService/BaseInfoService/GetTree4',
-					method:'get',
-					animate:true,
-					onClick: ys.modules.SignRoom.loadRoom
-				">
-        </ul>
+</div>
+
+<div id="signRoomTabDiscountDlg" class="easyui-dialog" style="width:800px;"  modal="true"
+     closed="true" buttons="#signRoomTabDiscountDlgBtns">
+    <div class="easyui-layout" data-options="fit:true" style="height:550px;">
+        <div data-options="region:'center'">
+            <table id="signRoomTabDiscountGrid" class="easyui-datagrid"
+                   data-options="singleSelect:true,fit:true,fitColumns:true">
+                <thead>
+                <tr>
+                    <th data-options="field:'CK',checkbox:true" width="80"></th>
+                    <th data-options="field:'DiscountName'" width="100">活动名称</th>
+                    <th data-options="field:'DiscountBegin'" width="100">开始时间</th>
+                    <th data-options="field:'DiscountEnd'" width="100">结束时间</th>
+                    <th data-options="field:'FristAmount'" width="100">首次减免数</th>
+                    <th data-options="field:'MonthDiscount'" width="100">每月折扣</th>
+                    <th data-options="field:'MonthAmount'" width="100">每月减免数</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
     </div>
+</div>
+<div id="signRoomTabDiscountDlgBtns">
+    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="javascript:ys.modules.SignRoom.selectDiscount()" style="width:90px">确认</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('.easyui-dialog').dialog('close')" style="width:90px">取消</a>
 </div>
 
 <script>
 ys.modules.SignRoom =  (function(){
-    function loadRoom(node){
-        var form = $('#signRoomTab').find('form');
-        form.form('clear');
-        if(node.type != 'room'){
-            return;
-        }
-        form.form('load', {RoomID: node.id});
+    function loadMainData(){
+        var params = $.form2JsonNotNull($('#signRoomTab').find('.top-search-form'));
         $.ajax({
             url: '/YSService/OnLineService/GetRoomInfo',
             method: 'POST',
-            data: JSON.stringify({RoomID: node.id}),
+            data: JSON.stringify(params),
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             success: function (resp) {
-                var room = resp[0];
-                var result = '', v = room.RommRenovation;
-                for(var i = 0; v && i < v.length; ++i){
-                    result += i == v.length - 1? (v[i].RenovationName + ', ') : v[i].RenovationName;
-                }
-                room.RenovationName = result;
-                form.form('load', room);
+                $('#signRoomTab').find('table.main').datagrid('loadData', {
+                    total: resp.length,
+                    rows: resp
+                });
             },
             error: function (XMLHttpRequest, textStatus, thrownError) {
                 alert("Error Occured!");
@@ -222,13 +217,43 @@ ys.modules.SignRoom =  (function(){
         });
     };
 
-    function confirm(){
-        var node = $('#signRoomTabLeftTree').tree('getSelected');
-        if(!node || node.type != 'room'){
-            $.messager.alert('提示','请先选择要签约的房间','info');
+    function onRoomTreeChange(node){
+        var form = $('#signRoomTab').find('.top-search-form');
+        if(node.type=='community'){
+            form.form('load',{CommunityID:node.id,VillageID:'',HouseID:'',RoomID:''});
+        } if(node.type=='village'){
+            form.form('load',{CommunityID:'',VillageID:node.id,HouseID:'',RoomID:''});
+        } if(node.type=='house'){
+            form.form('load',{CommunityID:'',VillageID:'',HouseID:node.id,RoomID:''});
+        }
+    };
+
+    function selectDiscount(i, data){
+        var tbl = $('#signRoomTabDiscountGrid');
+        if(tbl.datagrid('getSelections').length < 1){
+            $.messager.alert('提示','请先选择一个优惠项！','info');
             return;
         }
-        var form = $($('#signRoomTab').find('form').get(1));
+        var discount = tbl.datagrid('getSelected');
+        $('#signRoomTab').find('form.signForm').form('load',{'DiscountID': discount.DiscountID});
+        var info = discount.DiscountName + ': ' +
+                (discount.FristAmount? (' 首次减免' + discount.FristAmount) : '')  +
+                (discount.MonthDiscount? (' 每月折扣' + discount.MonthDiscount) : '')  +
+                (discount.MonthAmount? (' 每月减免' + discount.MonthAmount) : '');
+        $('#signRoomTabFormDiscountInfo').html(info);
+        $('.easyui-dialog').dialog('close');
+    };
+
+    function openDiscountDlg(){
+        $('#signRoomTabDiscountDlg').dialog('open').dialog('center').dialog('setTitle','选择优惠项');
+    };
+
+    function confirm(){
+        if($('#signRoomTab').find('table.main').datagrid('getSelections').length < 1){
+            $.messager.alert('提示','请先选择要签约的房间！','info');
+            return;
+        }
+        var form = $('#signRoomTab').find('form.signForm');
         if(!form.form('validate'))return;
         var formData =  form.serializeArray();
         var data = {};
@@ -243,10 +268,6 @@ ys.modules.SignRoom =  (function(){
                 data[v.name] = v.value;
             }
         });
-        data.RoomID = node.id;
-        if($('#signRoomTabDiscountGrid').datagrid('getSelections').length > 0){
-            data.DiscountID = $('#signRoomTabDiscountGrid').datagrid('getSelected').DiscountID;
-        }
 
         $.ajax({
             url: '/YSService/TenantContractService/Add',
@@ -264,10 +285,35 @@ ys.modules.SignRoom =  (function(){
     };
 
     return {
-        loadRoom: loadRoom,
+        onRoomTreeChange: onRoomTreeChange,
+        loadMainData: loadMainData,
+        openDiscountDlg: openDiscountDlg,
+        selectDiscount: selectDiscount,
         confirm: confirm
     };
 })();
+
+window.grid.cfg.signRoom = {
+    singleSelect:true,
+    rownumbers: true,
+    fit: true,
+    columns:[[
+        {field:'RoomNo',title:'房间号',width:70},
+        {field:'Direction',title:'朝向',width:40},
+        {field:'RoomArae',title:'面积(m<sup>2</sup>)',width:60},
+        {field:'RommRenovation',title:'配套设施',width:300, formatter: function(v){
+            var result = '';
+            for(var i = 0; v && i < v.length; ++i){
+                result += i == v.length - 1? (v[i].RenovationName + ', ') : v[i].RenovationName;
+            }
+        }}
+    ]],
+    onSelect:function(i, data){
+        var form = $('#signRoomTab').find('form.signForm');
+        form.form('clear');
+        form.form('load', {RoomID: data.RoomID});
+    }
+};
 
 (function(){
     $.ajax({

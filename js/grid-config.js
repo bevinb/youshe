@@ -125,41 +125,6 @@ window.grid.cfg = {
 		}, "-"]
 	},
 
-	tenantContract: {
-		singleSelect:true,
-		columns:[[
-			{field:'code',title:'合同编号',width:100},
-			{field:'code',title:'月租金',width:100},
-			{field:'price',title:'最后修改日期:',width:100},
-			{field:'name',title:'实际付款日期',width:100},
-			{field:'price',title:'支付备注:',width:100},
-			{field:'price',title:'录入人:',width:100},
-			{field:'price',title:'录入日期:',width:100}
-		]],
-		toolbar: [{
-			id: '',
-			text: '预定',
-			iconCls: 'icon-add',
-			handler: function () {
-				$('#reserveTenantContractDlg').dialog('open').dialog('center').dialog('setTitle','预定');
-			}
-		}, "-", {
-			id: '',
-			text: '签约',
-			iconCls: 'icon-add',
-			handler: function () {
-				$('#signTenantContractDlg').dialog('open').dialog('center').dialog('setTitle','签约');
-			}
-		}, "-", {
-			id: '',
-			text: '退房',
-			iconCls: 'icon-add',
-			handler: function () {
-				$('#finishTenantContractDlg').dialog('open').dialog('center').dialog('setTitle','退房');
-			}
-		}, "-"]
-	},
-
 	documents: {
 		singleSelect:true,
 		columns:[[

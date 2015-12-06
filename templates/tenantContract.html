@@ -2,11 +2,25 @@
     <div data-options="region:'center'">
         <div class="easyui-layout" data-options="fit:true">
             <div data-options="region:'north',split:true" style="height:90px;">
-                <form>
+                <form class="top-search-form">
+                    <input type="hidden" name="CommunityID">
+                    <input type="hidden" name="VillageID">
+                    <input type="hidden" name="HouseID">
+                    <input type="hidden" name="RoomID">
                     <table>
                         <tr>
-                            <td>小区名称:</td>
-                            <td><input name="phone" class="f1 easyui-textbox" style="width:100px"></td>
+                            <td>房间：</td>
+                            <td><input class="easyui-combotree" data-options="
+                    					url:'/YSService/BaseInfoService/GetTree3',
+                                        method:'get',
+                                        animate:true,
+                                        panelHeight: 'auto',
+                                        panelWidth: 300,
+                                        valueField:'id',
+                                        textField:'text',
+                                        onClick: ys.modules.TenantContract.onRoomTreeChange
+                             " style="width:200px;">
+                            </td>
                             <td>房东电话：<input name="phone" class="f1 easyui-textbox" style="width:100px">房东姓名：<input name="phone" class="f1 easyui-textbox" style="width:100px"></td>
                         </tr>
                         <tr>
@@ -20,7 +34,7 @@
                         </tr>
                         <tr>
                             <td></td>
-                            <td><input type="button" value="查询"></input></td>
+                            <td><input type="button" value="查询" onclick="ys.modules.TenantContract.loadMainData()"></input></td>
                             <td></td>
                         </tr>
                     </table>
@@ -33,23 +47,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div data-options="region:'west',split:true" style="width:280px;">
-        <ul class="easyui-tree">
-            <li>
-                <span>全部</span>
-                <ul>
-                    <li>
-                        <span>1号社区</span>
-                        <ul>
-                            <li>01号房源</li>
-                            <li>02号房源</li>
-                        </ul>
-                    </li>
-                    <li>某社区</li>
-                </ul>
-            </li>
-        </ul>
     </div>
 </div>
 
@@ -150,3 +147,68 @@
     <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="javascript:$('.easyui-dialog').dialog('close')" style="width:90px">保存</a>
     <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('.easyui-dialog').dialog('close')" style="width:90px">取消</a>
 </div>
+
+<script>
+    ys.modules.TenantContract =  (function(){
+        function loadMainData(){
+            var params = $.form2JsonNotNull($('#tenantContractTab').find('.top-search-form'));
+            $.ajax({
+                url: '/YSService/TenantContractService/GetDataList',
+                method: 'POST',
+                data: JSON.stringify(params),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (resp) {
+                    $.each(resp, function(i,item){
+                        item['BeginDate'] = $.wcfDate2JsDateStr(item['BeginDate']);
+                        item['EndDate'] = $.wcfDate2JsDateStr(item['EndDate']);
+                        item['CreateDate'] = $.wcfDate2JsDateStr(item['CreateDate']);
+                    });
+                    $('#tenantContractTab').find('table.main').datagrid('loadData', {
+                        total: resp.length,
+                        rows: resp
+                    });
+                },
+                error: function (XMLHttpRequest, textStatus, thrownError) {
+                    alert("Error Occured!");
+                }
+            });
+        };
+
+        function onRoomTreeChange(node){
+            var form = $('#tenantContractTab').find('.top-search-form');
+            if(node.type=='community'){
+                form.form('load',{CommunityID:node.id,VillageID:'',HouseID:'',RoomID:''});
+            } if(node.type=='village'){
+                form.form('load',{CommunityID:'',VillageID:node.id,HouseID:'',RoomID:''});
+            } if(node.type=='house'){
+                form.form('load',{CommunityID:'',VillageID:'',HouseID:node.id,RoomID:''});
+            }
+        };
+
+
+        return {
+            onRoomTreeChange: onRoomTreeChange,
+            loadMainData: loadMainData
+        };
+    })();
+
+    window.grid.cfg.tenantContract = {
+        singleSelect:true,
+        rownumbers: true,
+        pagination: true,
+        fit: true,
+        columns:[[
+            {field:'TenantContractNo',title:'合同编号',width:100},
+            {field:'ContractStatusName',title:'状态',width:100},
+            {field:'BeginDate',title:'开始日期',width:100},
+            {field:'EndDate',title:'结束日期',width:100},
+            {field:'TenantName',title:'入住人',width:100, formatter:function(v,r){return r.TenantInfo.TenantName;}},
+            {field:'Rent',title:'月租金(元)',width:100},
+            {field:'Deposit',title:'押金(元)',width:100},
+            {field:'Remarks',title:'备注信息',width:100},
+            {field:'Creater',title:'录入人',width:100},
+            {field:'CreateDate',title:'录入日期',width:100}
+        ]]
+    };
+</script>

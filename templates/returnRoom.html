@@ -1,7 +1,32 @@
 <div class="easyui-layout" data-options="fit:true">
-    <div data-options="region:'center'">
+    <div data-options="region:'north',split:true" style="height:60px;padding:10px;">
+        <form class="top-search-form">
+            <input type="hidden" name="CommunityID">
+            <input type="hidden" name="VillageID">
+            <input type="hidden" name="HouseID">
+            <input type="hidden" name="RoomID">
+            <table>
+                <tr>
+                    <td>房间：<input class="easyui-combotree" data-options="
+                    					url:'/YSService/BaseInfoService/GetTree3',
+                                        method:'get',
+                                        animate:true,
+                                        panelHeight: 'auto',
+                                        panelWidth: 300,
+                                        valueField:'id',
+                                        textField:'text',
+                                        onClick: ys.modules.ReturnRoom.onRoomTreeChange
+                             " style="width:200px;">
+                    </td>
+                    <td><input type="button" value="查询" onclick="ys.modules.ReturnRoom.loadMainData()"></input></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <div data-options="region:'center'"><table class="main"></table></div>
+    <div data-options="region:'south',split:true" style="height:260px;padding:10px;">
         <div class="easyui-layout" data-options="fit:true" style="overflow: auto;">
-            <div style="padding:10px 60px 20px 60px">
+            <div>
                 <h5>入住人信息</h5>
                 <form id="fm" method="post" novalidate>
                     <table cellpadding="5">
@@ -137,74 +162,122 @@
             </div>
         </div>
     </div>
-    <div data-options="region:'west',split:true" style="width:280px;">
-        <ul class="easyui-tree" data-options="
-					url:'/YSService/BaseInfoService/GetTree4',
-					method:'get',
-					animate:true,
-					onClick: ys.modules.ReturnRoom.loadRoom
-				">
-        </ul>
-    </div>
 </div>
 
 <script>
-    ys.modules.ReturnRoom =  (function(){
-        function loadRoom(node){
-            var form = $('#returnRoomTab').find('form');
-            form.form('clear');
-            if(node.type != 'room'){
-                return;
+ys.modules.ReturnRoom =  (function(){
+
+    function loadMainData(){
+        var params = $.form2JsonNotNull($('#returnRoomTab').find('.top-search-form'));
+        $.ajax({
+            url: '/YSService/OnLineService/GetRoomInfo',
+            method: 'POST',
+            data: JSON.stringify(params),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (resp) {
+                $('#returnRoomTab').find('table.main').datagrid('loadData', {
+                    total: resp.length,
+                    rows: resp
+                });
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
             }
-            form.form('load', {RoomID: node.id});
-            $.ajax({
-                url: '/YSService/OnLineService/GetRoomInfo',
-                method: 'POST',
-                data: JSON.stringify({RoomID: node.id}),
-                dataType: "json",
-                contentType: "application/json; charset=utf-8",
-                success: function (resp) {
-                    var room = resp[0];
-                    var result = '', v = room.RommRenovation;
-                    for(var i = 0; v && i < v.length; ++i){
-                        result += i == v.length - 1? (v[i].RenovationName + ', ') : v[i].RenovationName;
-                    }
-                    room.RenovationName = result;
-                    form.form('load', room);
-                },
-                error: function (XMLHttpRequest, textStatus, thrownError) {
-                    alert("Error Occured!");
+        });
+    };
+
+    function onRoomTreeChange(node){
+        var form = $('#returnRoomTab').find('.top-search-form');
+        if(node.type=='community'){
+            form.form('load',{CommunityID:node.id,VillageID:'',HouseID:'',RoomID:''});
+        } if(node.type=='village'){
+            form.form('load',{CommunityID:'',VillageID:node.id,HouseID:'',RoomID:''});
+        } if(node.type=='house'){
+            form.form('load',{CommunityID:'',VillageID:'',HouseID:node.id,RoomID:''});
+        }
+    };
+
+    function loadRoom(node){
+        var form = $('#returnRoomTab').find('form');
+        form.form('clear');
+        if(node.type != 'room'){
+            return;
+        }
+        form.form('load', {RoomID: node.id});
+        $.ajax({
+            url: '/YSService/OnLineService/GetRoomInfo',
+            method: 'POST',
+            data: JSON.stringify({RoomID: node.id}),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (resp) {
+                var room = resp[0];
+                var result = '', v = room.RommRenovation;
+                for(var i = 0; v && i < v.length; ++i){
+                    result += i == v.length - 1? (v[i].RenovationName + ', ') : v[i].RenovationName;
                 }
-            });
-        };
+                room.RenovationName = result;
+                form.form('load', room);
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
 
-        function confirm(){
-            var form = $($('#returnRoomTab').find('form').get(1));
-            if(!form.form('validate'))return;
-            var formData =  form.serializeArray();
-            var data = {};
-            $.each(formData, function(i, v) {
-                data[v.name] = v.value;
-            });
+    function confirm(){
+        var form = $($('#returnRoomTab').find('form').get(1));
+        if(!form.form('validate'))return;
+        var formData =  form.serializeArray();
+        var data = {};
+        $.each(formData, function(i, v) {
+            data[v.name] = v.value;
+        });
 
-            $.ajax({
-                url: '/YSService/TenantContractService/StopContract',
-                type: "POST",
-                data: JSON.stringify(data),
-                dataType: "json",
-                contentType: "application/json; charset=utf-8",
-                success: function (msg) {
-                    $.messager.alert('提示','退房成功！','success');
-                },
-                error: function (XMLHttpRequest, textStatus, thrownError) {
-                    alert("Error Occured!");
-                }
-            });
-        };
+        $.ajax({
+            url: '/YSService/TenantContractService/StopContract',
+            type: "POST",
+            data: JSON.stringify(data),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (msg) {
+                $.messager.alert('提示','退房成功！','success');
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
 
-        return {
-            loadRoom: loadRoom,
-            confirm: confirm
-        };
-    })();
+    return {
+        loadMainData: loadMainData,
+        onRoomTreeChange: onRoomTreeChange,
+        loadRoom: loadRoom,
+        confirm: confirm
+    };
+})();
+
+window.grid.cfg.returnRoom = {
+    singleSelect:true,
+    rownumbers: true,
+    fit: true,
+    columns:[[
+        {field:'RoomNo',title:'房间号',width:70},
+        {field:'Direction',title:'朝向',width:40},
+        {field:'RoomArae',title:'面积(m<sup>2</sup>)',width:60},
+        {field:'RommRenovation',title:'配套设施',width:300, formatter: function(v){
+            var result = '';
+            for(var i = 0; v && i < v.length; ++i){
+                result += i == v.length - 1? (v[i].RenovationName + ', ') : v[i].RenovationName;
+            }
+        }}
+    ]],
+    onSelect:function(i, data){
+        var form = $('#signRoomTab').find('form.signForm');
+        form.form('clear');
+        form.form('load', {RoomID: data.RoomID});
+    }
+};
+
 </script>

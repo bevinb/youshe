@@ -31,6 +31,17 @@ $.extend({
 		return y + '-' + (m > 9? m: ('0' + m)) + '-' + (d > 9? d: ('0' + d));
 	},
 
+	form2JsonNotNull: function(form){
+		var formData =  form.serializeArray();
+		var data = {};
+		$.each(formData, function(i, v) {
+			if (v === 0 || v.value) {
+				data[v.name] = v.value;
+			}
+		});
+		return data;
+	},
+
 	form2Json: function(form){
 		var formData =  form.serializeArray();
 		var data = {};

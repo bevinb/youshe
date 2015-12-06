@@ -1,42 +1,110 @@
-<script type="text/template" id="trendsTbTpl" >
-    <form>
-        <table>
-            <tr>
-                <td>社区筛选:</td>
-                <td><select class="easyui-combobox" name="state" style="width:200px;"></select></td>
-            </tr>
-            <tr>
-                <td>房源筛选:</td>
-                <td>
-                    <select class="easyui-combobox" name="state" style=""><option>区域</option></select>
-                    <select class="easyui-combobox" name="state" style=""><option>地铁</option></select>
-                    <select class="easyui-combobox" name="state" style=""><option>价格</option></select>
-                    <select class="easyui-combobox" name="state" style=""><option>可订</option></select>
-                    <input name="phone" class="f1 easyui-textbox" style="width:20px">天可入住
-                </td>
-            </tr>
-            <tr>
-                <td>房间特色:</td>
-                <td>
-                    <label>独卫<input type="checkbox"></label>
-                    <label>飘窗<input type="checkbox"></label>
-                    <label>朝南<input type="checkbox"></label>
-                    <label>阳台<input type="checkbox"></label>
-                    <label>电视<input type="checkbox"></label>
-                    <label>可住2人<input type="checkbox"></label>
-                    <label>可住2人以上<input type="checkbox"></label>
-                    <label>整租<input type="checkbox"></label>
-                </td>
-            </tr>
-            <tr>
-                <td>排序:</td>
-                <td><a>面积</a><a>价格</a></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td><input type="submit" value="查询"></input></td>
-            </tr>
-        </table>
-    </form>
-    <div><img src="img/trends.png"></div>
+<div class="easyui-layout" data-options="fit:true">
+    <div data-options="region:'center'">
+        <div class="easyui-layout" data-options="fit:true">
+            <div data-options="region:'north',split:true" style="height:60px;padding:10px;">
+                <form class="top-search-form">
+                    <input type="hidden" name="CommunityID">
+                    <input type="hidden" name="VillageID">
+                    <input type="hidden" name="HouseID">
+                    <table>
+                        <tr>
+                            <td>房源：<input class="easyui-combotree" data-options="
+                    					url:'/YSService/BaseInfoService/GetTree3',
+                                        method:'get',
+                                        animate:true,
+                                        panelHeight: 'auto',
+                                        panelWidth: 300,
+                                        valueField:'id',
+                                        textField:'text',
+                                        onClick: ys.modules.Trends.onRoomTreeChange
+                             " style="width:200px;">
+                            </td>
+                            <td><input type="button" value="查询" onclick="ys.modules.Trends.loadMainData()"></td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+            <div data-options="region:'center'"><div class="masonry-grid"></div></div>
+        </div>
+    </div>
+</div>
+
+<script>
+ys.modules.Trends =  (function(){
+    function loadMainData(){
+        var params = $.form2JsonNotNull($('#trendsTab').find('.top-search-form'));
+        params.PageIndex = 1;
+        params.PageSize = 80;
+        $.ajax({
+            url: '/YSService/HouseRoomService/GetDataList',
+            method: 'POST',
+            data: JSON.stringify(params),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (resp) {
+                $('#trendsTab').find('.masonry-grid').masonry('destroy');
+                $('#trendsTab').find('.masonry-grid').empty();
+
+                for(var i = 0;i < resp.ListHouseInfo.length; ++i){
+                    var house = resp.ListHouseInfo[i];
+                    var htmlStr = '<div class="card">'
+                        + '<h5>' + house.CommunityName + '-' + house.HouseNO + '-' + house.VillageName + '</h5>'
+                        + '<div class="card-content">';
+                    for(var j = 0; j < house.RoomInfo.length; ++j){
+                        var room = house.RoomInfo[j];
+                        if(room.TenantInfo) {
+                            htmlStr += '<div class="card-content-item clearfix">'
+                                    + '<div class="pull-left item-head status' + room.RoomStatus + '">' + room.RoomNo + '<br>￥' + room.Rent + '</div>'
+                                    + '<div class="pull-left">'
+                                    + '<p>' + room.TenantInfo.Gender + ' | ' + room.TenantInfo.Profession + ' | ' + room.TenantInfo.ConstellationID +  ' | ' + room.TenantInfo.Hobbies + '</p>'
+                                    + '</div>'
+                                    + '</div>';
+                        } else {
+                            htmlStr += '<div class="card-content-item clearfix">'
+                                + '<div class="pull-left item-head status' + room.RoomStatus + '">' + room.RoomNo + '<br>￥' + room.Rent + '</div>'
+                                + '<div class="pull-left">'
+                                    + '<p>' + house.FloorCount + '/' + house.Floor + ' | ' + room.RoomArae + 'm<sup>2</sup>' + ' | ' + room.DirectionName + '</p>'
+                                    + '<p>' + room.RommRenovation.join(' ') + '</p>'
+                                + '</div>'
+                                + '</div>';
+                        }
+                    }
+                    htmlStr += '</div></div>';
+                    $('#trendsTab').find('.masonry-grid').append(htmlStr);
+                }
+                $('#trendsTab').find('.masonry-grid').masonry({
+                    // set itemSelector so .grid-sizer is not used in layout
+                    itemSelector: '.card',
+                    // use element for option
+                    percentPosition: true
+                });
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    function onRoomTreeChange(node){
+        var form = $('#trendsTab').find('.top-search-form');
+        if(node.type=='community'){
+            form.form('load',{CommunityID:node.id,VillageID:'',HouseID:'',RoomID:''});
+        } if(node.type=='village'){
+            form.form('load',{CommunityID:'',VillageID:node.id,HouseID:'',RoomID:''});
+        } if(node.type=='house'){
+            form.form('load',{CommunityID:'',VillageID:'',HouseID:node.id,RoomID:''});
+        }
+    };
+
+    return {
+        loadMainData: loadMainData,
+        onRoomTreeChange: onRoomTreeChange
+    };
+})();
+
+(function(){
+
+    ys.modules.Trends.loadMainData();
+})();
+
 </script>

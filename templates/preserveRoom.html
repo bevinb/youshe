@@ -1,31 +1,33 @@
 <div class="easyui-layout" data-options="fit:true">
-    <div data-options="region:'center'" style="overflow: auto;">
-        <div style="padding:10px 60px 20px 60px">
-            <h5>房间信息</h5>
-            <form  method="post" novalidate>
-                <input name="RoomID" type="hidden">
-                <table cellpadding="5">
-                    <tr>
-                        <td>房间编号:</td>
-                        <td><input name="RoomNo" class="easyui-textbox" style="width:150px;" readonly></td>
-                        <td>朝向:</td>
-                        <td>
-                            <input name="Direction" class="easyui-textbox" style="width:150px;" readonly>
-                        <td>面积:</td>
-                        <td>
-                            <input name="RoomArae" class="easyui-textbox" style="width:150px;" readonly>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>配套设施:</td>
-                        <td colspan="5">
-                            <input name="RommRenovation" class="easyui-textbox" style="width:100%;" readonly>
-                        </td>
-                    </tr>
-                </table>
-            </form>
+    <div data-options="region:'north',split:true" style="height:60px;padding:10px;">
+        <form class="top-search-form">
+            <input type="hidden" name="CommunityID">
+            <input type="hidden" name="VillageID">
+            <input type="hidden" name="HouseID">
+            <input type="hidden" name="RoomID">
+            <table>
+                <tr>
+                    <td>房间：<input class="easyui-combotree" data-options="
+                    					url:'/YSService/BaseInfoService/GetTree3',
+                                        method:'get',
+                                        animate:true,
+                                        panelHeight: 'auto',
+                                        panelWidth: 300,
+                                        valueField:'id',
+                                        textField:'text',
+                                        onClick: ys.modules.PreserveRoom.onRoomTreeChange
+                             " style="width:200px;">
+                    </td>
+                    <td><input type="button" value="查询" onclick="ys.modules.PreserveRoom.loadMainData()"></input></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <div data-options="region:'center'"><table class="main"></table></div>
+    <div data-options="region:'south',split:true" style="height:260px;padding:10px;">
+        <div>
             <h5>预定人信息</h5>
-            <form method="post" novalidate>
+            <form class="preserveForm" method="post" novalidate>
                 <input name="RoomID" type="hidden" data-options="required:true">
                 <table cellpadding="5">
                     <tr>
@@ -66,40 +68,23 @@
             </div>
         </div>
     </div>
-    <div data-options="region:'west',split:true" style="width:280px;">
-        <ul class="easyui-tree" data-options="
-					url:'/YSService/BaseInfoService/GetTree4',
-					method:'get',
-					animate:true,
-					onClick: ys.modules.PreserveRoom.loadRoom
-				">
-        </ul>
-    </div>
 </div>
 
 <script>
 ys.modules.PreserveRoom =  (function(){
-    function loadRoom(node){
-        var form = $('#preserveRoomTab').find('form');
-        form.form('clear');
-        if(node.type != 'room'){
-            return;
-        }
-        form.form('load', {RoomID: node.id});
+    function loadMainData(){
+        var params = $.form2JsonNotNull($('#preserveRoomTab').find('.top-search-form'));
         $.ajax({
             url: '/YSService/OnLineService/GetRoomInfo',
             method: 'POST',
-            data: JSON.stringify({RoomID: node.id}),
+            data: JSON.stringify(params),
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             success: function (resp) {
-                var room = resp[0];
-                var result = '', v = room.RommRenovation;
-                for(var i = 0; v && i < v.length; ++i){
-                    result += i == v.length - 1? (v[i].RenovationName + ', ') : v[i].RenovationName;
-                }
-                room.RenovationName = result;
-                form.form('load', room);
+                $('#preserveRoomTab').find('table.main').datagrid('loadData', {
+                    total: resp.length,
+                    rows: resp
+                });
             },
             error: function (XMLHttpRequest, textStatus, thrownError) {
                 alert("Error Occured!");
@@ -107,8 +92,23 @@ ys.modules.PreserveRoom =  (function(){
         });
     };
 
+    function onRoomTreeChange(node){
+        var form = $('#preserveRoomTab').find('.top-search-form');
+        if(node.type=='community'){
+            form.form('load',{CommunityID:node.id,VillageID:'',HouseID:'',RoomID:''});
+        } if(node.type=='village'){
+            form.form('load',{CommunityID:'',VillageID:node.id,HouseID:'',RoomID:''});
+        } if(node.type=='house'){
+            form.form('load',{CommunityID:'',VillageID:'',HouseID:node.id,RoomID:''});
+        }
+    };
+
     function confirm(){
-        var form = $($('#preserveRoomTab').find('form').get(1));
+        if($('#preserveRoomTab').find('table.main').datagrid('getSelections').length < 1){
+            $.messager.alert('提示','请先选择一个房间！','info');
+            return;
+        }
+        var form = $('#preserveRoomTab').find('form.preserveForm');
         if(!form.form('validate'))return;
         var formData =  form.serializeArray();
         var data = {};
@@ -136,7 +136,11 @@ ys.modules.PreserveRoom =  (function(){
     };
 
     function cancel(){
-        var form = $('#preserveRoomTab').find('form');
+        if($('#preserveRoomTab').find('table.main').datagrid('getSelections').length < 1){
+            $.messager.alert('提示','请先选择一个房间！','info');
+            return;
+        }
+        var form = $('#preserveRoomTab').find('form.preserveForm');
         if(!form.form('validate'))return;
         var formData =  form.serializeArray();
         var data = {};
@@ -160,11 +164,34 @@ ys.modules.PreserveRoom =  (function(){
     };
 
     return {
-        loadRoom: loadRoom,
+        onRoomTreeChange: onRoomTreeChange,
+        loadMainData: loadMainData,
         confirm: confirm,
         cancel: cancel
     };
 })();
+
+window.grid.cfg.preserveRoom = {
+    singleSelect:true,
+    rownumbers: true,
+    fit: true,
+    columns:[[
+        {field:'RoomNo',title:'房间号',width:70},
+        {field:'Direction',title:'朝向',width:40},
+        {field:'RoomArae',title:'面积(m<sup>2</sup>)',width:60},
+        {field:'RommRenovation',title:'配套设施',width:300, formatter: function(v){
+            var result = '';
+            for(var i = 0; v && i < v.length; ++i){
+                result += i == v.length - 1? (v[i].RenovationName + ', ') : v[i].RenovationName;
+            }
+        }}
+    ]],
+    onSelect:function(i, data){
+        var form = $('#preserveRoomTab').find('form.preserveForm');
+        form.form('clear');
+        form.form('load', {RoomID: data.RoomID});
+    }
+};
 </script>
 
 

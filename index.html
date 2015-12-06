@@ -54,17 +54,17 @@
 	<!--<div data-options="region:'south',split:true" style="height:50px;"></div>-->
 	<div id="leftMainMenu" data-options="region:'west',split:true" title="2015年8月29日" style="width:280px;">
 		<div class="easyui-accordion" data-options="fit:true,border:false">
-			<div title="房源中心" data-options="selected:true">
+			<div title="物业中心" data-options="selected:true">
 				<ul class="easyui-tree">
 					<li>
-						<span>房源中心</span>
+						<span>物业中心</span>
 						<ul>
                             <li data-options="tabLink:'property'">物业公司</li>
                             <li data-options="tabLink:'serviceCenter'">服务中心</li>
-						    <li data-options="tabLink:'community'">社区信息</li>
-							<li data-options="tabLink:'village'">小区信息</li>
-							<li data-options="tabLink:'house'">房源信息</li>
-							<li data-options="tabLink:'owner'">业主信息</li>
+						    <li data-options="tabLink:'community'">社区管理</li>
+							<li data-options="tabLink:'village'">楼盘字典</li>
+							<li data-options="tabLink:'house'">房源管理</li>
+							<li data-options="tabLink:'owner'">业主管理</li>
 							<li data-options="tabLink:'contract'">合同管理</li>					
 						</ul>
 					</li>
@@ -75,31 +75,32 @@
 					<li>
 						<span>物业管控</span>
 						<ul>
-						    <li data-options="tabLink:'houseOnline'">房源状态</li>
+						    <li data-options="tabLink:'houseOnline'">上线管控</li>
 						</ul>
 					</li>
 				</ul>
 			</div>
 			
-			<div title="市场运营">
+			<div title="运营中心">
 				<ul class="easyui-tree">
 					<li>
-						<span>市场运营</span>
+						<span>运营中心</span>
 						<ul>
-							<li data-options="tabLink:'discount'">营销信息</li>
-							<li data-options="tabLink:'renter'">房客信息</li>
+                            <li data-options="tabLink:'trends'">公寓房态</li>
                             <li data-options="tabLink:'preserveRoom'">预定</li>
                             <li data-options="tabLink:'signRoom'">签约</li>
                             <li data-options="tabLink:'returnRoom'">退房</li>
-							<li data-options="tabLink:'tenantContract'">入住合同管理</li>
+                            <li data-options="tabLink:'tenantContract'">合同列表</li>
+							<li data-options="tabLink:'renter'">租客管理</li>
+                            <li data-options="tabLink:'discount'">优惠项</li>
 						</ul>
 					</li>
 				</ul>
 			</div>
-			<div title="收支凭证">
+			<div title="财务管理">
 				<ul class="easyui-tree">
 					<li>
-						<span>收支凭证</span>
+						<span>财务管理</span>
 						<ul>
 							<li data-options="tabLink:'documents'">收支凭证</li>
                             <li data-options="tabLink:'otherPay'">其他费用</li>
@@ -113,7 +114,7 @@
 					<li>
 						<span>数据统计</span>
 						<ul>
-							<li data-options="tabLink:'trends'"><span >公寓房态</span></li>
+                            <li data-options="">运营数据</li>
 							<li data-options="">渠道分析</li>
 							<li data-options="">营业分析</li>
 						</ul>
@@ -125,8 +126,9 @@
 					<li>
 						<span>系统管理</span>
 						<ul>
-						    <li data-options="">用户信息</li>
-							<li data-options="">角色信息</li>
+                            <li data-options="">城市管理</li>
+						    <li data-options="">用户角色</li>
+							<li data-options="">操作日志</li>
 						</ul>
 					</li>
 				</ul>
@@ -475,15 +477,16 @@
     
 </body>
 
-<script type="text/javascript" src="jquery.min.js"></script>
-<script type="text/javascript" src="jquery.easyui.min.js"></script>
-<script type="text/javascript" src="jquery.portal.js"></script>
+<script type="text/javascript" src="lib/jquery.min.js"></script>
+<script type="text/javascript" src="lib/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="lib/jquery.portal.js"></script>
+<script type="text/javascript" src="lib/datagrid-cellediting.js"></script>
+<script type="text/javascript" src="lib/masonry.pkgd.js"></script>
 <script type="text/javascript" src="js/constant.js"></script>
 <script type="text/javascript" src="js/util.js"></script>
 <script type="text/javascript" src="js/session.js"></script>
 <script type="text/javascript" src="js/loader.js"></script>
 <script type="text/javascript" src="js/grid-config.js"></script>
 <script type="text/javascript" src="js/main.js"></script>
-<script type="text/javascript" src="datagrid-cellediting.js"></script>
 <script type="text/javascript" src="locale/easyui-lang-zh_CN.js"></script>
 </html>
