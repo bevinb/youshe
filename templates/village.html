@@ -1,4 +1,31 @@
 <div class="easyui-layout" data-options="fit:true">
+    <div data-options="region:'north',split:true" style="height:56px;padding:10px;">
+        <form class="top-search-form">
+            <table>
+                <tr>
+                    <td>社区：<input class="easyui-combobox"
+                                  name="CommunityID"
+                                  data-options="
+                            loader: ys.loaders.communityLoader,
+                            valueField:'CommunityID',
+                            textField:'CommunityName',
+                            panelHeight:'auto'
+                    ">
+                    </td>
+                    <td>物业公司：<input class="easyui-combobox"
+                                    name="PropertyID"
+                                    data-options="
+                            loader: ys.loaders.propertyLoader,
+                            valueField:'PropertyID',
+                            textField:'PropertyName',
+                            panelHeight:'auto'
+                    ">
+                    </td>
+                    <td><input type="button" value="查询" onclick="ys.modules.Village.loadMainData()"></td>
+                </tr>
+            </table>
+        </form>
+    </div>
     <div data-options="region:'center'"><table class="main"></table></div>
 </div>
 
@@ -57,14 +84,16 @@
 <script>
 ys.modules.Village =  (function(){
     function loadMainData(){
+        var mainTb = $('#villageTab');
+        var params = $.form2JsonNotNull(mainTb.find('.top-search-form'));
         $.ajax({
             url: '/YSService/VillageService/GetDataList',
             method: 'POST',
-            data: JSON.stringify({}),
+            data: JSON.stringify(params),
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             success: function (resp) {
-                $('#villageTab').find('table.main').datagrid('loadData', {
+                mainTb.find('table.main').datagrid('loadData', {
                     total: resp.length,
                     rows: resp
                 });
@@ -103,9 +132,36 @@ ys.modules.Village =  (function(){
         });
     };
 
+    function deleteMainItem(){
+        var mainTbl = $('#villageTab').find('table.main');
+        if(mainTbl.datagrid('getSelections').length < 1){
+            $.messager.alert('提示','请先选择要删除的数据','info');
+            return;
+        }
+        var data = mainTbl.datagrid('getSelected');
+        $.messager.confirm('确认','确认删除?',function(r){
+            if (r){
+                $.ajax({
+                    url: '/YSService/VillageService/Delete',
+                    type: "POST",
+                    data: JSON.stringify({CommunityID: data.CommunityID}),
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (msg) {
+                        loadMainData();
+                    },
+                    error: function (XMLHttpRequest, textStatus, thrownError) {
+                        alert("Error Occured!");
+                    }
+                });
+            }
+        });
+    };
+
     return {
         loadMainData: loadMainData,
-        saveMainItem: saveMainItem
+        saveMainItem: saveMainItem,
+        deleteMainItem: deleteMainItem
     };
 })();
 
@@ -115,7 +171,6 @@ window.grid.cfg.village = {
     pagination: true,
     fit: true,
     columns:[[
-        {field:'VillageID',title:'编号',width:100},
         {field:'VillageName',title:'小区名称',width:100},
         {field:'VillageAddress',title:'小区地址',width:100},
         {field:'PropertyName',title:'物业公司',width:100, formatter:function(v,r){return r.PropertyInfo.PropertyName;}},
@@ -150,7 +205,7 @@ window.grid.cfg.village = {
         id: '',
         text: '删除',
         iconCls: 'icon-remove',
-        handler: confirmRemove
+        handler: ys.modules.Village.deleteMainItem
     }, "-"]
 };
 

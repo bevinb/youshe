@@ -1,4 +1,15 @@
 <div class="easyui-layout" data-options="fit:true">
+    <div data-options="region:'north',split:true" style="height:56px;padding:10px;">
+        <form class="top-search-form">
+            <table>
+                <tr>
+                    <td>名称：<input class="easyui-textbox" name="PropertyName" style="width:200px;">
+                    </td>
+                    <td><input type="button" value="查询" onclick="ys.modules.Property.loadMainData()"></td>
+                </tr>
+            </table>
+        </form>
+    </div>
     <div data-options="region:'center'"><table class="main"></table></div>
 </div>
 
@@ -25,21 +36,23 @@
     </form>
 </div>
 <div id="editPropertyDlgBtns">
-    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="ys.modules.Owner.saveMainItem()" style="width:90px">保存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="ys.modules.Property.saveMainItem()" style="width:90px">保存</a>
     <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('.easyui-dialog').dialog('close')" style="width:90px">取消</a>
 </div>
 
 <script>
-ys.modules.Owner =  (function(){
+ys.modules.Property =  (function(){
     function loadMainData(){
+        var mainTb = $('#propertyTab');
+        var params = $.form2JsonNotNull(mainTb.find('.top-search-form'));
         $.ajax({
             url: '/YSService/PropertyService/GetDataList',
             method: 'POST',
-            data: JSON.stringify({}),
+            data: JSON.stringify(params),
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             success: function (resp) {
-                $('#propertyTab').find('table.main').datagrid('loadData', {
+                mainTb.find('table.main').datagrid('loadData', {
                     total: resp.length,
                     rows: resp
                 });
@@ -78,9 +91,36 @@ ys.modules.Owner =  (function(){
         });
     };
 
+    function deleteMainItem(){
+        var mainTbl = $('#propertyTab').find('table.main');
+        if(mainTbl.datagrid('getSelections').length < 1){
+            $.messager.alert('提示','请先选择要删除的数据','info');
+            return;
+        }
+        var data = mainTbl.datagrid('getSelected');
+        $.messager.confirm('确认','确认删除?',function(r){
+            if (r){
+                $.ajax({
+                    url: '/YSService/PropertyService/Delete',
+                    type: "POST",
+                    data: JSON.stringify({PropertyID: data.PropertyID}),
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (msg) {
+                        loadMainData();
+                    },
+                    error: function (XMLHttpRequest, textStatus, thrownError) {
+                        alert("Error Occured!");
+                    }
+                });
+            }
+        });
+    };
+
     return {
         loadMainData: loadMainData,
-        saveMainItem: saveMainItem
+        saveMainItem: saveMainItem,
+        deleteMainItem: deleteMainItem
     };
 })();
 
@@ -90,7 +130,6 @@ window.grid.cfg.property =  {
     pagination: true,
     fit: true,
     columns:[[
-        {field:'PropertyID',title:'编号',width:100},
         {field:'PropertyName',title:'名称',width:100},
         {field:'code',title:'联系人',width:100},
         {field:'Phone',title:'电话',width:100},
@@ -124,9 +163,9 @@ window.grid.cfg.property =  {
         id: '',
         text: '删除',
         iconCls: 'icon-remove',
-        handler: confirmRemove
+        handler: ys.modules.Property.deleteMainItem
     }, "-"]
 };
 
-ys.modules.Owner.loadMainData();
+ys.modules.Property.loadMainData();
 </script>

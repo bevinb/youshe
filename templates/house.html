@@ -1,5 +1,43 @@
 <div class="easyui-layout" data-options="fit:true">
+    <div data-options="region:'north',split:true" style="height:56px;padding:10px;">
+        <form class="top-search-form">
+            <input type="hidden" name="CommunityID">
+            <input type="hidden" name="VillageID">
+            <table>
+                <tr>
+                    <td>楼盘：<input class="easyui-combotree" data-options="
+                    					url:'/YSService/BaseInfoService/GetTree2',
+                                        method:'get',
+                                        animate:true,
+                                        panelHeight: 'auto',
+                                        panelWidth: 300,
+                                        valueField:'id',
+                                        textField:'text',
+                                        onClick: ys.modules.House.onRoomTreeChange
+                             " style="width:200px;">
+                    </td>
+                    <td> 状态：<select name="HouseStatus" >
+                        <option value="">--全部--</option>
+                        <option value="1">签约收房</option>
+                        <option value="2">信息交接</option>
+                        <option value="3">装修方案</option>
+                        <option value="4">拍照上传</option>
+                        <option value="5">定价上线</option></select>
+                    </td>
+                    <td> 业主姓名：<input class="easyui-textbox" name="OwnerName" style="width:100px;"></td>
+                    <td> 业主电话：<input class="easyui-textbox" name="Phone" style="width:100px;"></td>
+                    <td><input type="button" value="查询" onclick="ys.modules.House.loadMainData()"></td>
+                </tr>
+            </table>
+        </form>
+    </div>
     <div data-options="region:'center'"><table class="main"></table></div>
+    <div data-options="region:'south',split:true" style="height:300px;">
+        <div class="easyui-tabs" data-options="fit:true,border:false">
+            <div title="房间信息"><table class="subRoom"></table></div>
+            <div title="水电煤"><table class="subPay"></table></div>
+        </div>
+    </div>
 </div>
 
 <div id="editHouseDlg" class="easyui-dialog" style="width:750px;" modal="true"
@@ -85,14 +123,16 @@
 <script>
 ys.modules.House =  (function(){
     function loadMainData(){
+        var mainTb = $('#houseTab');
+        var params = $.form2JsonNotNull(mainTb.find('.top-search-form'));
         $.ajax({
             url: '/YSService/HouseService/GetDataList',
             method: 'POST',
-            data: JSON.stringify({}),
+            data: JSON.stringify(params),
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             success: function (resp) {
-                $('#houseTab').find('table.main').datagrid('loadData', {
+                mainTb.find('table.main').datagrid('loadData', {
                     total: resp.length,
                     rows: resp
                 });
@@ -101,6 +141,17 @@ ys.modules.House =  (function(){
                 alert("Error Occured!");
             }
         });
+    };
+
+    function onRoomTreeChange(node){
+        var form = $('#houseTab').find('.top-search-form');
+        if(node.type=='community'){
+            form.form('load',{CommunityID:node.id,VillageID:'',HouseID:'',RoomID:''});
+        } if(node.type=='village'){
+            form.form('load',{CommunityID:'',VillageID:node.id,HouseID:'',RoomID:''});
+        } if(node.type=='house'){
+            form.form('load',{CommunityID:'',VillageID:'',HouseID:node.id,RoomID:''});
+        }
     };
 
     function saveMainItem(){
@@ -150,10 +201,55 @@ ys.modules.House =  (function(){
         });
     };
 
+    function loadSubRoom(params){
+        $.ajax({
+            url: '/YSService/OnLineService/GetRoomInfo',
+            method: 'POST',
+            data: JSON.stringify(params),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (resp) {
+                $('#houseTab').find('table.subRoom').datagrid('loadData', {
+                    total: resp.length,
+                    rows: resp
+                });
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    function loadSubPay(params){
+        $.ajax({
+            url: '/YSService/HousePayService/GetDataList',
+            method: 'POST',
+            data: JSON.stringify(params),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (resp) {
+                $.each(resp, function(i,item){
+                    item['PayDate'] = $.wcfDate2JsDateStr(item['PayDate']);
+                    item['CreateDate'] = $.wcfDate2JsDateStr(item['CreateDate']);
+                });
+                $('#houseTab').find('table.subPay').datagrid('loadData', {
+                    total: resp.length,
+                    rows: resp
+                });
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
     return {
         loadMainData: loadMainData,
+        onRoomTreeChange: onRoomTreeChange,
         saveMainItem: saveMainItem,
-        onCommunityChange: onCommunityChange
+        onCommunityChange: onCommunityChange,
+        loadSubRoom: loadSubRoom,
+        loadSubPay: loadSubPay
     };
 })();
 
@@ -169,8 +265,14 @@ window.grid.cfg.house = {
         {field:'VillageName',title:'小区',width:100},
         {field:'OwnerName',title:'业主',width:100},
         {field:'Address',title:'地址',width:100},
+        {field:'FloorInfo',title:'楼层',width:70},
+        {field:'HouseDetail',title:'详细信息',width:120},
         {field:'HouseStatusName',title:'状态',width:100}
     ]],
+    onSelect:function(i, data){
+        ys.modules.House.loadSubRoom(data);
+        ys.modules.House.loadSubPay(data);
+    },
     toolbar: [{
         id: '',
         text: '新增',
@@ -202,5 +304,41 @@ window.grid.cfg.house = {
     }, "-"]
 };
 
-ys.modules.House.loadMainData();
+window.grid.cfg.house.Room = {
+    singleSelect:true,
+    rownumbers: true,
+    fit: true,
+    columns:[[
+        {field:'RoomNo',title:'房间号',width:70},
+        {field:'Direction',title:'朝向',width:40},
+        {field:'RoomArae',title:'面积(m<sup>2</sup>)',width:60},
+        {field:'RommRenovation',title:'配套设施',width:300, formatter: function(v){
+            var result = '';
+            for(var i = 0; v && i < v.length; ++i){
+                result += i == v.length - 1? (v[i].RenovationName + ', ') : v[i].RenovationName;
+            }
+        }}
+    ]]
+};
+
+window.grid.cfg.house.Pay = {
+    singleSelect:true,
+    rownumbers: true,
+    fit: true,
+    columns:[[
+        {field:'HouseCostTypeID',title:'费用类型',width:70},
+        {field:'Amount',title:'支付金额(元)',width:40},
+        {field:'Payer',title:'付款人',width:60},
+        {field:'PayDate',title:'支付日期',width:60},
+        {field:'Creater',title:'录入人',width:60},
+        {field:'CreateDate',title:'录入日期',width:60}
+    ]]
+};
+
+(function(){
+    ys.modules.House.loadMainData();
+    $('#houseTab').find('table.subRoom').datagrid(window.grid.cfg.house.Room);
+    $('#houseTab').find('table.subPay').datagrid(window.grid.cfg.house.Pay);
+})();
+
 </script>

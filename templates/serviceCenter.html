@@ -81,9 +81,36 @@ ys.modules.ServiceCenter =  (function(){
         });
     };
 
+    function deleteMainItem(){
+        var mainTbl = $('#serviceCenterTab').find('table.main');
+        if(mainTbl.datagrid('getSelections').length < 1){
+            $.messager.alert('提示','请先选择要删除的数据','info');
+            return;
+        }
+        var data = mainTbl.datagrid('getSelected');
+        $.messager.confirm('确认','确认删除?',function(r){
+            if (r){
+                $.ajax({
+                    url: '/YSService/ServiceCenterService/Delete',
+                    type: "POST",
+                    data: JSON.stringify({ServiceCenterID: data.ServiceCenterID}),
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (msg) {
+                        loadMainData();
+                    },
+                    error: function (XMLHttpRequest, textStatus, thrownError) {
+                        alert("Error Occured!");
+                    }
+                });
+            }
+        });
+    };
+
     return {
         loadMainData: loadMainData,
-        saveMainItem: saveMainItem
+        saveMainItem: saveMainItem,
+        deleteMainItem: deleteMainItem
     };
 })();
 
@@ -95,8 +122,8 @@ window.grid.cfg.serviceCenter = {
     columns:[[
         {field:'ServiceCenterName',title:'名称',width:100},
         {field:'Phone',title:'联系电话',width:100},
-        {field:'Adress',title:'地址',width:100},
-        {field:'IsActive',title:'状态',width:100, formatter:function(value){
+        {field:'Adress',title:'地址',width:300},
+        {field:'IsActive',title:'状态',width:70, formatter:function(value){
             return value?'启用':'禁用';
         }},
     ]],
@@ -127,7 +154,7 @@ window.grid.cfg.serviceCenter = {
         id: '',
         text: '删除',
         iconCls: 'icon-remove',
-        handler: confirmRemove
+        handler: ys.modules.ServiceCenter.deleteMainItem
     }, "-"]
 };
 

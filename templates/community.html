@@ -1,4 +1,15 @@
 <div class="easyui-layout" data-options="fit:true">
+    <div data-options="region:'north',split:true" style="height:56px;padding:10px;">
+        <form class="top-search-form">
+            <table>
+                <tr>
+                    <td>名称：<input class="easyui-textbox" name="CommunityName" style="width:200px;">
+                    </td>
+                    <td><input type="button" value="查询" onclick="ys.modules.Community.loadMainData()"></td>
+                </tr>
+            </table>
+        </form>
+    </div>
     <div data-options="region:'center'"><table class="main"></table></div>
 </div>
 
@@ -60,14 +71,17 @@
 <script>
 ys.modules.Community =  (function(){
     function loadMainData(){
+        var mainTb = $('#communityTab');
+        var params = $.form2JsonNotNull(mainTb.find('.top-search-form'));
+        params.CityID = ys.Session.currentCity;
         $.ajax({
             url: '/YSService/CommunityService/GetDataList',
             method: 'POST',
-            data: JSON.stringify({CityID: ys.Session.currentCity}),
+            data: JSON.stringify(params),
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             success: function (resp) {
-                $('#communityTab').find('table.main').datagrid('loadData', {
+                mainTb.find('table.main').datagrid('loadData', {
                     total: resp.length,
                     rows: resp
                 });
@@ -106,9 +120,36 @@ ys.modules.Community =  (function(){
         });
     };
 
+    function deleteMainItem(){
+        var mainTbl = $('#communityTab').find('table.main');
+        if(mainTbl.datagrid('getSelections').length < 1){
+            $.messager.alert('提示','请先选择要删除的数据','info');
+            return;
+        }
+        var data = mainTbl.datagrid('getSelected');
+        $.messager.confirm('确认','确认删除?',function(r){
+            if (r){
+                $.ajax({
+                    url: '/YSService/CommunityService/Delete',
+                    type: "POST",
+                    data: JSON.stringify({CommunityID: data.CommunityID}),
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (msg) {
+                        loadMainData();
+                    },
+                    error: function (XMLHttpRequest, textStatus, thrownError) {
+                        alert("Error Occured!");
+                    }
+                });
+            }
+        });
+    };
+
     return {
         loadMainData: loadMainData,
-        saveMainItem: saveMainItem
+        saveMainItem: saveMainItem,
+        deleteMainItem: deleteMainItem
     };
 })();
 
@@ -155,7 +196,7 @@ window.grid.cfg.community = {
         id: '',
         text: '删除',
         iconCls: 'icon-remove',
-        handler: confirmRemove
+        handler: ys.modules.Community.deleteMainItem
     }, "-"]
 };
 
