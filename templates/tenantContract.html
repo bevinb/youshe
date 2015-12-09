@@ -43,7 +43,7 @@
             <div data-options="region:'center'"><table class="main"></table></div>
             <div data-options="region:'south',split:true" style="height:300px;">
                 <div class="easyui-tabs" data-options="fit:true,border:false,plain:true">
-                    <div title="付款信息" style="padding:10px"><table class="fee"></table></div>
+                    <div title="付款信息" style="padding:10px"><table class="subPay"></table></div>
                 </div>
             </div>
         </div>
@@ -189,26 +189,55 @@
 
         return {
             onRoomTreeChange: onRoomTreeChange,
-            loadMainData: loadMainData
+            loadMainData: loadMainData,
+            loadSubPay: loadSubPay
         };
     })();
 
-    window.grid.cfg.tenantContract = {
-        singleSelect:true,
-        rownumbers: true,
-        pagination: true,
-        fit: true,
-        columns:[[
-            {field:'TenantContractNo',title:'合同编号',width:100},
-            {field:'ContractStatusName',title:'状态',width:100},
-            {field:'BeginDate',title:'开始日期',width:100},
-            {field:'EndDate',title:'结束日期',width:100},
-            {field:'TenantName',title:'入住人',width:100, formatter:function(v,r){return r.TenantInfo.TenantName;}},
-            {field:'Rent',title:'月租金(元)',width:100},
-            {field:'Deposit',title:'押金(元)',width:100},
-            {field:'Remarks',title:'备注信息',width:100},
-            {field:'Creater',title:'录入人',width:100},
-            {field:'CreateDate',title:'录入日期',width:100}
-        ]]
-    };
+window.grid.cfg.tenantContract = {
+    singleSelect:true,
+    rownumbers: true,
+    pagination: true,
+    fit: true,
+    columns:[[
+        {field:'TenantContractNo',title:'合同编号',width:100},
+        {field:'ContractStatusName',title:'状态',width:100},
+        {field:'BeginDate',title:'开始日期',width:100},
+        {field:'EndDate',title:'结束日期',width:100},
+        {field:'TenantName',title:'入住人',width:100, formatter:function(v,r){return r.TenantInfo.TenantName;}},
+        {field:'Rent',title:'月租金(元)',width:100},
+        {field:'Deposit',title:'押金(元)',width:100},
+        {field:'Remarks',title:'备注信息',width:100},
+        {field:'Creater',title:'录入人',width:100},
+        {field:'CreateDate',title:'录入日期',width:100}
+    ]],
+    onSelect:function(i, data){
+        ys.modules.House.loadSubRoom(data);
+        ys.modules.House.loadSubPay(data);
+    }
+};
+
+window.grid.cfg.tenantContract.Pay = {
+    singleSelect:true,
+    rownumbers: true,
+    fit: true,
+    columns:[[
+        {field:'TenantContractNo',title:'合同编号',width:100},
+        {field:'ContractStatusName',title:'状态',width:100},
+        {field:'BeginDate',title:'开始日期',width:100},
+        {field:'EndDate',title:'结束日期',width:100},
+        {field:'TenantName',title:'入住人',width:100, formatter:function(v,r){return r.TenantInfo.TenantName;}},
+        {field:'Rent',title:'月租金(元)',width:100},
+        {field:'Deposit',title:'押金(元)',width:100},
+        {field:'Remarks',title:'备注信息',width:100},
+        {field:'Creater',title:'录入人',width:100},
+        {field:'CreateDate',title:'录入日期',width:100}
+    ]]
+};
+
+(function(){
+    ys.modules.TenantContract.loadMainData();
+    $('#tenantContractTab').find('table.subPay').datagrid(window.grid.cfg.tenantContract.Pay);
+    //$('#houseTab').find('table.subPay').datagrid(window.grid.cfg.house.Pay);
+})();
 </script>

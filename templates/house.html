@@ -43,7 +43,7 @@
 <div id="editHouseDlg" class="easyui-dialog" style="width:750px;" modal="true"
      closed="true" data-options="buttons: '#editHouseDlgBtns'">
     <div style="padding:10px 60px 20px 60px">
-        <form id="fm" method="post" novalidate>
+        <form  method="post" novalidate>
             <input name="HouseID" type="hidden">
             <table cellpadding="5">
                 <tr>
@@ -120,6 +120,45 @@
     <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('.easyui-dialog').dialog('close')" style="width:90px">取消</a>
 </div>
 
+<div id="editHousePayDlg" class="easyui-dialog" style="width:550px;" modal="true"
+     closed="true" data-options="buttons: '#editHousePayDlgBtns'">
+    <div style="padding:10px 60px 20px 60px">
+        <form method="post" novalidate>
+            <input name="HouseCostPayID" type="hidden">
+            <input name="HouseID" type="hidden">
+            <div class="fitem">
+                <label>费用类型:</label>
+                <input class="easyui-combobox"
+                       name="HouseCostTypeID"
+                       style="width:300px;"
+                       data-options="
+                    loader: ys.loaders.houseCostTypeLoader,
+                    valueField:'HouseCostTypeID',
+                    textField:'HouseCostTypeName',
+                    required: true,
+                    panelHeight:'auto'
+            ">
+            </div>
+            <div class="fitem">
+                <label>支付金额:</label>
+                <input name="Amount" class="easyui-numberbox" data-options="precision:2" data-options="required:true" style="width:300px;">
+            </div>
+            <div class="fitem">
+                <label>支付日期:</label>
+                <input name="PayDate" class="easyui-datebox" data-options="required:true" style="width:300px;">
+            </div>
+            <div class="fitem">
+                <label>付款人:</label>
+                <input name="Payer" class="easyui-textbox" data-options="required:true" style="width:300px;">
+            </div>
+        </form>
+    </div>
+</div>
+<div id="editHousePayDlgBtns">
+    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="ys.modules.House.saveSubPay()" style="width:90px">保存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('.easyui-dialog').dialog('close')" style="width:90px">取消</a>
+</div>
+
 <script>
 ys.modules.House =  (function(){
     function loadMainData(){
@@ -178,6 +217,32 @@ ys.modules.House =  (function(){
             },
             error: function (XMLHttpRequest, textStatus, thrownError) {
                 alert("Error Occured!");
+            }
+        });
+    };
+
+    function deleteMainItem(){
+        var tbl = $('#houseTab').find('table.main');
+        if(tbl.datagrid('getSelections').length < 1){
+            $.messager.alert('提示','请先选择要删除的数据','info');
+            return;
+        }
+        var data = tbl.datagrid('getSelected');
+        $.messager.confirm('确认','确认删除?',function(r){
+            if (r){
+                $.ajax({
+                    url: '/YSService/HouseService/Delete',
+                    type: "POST",
+                    data: JSON.stringify({HouseID: data.HouseID}),
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (msg) {
+                        loadSubPay($('#houseTab').find('table.main').datagrid('getSelected'));
+                    },
+                    error: function (XMLHttpRequest, textStatus, thrownError) {
+                        alert("Error Occured!");
+                    }
+                });
             }
         });
     };
@@ -243,13 +308,75 @@ ys.modules.House =  (function(){
         });
     };
 
+    function saveSubPay(){
+        var dlg = $('#editHousePayDlg'), form = dlg.find('form');
+        if(!form.form('validate'))return;
+        var formData =  form.serializeArray();
+        var data = {};
+        $.each(formData, function(i, v) {
+            data[v.name] = v.value;
+            if (v.name == 'PayDate' || v.name == 'CreateDate') {
+                data[v.name] = $.jsDateStr2WcfDate(v.value);
+            } else {
+                data[v.name] = v.value;
+            }
+        });
+        var url = '/YSService/HousePayService/Add';
+        if(data['HouseCostPayID'] != '0'){
+            url = '/YSService/HousePayService/Update';
+        }
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: JSON.stringify(data),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (msg) {
+                loadSubPay($('#houseTab').find('table.main').datagrid('getSelected'));
+                dlg.dialog('close');
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    function deleteSubPay(){
+        var tbl = $('#houseTab').find('table.subPay');
+        if(tbl.datagrid('getSelections').length < 1){
+            $.messager.alert('提示','请先选择要删除的数据','info');
+            return;
+        }
+        var data = tbl.datagrid('getSelected');
+        $.messager.confirm('确认','确认删除?',function(r){
+            if (r){
+                $.ajax({
+                    url: '/YSService/HousePayService/Delete',
+                    type: "POST",
+                    data: JSON.stringify({HouseCostPayID: data.HouseCostPayID}),
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (msg) {
+                        loadSubPay($('#houseTab').find('table.main').datagrid('getSelected'));
+                    },
+                    error: function (XMLHttpRequest, textStatus, thrownError) {
+                        alert("Error Occured!");
+                    }
+                });
+            }
+        });
+    };
+
     return {
         loadMainData: loadMainData,
         onRoomTreeChange: onRoomTreeChange,
         saveMainItem: saveMainItem,
+        deleteMainItem: deleteMainItem,
         onCommunityChange: onCommunityChange,
         loadSubRoom: loadSubRoom,
-        loadSubPay: loadSubPay
+        loadSubPay: loadSubPay,
+        saveSubPay: saveSubPay,
+        deleteSubPay: deleteSubPay
     };
 })();
 
@@ -263,8 +390,8 @@ window.grid.cfg.house = {
         {field:'HouseNO',title:'编号',width:100},
         {field:'CommunityName',title:'社区',width:100},
         {field:'VillageName',title:'小区',width:100},
-        {field:'OwnerName',title:'业主',width:100},
-        {field:'Address',title:'地址',width:100},
+        {field:'OwnerName',title:'业主',width:70},
+        {field:'Address',title:'地址',width:200},
         {field:'FloorInfo',title:'楼层',width:70},
         {field:'HouseDetail',title:'详细信息',width:120},
         {field:'HouseStatusName',title:'状态',width:100}
@@ -300,7 +427,7 @@ window.grid.cfg.house = {
         id: '',
         text: '删除',
         iconCls: 'icon-remove',
-        handler: confirmRemove
+        handler: ys.modules.House.deleteMainItem
     }, "-"]
 };
 
@@ -310,7 +437,10 @@ window.grid.cfg.house.Room = {
     fit: true,
     columns:[[
         {field:'RoomNo',title:'房间号',width:70},
-        {field:'Direction',title:'朝向',width:40},
+        {field:'DirectionName',title:'朝向',width:50},
+        {field:'Rent',title:'租金(元)',width:50},
+        {field:'RentStatusName',title:'定价状态',width:40},
+        {field:'RoomStatusName',title:'房间状态',width:40},
         {field:'RoomArae',title:'面积(m<sup>2</sup>)',width:60},
         {field:'RommRenovation',title:'配套设施',width:300, formatter: function(v){
             var result = '';
@@ -332,7 +462,47 @@ window.grid.cfg.house.Pay = {
         {field:'PayDate',title:'支付日期',width:60},
         {field:'Creater',title:'录入人',width:60},
         {field:'CreateDate',title:'录入日期',width:60}
-    ]]
+    ]],
+    toolbar: [{
+        id: '',
+        text: '新增',
+        iconCls: 'icon-add',
+        handler: function () {
+            var mainTbl = $('#houseTab').find('table.main');
+            if(mainTbl.datagrid('getSelections').length < 1){
+                $.messager.alert('提示','请先选择一条房源记录！','info');
+                return;
+            }
+            var data = mainTbl.datagrid('getSelected');
+            var dlg = $('#editHousePayDlg'), form = dlg.find('form');
+            dlg.dialog('open').dialog('center').dialog('setTitle','新增支付信息');
+            form.form('clear');
+            form.form('load', {
+                HouseID: data['HouseID'],
+                HouseCostPayID: 0
+            });
+        }
+    }, "-", {
+        id: '',
+        text: '编辑',
+        iconCls: 'icon-edit',
+        handler: function () {
+            var tbl = $('#houseTab').find('table.subPay');
+            if(tbl.datagrid('getSelections').length < 1){
+                $.messager.alert('提示','请先选择一条支付信息！','info');
+                return;
+            }
+            var dlg = $('#editHousePayDlg'), form = dlg.find('form');
+            dlg.dialog('open').dialog('center').dialog('setTitle','编辑支付信息');
+            form.form('clear');
+            form.form('load', tbl.datagrid('getSelected'));
+        }
+    }, "-", {
+        id: '',
+        text: '删除',
+        iconCls: 'icon-remove',
+        handler: ys.modules.House.deleteSubPay
+    }, "-"]
 };
 
 (function(){
