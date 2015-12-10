@@ -55,16 +55,20 @@ ys.modules.Trends =  (function(){
                         if(room.TenantInfo) {
                             htmlStr += '<div class="card-content-item clearfix">'
                                     + '<div class="pull-left item-head status' + room.RoomStatus + '">' + room.RoomNo + '<br>￥' + room.Rent + '</div>'
-                                    + '<div class="pull-left">'
-                                    + '<p>' + room.TenantInfo.Gender + ' | ' + room.TenantInfo.Profession + ' | ' + room.TenantInfo.ConstellationID +  ' | ' + room.TenantInfo.Hobbies + '</p>'
+                                    + '<div class="pull-left item-content">'
+                                    + '<p>' + ys.Constant.GENDER[room.TenantInfo.Gender].text + ' | ' + room.TenantInfo.Profession + ' | ' + ys.Constant.CONSTELLATION[room.TenantInfo.ConstellationID-1].text +  ' | ' + room.TenantInfo.Hobbies + '</p>'
                                     + '</div>'
                                     + '</div>';
                         } else {
+                            var renovationStr = '', rr = room.RommRenovation;
+                            for(var k = 0; rr && k < rr.length; ++k){
+                                renovationStr += k < rr.length - 1? (rr[k].RenovationName + ', ') : rr[k].RenovationName;
+                            };
                             htmlStr += '<div class="card-content-item clearfix">'
                                 + '<div class="pull-left item-head status' + room.RoomStatus + '">' + room.RoomNo + '<br>￥' + room.Rent + '</div>'
-                                + '<div class="pull-left">'
+                                + '<div class="pull-left item-content">'
                                     + '<p>' + house.FloorCount + '/' + house.Floor + ' | ' + room.RoomArae + 'm<sup>2</sup>' + ' | ' + room.DirectionName + '</p>'
-                                    + '<p>' + room.RommRenovation.join(' ') + '</p>'
+                                    + '<p>' + renovationStr + '</p>'
                                 + '</div>'
                                 + '</div>';
                         }

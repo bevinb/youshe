@@ -83,6 +83,13 @@ span.label {
   text-align: center;
   margin-right:10px;
   padding:4px 2px;
+  width:80px;
+}
+.card .card-content .item-content {
+  width:calc(100% - 100px);
+  width:-webkit-calc(100% - 100px);
+  width:-moz-calc(100% - 100px);
+  overflow: hidden;
 }
 .card .card-content .item-head.status0 {
   background: green;

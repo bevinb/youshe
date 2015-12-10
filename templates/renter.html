@@ -174,18 +174,18 @@ window.grid.cfg.renter =  {
     columns:[[
         {field:'TenantName',title:'姓名',width:100},
         {field:'Phone',title:'手机',width:100},
-        {field:'Gender',title:'性别:',width:100},
-        {field:'Nationality',title:'国籍:',width:100},
-        {field:'IDTypeID',title:'护照类型:',width:100},
-        {field:'IDNo',title:'证件号码:',width:100},
-        {field:'Profession',title:'职业:',width:100},
-        {field:'EducationTypeID',title:'学历:',width:100},
-        {field:'DateOfBirth',title:'出生日期:',width:100},
-        {field:'ConstellationID',title:'星座',width:100},
+        {field:'Gender',title:'性别',width:40, formatter: function(v){return v? '男':'女';}},
+        {field:'Nationality',title:'国籍',width:100},
+        {field:'IDTypeName',title:'护照类型',width:70},
+        {field:'IDNo',title:'证件号码',width:100},
+        {field:'Profession',title:'职业',width:50},
+        {field:'EducationTypeID',title:'学历',width:50, formatter: function(v){return ys.Constant.EDUCATION[v-1].text;}},
+        {field:'DateOfBirth',title:'出生日期',width:70},
+        {field:'ConstellationID',title:'星座',width:50, formatter: function(v){return ys.Constant.CONSTELLATION[v-1].text;}},
         {field:'Hobbies',title:'爱好',width:100},
         {field:'EmergencyContact',title:'紧急联系人',width:100},
         {field:'EmergencyPhone',title:'紧急联系人电话',width:100},
-        {field:'SourceID',title:'来源',width:100}
+        {field:'SourceID',title:'来源',width:70, formatter: function(v){return ys.Constant.SOURCE[v-1].text;}}
     ]],
     toolbar: [{
         id: '',

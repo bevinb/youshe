@@ -1,6 +1,12 @@
 ﻿window.ys = window.ys || {};
 
 window.ys.Constant = {
+	GENDER: [{
+		id: 0, text: '女'
+	}, {
+		id: 1, text: '男'
+	}],
+
 	CONSTELLATION: [{
 		id: 1, text: '白羊'
 	}, {
