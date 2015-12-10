@@ -55,6 +55,44 @@
     </div>
 </div>
 
+<div id="editHouseCostDlg" class="easyui-dialog" style="width:500px;padding:10px 20px"  modal="true"
+     closed="true" buttons="#editHouseCostDlgBtns">
+    <form method="post" novalidate>
+        <input name="HouseCostID" type="hidden">
+        <input name="HouseID" type="hidden">
+        <div class="fitem">
+            <label>费用类型:</label>
+            <input class="easyui-combobox"
+                   name="CostPayType"
+                   style="width:300px;"
+                   data-options="
+                    loader: ys.loaders.houseCostTypeLoader,
+                    valueField:'HouseCostTypeID',
+                    textField:'HouseCostTypeName',
+                    required: true,
+                    panelHeight:'auto'
+            ">
+        </div>
+        <div class="fitem">
+            <label>账号:</label>
+            <input name="AccountNO" class="easyui-textbox" data-options="required:true">
+        </div>
+        <div class="fitem">
+            <label>账号所属公司:</label>
+            <input name="AccountCompanyID" class="easyui-textbox" data-options="required:true">
+        </div>
+        <div class="fitem">
+            <label>查询电话:</label>
+            <input name="QueryPhone" class="easyui-textbox" data-options="required:true">
+        </div>
+    </form>
+</div>
+<div id="editHouseCostDlgBtns">
+    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="ys.modules.HouseOnline.saveHouseCost()" style="width:90px">保存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('.easyui-dialog').dialog('close')" style="width:90px">取消</a>
+</div>
+
+
 <div id="editHouseRenovationDlg" class="easyui-dialog" style="width:600px;padding:10px 20px"  modal="true"
      closed="true" buttons="#editHouseRenovationDlgBtns">
     <form id="fm" method="post" novalidate>
@@ -66,26 +104,20 @@
         </div>
         <div class="fitem">
             <label>朝向:</label>
-            <td>状态：
-                <select name="HouseStatus" >
-                    <option value="0">无窗户</option>
-                    <option value="1">朝东</option>
-                    <option value="2">朝南</option>
-                    <option value="3">朝西</option>
-                    <option value="4">朝北</option>
-                </select>
-            </td>
-            <input name="Direction" class="easyui-textbox" data-options="required:true"
+            <select name="HouseStatus" class="easyui-combobox" >
+                <option value="0">无窗户</option>
+                <option value="1">朝东</option>
+                <option value="2">朝南</option>
+                <option value="3">朝西</option>
+                <option value="4">朝北</option>
+            </select>
         </div>
         <div class="fitem">
             <label>面积（平方米）:</label>
             <input name="RoomArae" class="easyui-numberbox" data-options="required:true">
         </div>
-        <div class="fitem">
+        <div class="fitem renovation-list">
             <label>配套设施:</label>
-            <input type="checkbox" name="PayRentID" style="display:inline;">转账
-            <input type="checkbox" name="PayRentID" style="display:inline;">现金
-            <input type="checkbox" name="PayRentID" style="display:inline;">代付转账
         </div>
     </form>
 </div>
@@ -199,7 +231,7 @@ ys.modules.HouseOnline =  (function(){
         $.ajax({
             url: '/YSService/HouseCostService/GetDataList',
             method: 'POST',
-            data: JSON.stringify({HouseID:params.HouseID}),
+            data: JSON.stringify(params),
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             success: function (resp) {
@@ -210,6 +242,60 @@ ys.modules.HouseOnline =  (function(){
             },
             error: function (XMLHttpRequest, textStatus, thrownError) {
                 alert("Error Occured!");
+            }
+        });
+    };
+
+    function saveHouseCost(){
+        var dlg = $('#editHouseCostDlg'), form = dlg.find('form');
+        if(!form.form('validate'))return;
+        var formData =  form.serializeArray();
+        var data = {};
+        $.each(formData, function(i, v) {
+            data[v.name] = v.value;
+        });
+        var url = '/YSService/HouseCostService/Add';
+        if(data['HouseCostID'] != '0'){
+            url = '/YSService/HouseCostService/Update';
+        }
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: JSON.stringify(data),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (msg) {
+                loadHouseCost({HouseID: data.HouseID});
+                dlg.dialog('close');
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    function deleteHouseCost(){
+        var tbl = $('#houseOnlineTab').find('table.cost');
+        if(tbl.datagrid('getSelections').length < 1){
+            $.messager.alert('提示','请先选择要删除的数据','info');
+            return;
+        }
+        var data = tbl.datagrid('getSelected');
+        $.messager.confirm('确认','确认删除?',function(r){
+            if (r){
+                $.ajax({
+                    url: '/YSService/HouseCostService/Delete',
+                    type: "POST",
+                    data: JSON.stringify({HouseCostID: data.HouseCostID}),
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (msg) {
+                        loadHouseCost({HouseID: data.HouseID});
+                    },
+                    error: function (XMLHttpRequest, textStatus, thrownError) {
+                        alert("Error Occured!");
+                    }
+                });
             }
         });
     };
@@ -253,12 +339,18 @@ ys.modules.HouseOnline =  (function(){
         var dlg = $('#editHouseRenovationDlg'), form = dlg.find('form');
         if(!form.form('validate'))return;
         var formData =  form.serializeArray();
-        var data = {};
+        var data = {RommRenovation:[]};
         $.each(formData, function(i, v) {
-            data[v.name] = v.value;
+            if(v.name == 'RommRenovationItem'){
+                data['RommRenovation'].push({
+                    RenovationID: v.value
+                });
+            } else {
+                data[v.name] = v.value;
+            }
         });
         var url = '/YSService/OnLineService/AddRoomInfo';
-        if(data['HouseID']){
+        if(data['RoomID'] != '0'){
             url = '/YSService/OnLineService/UpdateRoomInfo';
         }
         $.ajax({
@@ -347,7 +439,11 @@ ys.modules.HouseOnline =  (function(){
         saveMainItem: saveMainItem,
         loadHouseContract: loadHouseContract,
         confirmContract: confirmContract,
+
         loadHouseCost: loadHouseCost,
+        saveHouseCost: saveHouseCost,
+        deleteHouseCost: deleteHouseCost,
+
         confirmInterfacing:confirmInterfacing,
         loadHouseRenovation: loadHouseRenovation,
         saveHouseRenovation: saveHouseRenovation,
@@ -375,7 +471,7 @@ window.grid.cfg.houseOnline = {
     ]],
     onSelect:function(i, data){
         ys.modules.HouseOnline.loadHouseContract(data);
-        ys.modules.HouseOnline.loadHouseCost(data);
+        ys.modules.HouseOnline.loadHouseCost({HouseID: data.HouseID});
         ys.modules.HouseOnline.loadHouseRenovation(data);
     }
 };
@@ -425,6 +521,40 @@ window.grid.cfg.houseOnline.cost = {
         {field:'QueryPhone',title:'查询电话',width:100}
     ]],
     toolbar: [{
+        id: '',
+        text: '新增',
+        iconCls: 'icon-add',
+        handler: function () {
+            var mainTbl = $('#houseOnlineTab').find('table.main');
+            if(mainTbl.datagrid('getSelections').length < 1){
+                $.messager.alert('提示','请先选择一条房源记录','info');
+                return;
+            }
+            var dlg = $('#editHouseCostDlg'), form = dlg.find('form');
+            var mainData = mainTbl.datagrid('getSelected');
+            dlg.dialog('open').dialog('center').dialog('setTitle','新增房屋费用');
+            form.form('clear');
+            form.form('load', {HouseID: mainData.HouseID, HouseCostID: 0});
+        }
+    }, "-", {
+        id: '',
+        text: '编辑',
+        iconCls: 'icon-edit',
+        handler: function () {
+            var dlg = $('#editHouseCostDlg'), form = dlg.find('form'), tbl = $('#houseOnlineTab').find('table.cost');
+            if(tbl.datagrid('getSelections').length < 1){
+                $.messager.alert('提示','请先选择要编辑的数据','info');
+                return;
+            }
+            dlg.dialog('open').dialog('center').dialog('setTitle','编辑房屋费用');
+            form.form('load', tbl.datagrid('getSelected'));
+        }
+    }, "-", {
+        id: '',
+        text: '删除',
+        iconCls: 'icon-cancel',
+        handler: ys.modules.HouseOnline.deleteHouseCost
+    },"-", {
         id: '',
         text: '信息交接',
         iconCls: 'icon-ok',
@@ -571,5 +701,23 @@ window.grid.cfg.houseOnline.roomPrice = {
     $('#houseOnlineTab').find('table.upImg').datagrid(window.grid.cfg.houseOnline.renovation);
     $('#houseOnlineTab').find('table.renovation').datagrid(window.grid.cfg.houseOnline.renovation);
     $('#houseOnlineTab').find('table.roomPrice').datagrid(window.grid.cfg.houseOnline.roomPrice);
+
+    //获取房间配套基础信息
+    $.ajax({
+        url: '/YSService/BaseInfoService/GetRoomRenovationList',
+        method: 'GET',
+        dataType: "json",
+        contentType: "application/json; charset=utf-8",
+        success: function (resp) {
+            var str, i = 0;
+            for(; i < resp.length; ++i){
+                str += '<label><input type="checkbox" name="RommRenovationiItem" value="' + resp[i].RenovationID + '">' + resp[i].RenovationName + '</label>'
+            }
+            $('#editHouseRenovationDlg .renovation-list').append(str);
+        },
+        error: function (XMLHttpRequest, textStatus, thrownError) {
+            alert("Error Occured!");
+        }
+    });
 })();
 </script>
