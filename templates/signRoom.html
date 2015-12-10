@@ -299,9 +299,9 @@ window.grid.cfg.signRoom = {
     fit: true,
     columns:[[
         {field:'RoomNo',title:'房间号',width:70},
-        {field:'Direction',title:'朝向',width:40},
+        {field:'Direction',title:'朝向',width:40, formatter: function(v){return ys.Constant.DIRECTION[v].text;}},
         {field:'RoomArae',title:'面积(m<sup>2</sup>)',width:60},
-        {field:'RommRenovation',title:'配套设施'width:300, formatter: function(v, r){
+        {field:'RommRenovation',title:'配套设施', width:300, formatter: function(v, r){
             var result = '', list = r.RommRenovation;
             for(var i = 0; list && i < list.length; ++i){
                 result += i < list.length - 1? (list[i].RenovationName + ', ') : list[i].RenovationName;

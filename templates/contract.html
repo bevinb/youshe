@@ -57,12 +57,24 @@
                 <table cellpadding="5">
                     <tr>
                         <td>房源:</td>
-                        <td colspan=5><input name="firstname" class="easyui-textbox"></td>
+                        <td colspan=5>
+                            <input name="HouseID" class="easyui-combotree" data-options="
+                                url:'/YSService/BaseInfoService/GetTree3',
+                                method:'get',
+                                animate:true,
+                                panelHeight: 'auto',
+                                panelWidth: 300,
+                                valueField:'id',
+                                textField:'text',
+                                onClick: ys.modules.Contract.onDlgRoomTreeChange,
+                                required:true
+                            " style="width:200px;">
+                        </td>
                     </tr>
                     <tr>
                         <td>所属社区:</td>
                         <td>
-                            <input name="lastname" class="easyui-textbox" style="width:150px;" readonly>
+                            <input name="HousInfo.CommunityName" class="easyui-textbox" style="width:150px;" readonly>
                             <span class="label">房源编号:</span><input name="lastname" class="easyui-textbox" style="width:150px;" readonly>
                         </td>
                     </tr>
@@ -123,14 +135,14 @@
                     <tr>
                         <td>合同编号:</td>
                         <td>
-                            <input name="ContractNo" class="easyui-textbox" style="width:150px;">
+                            <input name="ContractNo" class="easyui-textbox" style="width:150px;" data-options="required:true">
                             <span class="label">房屋接收人:</span><input name="SendeeID" class="easyui-textbox" style="width:150px;">
                         </td>
                     </tr>
                     <tr>
                         <td>房屋租金:</td>
                         <td>
-                            <input name="Rent" class="easyui-textbox" style="width:120px;">元/月
+                            <input name="Rent" class="easyui-textbox" style="width:120px;" data-options="required:true">元/月
                             <span class="label" style="padding-left:18px;">房屋押金:</span><input name="Deposit" class="easyui-numberbox" style="width:120px;">元/月
                             <span class="label">付款方式:</span>押<input name="DepositCout" class="easyui-numberbox" style="width:50px;">付<input name="PayCout" class="easyui-numberbox" style="width:50px;">
                         </td>
@@ -140,6 +152,12 @@
                         <td>
                             <input name="BeginDate" class="easyui-datebox" style="width:150px;" data-options="required:true">-<input name="EndDate" class="easyui-datebox" style="width:150px;" data-options="required:true">
                             <span class="label">免租期:</span><input name="FreeDate" class="easyui-numberbox" style="width:50px;">月
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>备注:</td>
+                        <td>
+                            <textarea name="Remarks" class="textarea easyui-validatebox" style="width:100%;" data-options="required:true"></textarea>
                         </td>
                     </tr>
                 </table>
@@ -260,6 +278,15 @@ ys.modules.Contract =  (function(){
         }
     };
 
+    function onDlgRoomTreeChange(node){
+        var dlg = $('#editContractDlg'), form = dlg.find('form');
+        if(node.type!='house'){
+
+            form.find('.easyui-combotree').treegrid("unselect");
+            return false;
+        }
+    };
+
     function saveMainItem(){
         var dlg = $('#editContractDlg'), form = dlg.find('form');
         if(!form.form('validate'))return;
@@ -298,12 +325,13 @@ ys.modules.Contract =  (function(){
             $.messager.alert('提示','请先选择要编辑的数据','info');
             return;
         }
+        var data = mainTbl.datagrid('getSelected');
         $.messager.confirm('确认','确认作废该合同?',function(r){
             if (r){
                 $.ajax({
                     url: '/YSService/ContractService/CancelContract',
                     method: 'POST',
-                    data: JSON.stringify(mainTbl.datagrid('getSelected')),
+                    data: JSON.stringify({ContractID: data.ContractID}),
                     dataType: "json",
                     contentType: "application/json; charset=utf-8",
                     success: function (resp) {
@@ -324,12 +352,13 @@ ys.modules.Contract =  (function(){
             $.messager.alert('提示','请先选择要编辑的数据','info');
             return;
         }
+        var data = mainTbl.datagrid('getSelected');
         $.messager.confirm('确认','确认终止该合同?',function(r){
             if (r){
                 $.ajax({
                     url: '/YSService/ContractService/StopContract',
                     method: 'POST',
-                    data: JSON.stringify(mainTbl.datagrid('getSelected')),
+                    data: JSON.stringify({ContractID: data.ContractID}),
                     dataType: "json",
                     contentType: "application/json; charset=utf-8",
                     success: function (resp) {
@@ -400,6 +429,7 @@ ys.modules.Contract =  (function(){
     return {
         loadMainData: loadMainData,
         onRoomTreeChange: onRoomTreeChange,
+        onDlgRoomTreeChange: onDlgRoomTreeChange,
         saveMainItem: saveMainItem,
         cancelContract: cancelContract,
         stopContract: stopContract,
