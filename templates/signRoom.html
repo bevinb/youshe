@@ -1,159 +1,100 @@
 <div class="easyui-layout" data-options="fit:true">
-    <div data-options="region:'north',split:true" style="height:60px;padding:10px;">
-        <form class="top-search-form">
-            <input type="hidden" name="CommunityID">
-            <input type="hidden" name="VillageID">
-            <input type="hidden" name="HouseID">
-            <input type="hidden" name="RoomID">
-            <table>
-                <tr>
-                    <td>房间：<input class="easyui-combotree" data-options="
-                    					url:'/YSService/BaseInfoService/GetTree3',
-                                        method:'get',
-                                        animate:true,
-                                        panelHeight: 'auto',
-                                        panelWidth: 300,
-                                        valueField:'id',
-                                        textField:'text',
-                                        onClick: ys.modules.SignRoom.onRoomTreeChange
-                             " style="width:200px;">
-                    </td>
-                    <td><input type="button" value="查询" onclick="ys.modules.SignRoom.loadMainData()"></input></td>
-                </tr>
-            </table>
-        </form>
+    <div class="easyui-layout" data-options="region:'center',fit:true">
+        <div data-options="region:'north',split:true" style="height:60px;padding:10px;">
+            <form class="top-search-form">
+                <input type="hidden" name="CommunityID">
+                <input type="hidden" name="VillageID">
+                <input type="hidden" name="HouseID">
+                <input type="hidden" name="RoomID">
+                <table>
+                    <tr>
+                        <td>房间：<input class="easyui-combotree" data-options="
+                                            url:'/YSService/BaseInfoService/GetTree3',
+                                            method:'get',
+                                            animate:true,
+                                            panelHeight: 'auto',
+                                            panelWidth: 300,
+                                            valueField:'id',
+                                            textField:'text',
+                                            onClick: ys.modules.SignRoom.onRoomTreeChange
+                                 " style="width:200px;">
+                        </td>
+                        <td><input type="button" value="查询" onclick="ys.modules.SignRoom.loadMainData()"></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <div data-options="region:'center'"><table class="main"></table></div>
     </div>
-    <div data-options="region:'center'"><table class="main"></table></div>
-    <div data-options="region:'south',split:true" style="height:260px;padding:10px;">
+    <div data-options="region:'east',split:true" style="width:700px;padding:10px;">
             <div>
-                <h5>入住人信息</h5>
-                <form class="signForm" method="post" novalidate>
+                <form class="signForm" novalidate>
                     <input name="RoomID" type="hidden">
-                    <table cellpadding="5">
-                        <tr>
-                            <td>合同编号:</td>
-                            <td><input name="TenantContractNo" class="easyui-textbox" style="width:150px;" ></td>
-                            <td>房屋租金:</td>
-                            <td><input name="PayRent" class="easyui-numberbox" style="width:150px;" data-options="precision:2">元/月</td>
-                            <td>房屋押金:</td>
-                            <td><input name="Deposit" class="easyui-numberbox" style="width:150px;" data-options="precision:2">元/月</td>
-                        </tr>
-                        <tr>
-                            <td>服务费:</td>
-                            <td><input name="ServiceCharge" class="easyui-numberbox" style="width:150px;" data-options="precision:2"></td>
-                            <td>付:</td>
-                            <td><input name="PayCout" class="easyui-numberbox" style="width:150px;" data-options=""></td>
-                            <td>押:</td>
-                            <td><input name="DepositCout" class="easyui-numberbox" style="width:150px;" data-options=""></td>
-                        </tr>
-                        <tr>
-                            <td>入住人姓名:</td>
-                            <td><input name="TenantInfo.TenantName" class="easyui-textbox" style="width:150px;" ></td>
-                            <td>入住人性别:</td>
-                            <td>
-                                <select class="easyui-combobox" name="TenantInfo.Gender">
-                                    <option value="1">男</option>
-                                    <option value="0">女</option>
-                                </select>
-                            </td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>入住人手机:</td>
-                            <td><input name="TenantInfo.Phone" class="easyui-textbox" style="width:150px;" ></td>
-                            <td>起租日:</td>
-                            <td><input class="easyui-datebox" name="BeginDate"></input></td>
-                            <td>入住日期:</td>
-                            <td><input class="easyui-datebox" name="EndDate"></input></td>
-                        </tr>
-                        <tr>
-                            <td>星座:</td>
-                            <td>
-                                <input class="easyui-combobox"
-                                       name="TenantInfo.ConstellationID"
-                                       data-options="
-                                        data:ys.Constant.CONSTELLATION,
-                                        method:'get',
-                                        valueField:'id',
-                                        textField:'text',
-                                        panelHeight:'auto'
-                                ">
-                            </td>
-                            <td>国籍:</td>
-                            <td><input name="TenantInfo.Nationality" class="easyui-textbox" style="width:150px;" ></td>
-                            <td>租金付款方式:</td>
-                            <td>
-                                <input class="easyui-combobox"
-                                       name="PayTypeID"
-                                       data-options="
-                                        loader: ys.loaders.payTypeLoader,
-                                        valueField:'PayTypeID',
-                                        textField:'PayTypeName',
-                                        panelHeight:'auto'
-                                ">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>爱好:</td>
-                            <td><input name="TenantInfo.Hobbies" class="easyui-textbox" style="width:150px;" ></td>
-                            <td>职业:</td>
-                            <td><input name="TenantInfo.Profession" class="easyui-textbox" style="width:150px;" ></td>
-                            <td>销售管家:</td>
-                            <td><input name="TenantInfo.HousekeeperID" class="easyui-textbox" style="width:150px;" ></td>
-                        </tr>
-                        <tr>
-                            <td>证件类型:</td>
-                            <td>
-                                <input class="easyui-combobox"
-                                       name="TenantInfo.IDTypeID"
-                                       data-options="
-                                        loader: ys.loaders.idTypeLoader,
-                                        valueField:'IDTypeID',
-                                        textField:'IDTypeIDName',
-                                        panelHeight:'auto'
-                                ">
-                            </td>
-                            <td>证件号码:</td>
-                            <td><input name="TenantInfo.IDNo" class="easyui-textbox" style="width:150px;" ></td>
-                            <td>紧急联系人:</td>
-                            <td><input name="TenantInfo.EmergencyContact" class="easyui-textbox" style="width:150px;" ></td>
-                        </tr>
-                        <tr>
-                            <td>学历:</td>
-                            <td>
-                                <input class="easyui-combobox"
-                                       name="TenantInfo.EducationTypeID"
-                                       data-options="
-                                        data:ys.Constant.EDUCATION,
-                                        method:'get',
-                                        valueField:'id',
-                                        textField:'text',
-                                        panelHeight:'auto'
-                                ">
-                            </td>
-                            <td>出生日期:</td>
-                            <td><input class="easyui-datebox" name="TenantInfo.DateOfBirth"></input></td>
-                            <td>紧急联系人电话:</td>
-                            <td><input name="TenantInfo.EmergencyPhone" class="easyui-textbox" style="width:150px;" ></td>
-                        </tr>
-                        <tr>
-                            <td>租客来源:</td>
-                            <td>
-                                <input class="easyui-combobox"
-                                       name="TenantInfo.SourceID"
-                                       data-options="
-                                        data:ys.Constant.SOURCE,
-                                        method:'get',
-                                        valueField:'id',
-                                        textField:'text',
-                                        panelHeight:'auto'
-                                ">
-                            </td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                    </table>
+                    <input name="RoomID" type="hidden">
+                    <h5>合同信息</h5>
+                    <fieldset>
+                        <table>
+                            <tr>
+                                <td>合同编号:</td>
+                                <td><input name="TenantContractNo" class="easyui-textbox" style="width:120px;" ></td>
+                                <td>房屋租金:</td>
+                                <td><input name="PayRent" class="easyui-numberbox" style="width:120px;" data-options="precision:2">元/月</td>
+                                <td>房屋押金:</td>
+                                <td><input name="Deposit" class="easyui-numberbox" style="width:120px;" data-options="precision:2">元/月</td>
+                            </tr>
+                            <tr>
+                                <td>服务费:</td>
+                                <td><input name="ServiceCharge" class="easyui-numberbox" style="width:120px;" data-options="precision:2"></td>
+                                <td>付:</td>
+                                <td><input name="PayCout" class="easyui-numberbox" style="width:120px;" data-options=""></td>
+                                <td>押:</td>
+                                <td><input name="DepositCout" class="easyui-numberbox" style="width:120px;" data-options=""></td>
+                            </tr>
+                            <tr>
+                                <td>起租日:</td>
+                                <td><input class="easyui-datebox" name="BeginDate" style="width:120px;"></td>
+                                <td>入住日期:</td>
+                                <td><input class="easyui-datebox" name="EndDate" style="width:120px;"></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    <h5>入住人 <a href="javascript:void(0)" class="easyui-link c6" iconCls="icon-edit" onclick="ys.modules.SignRoom.openRenterDlg()" style="width:90px">修改</a></h5>
+                    <fieldset>
+                        <table>
+                            <tr>
+                                <td>入住人姓名:</td>
+                                <td><input name="TenantInfo.TenantName" class="easyui-textbox" style="width:120px;" readonly></td>
+                                <td>入住人性别:</td>
+                                <td>
+                                    <select class="easyui-combobox" name="TenantInfo.Gender" readonly style="width:120px;">
+                                        <option value="1">男</option>
+                                        <option value="0">女</option>
+                                    </select>
+                                </td>
+                                <td>入住人手机:</td>
+                                <td><input name="TenantInfo.Phone" class="easyui-textbox" style="width:120px;" readonly></td>
+                            </tr>
+                            <tr>
+                                <td>证件类型:</td>
+                                <td>
+                                    <input class="easyui-combobox"
+                                           name="TenantInfo.IDTypeID"
+                                           data-options="
+                                            loader: ys.loaders.idTypeLoader,
+                                            valueField:'IDTypeID',
+                                            textField:'IDTypeIDName',
+                                            panelHeight:'auto'
+                                    " style="width:120px;" readonly>
+                                </td>
+                                <td>证件号码:</td>
+                                <td><input name="TenantInfo.IDNo" class="easyui-textbox" style="width:120px;" readonly></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </table>
+                    </fieldset>
                     <h5>优惠项 <a href="javascript:void(0)" class="easyui-link c6" iconCls="icon-edit" onclick="ys.modules.SignRoom.openDiscountDlg()" style="width:90px">修改</a></h5>
                     <input type="hidden" name="DiscountID">
                     <div id="signRoomTabFormDiscountInfo"></div>
@@ -167,6 +108,133 @@
             </div>
         </div>
     </div>
+</div>
+
+<div id="signRoomRenterDlg" class="easyui-dialog" style="width:800px;"  modal="true"
+     closed="true" buttons="#signRoomRenterDlgBtns">
+    <div class="easyui-layout" data-options="fit:true" style="height:550px;">
+        <div data-options="region:'north',split:true" style="height:56px;padding:10px;">
+            <form class="dlg-search-form">
+                <table>
+                    <tr>
+                        <td>名称：<input class="easyui-textbox" name="TenantName" style="width:120px;"></td>
+                        <td>手机：<input class="easyui-textbox" name="Phone" style="width:120px;"></td>
+                        <td>证件号码：<input class="easyui-textbox" name="IDNo" style="width:200px;"></td>
+                        <td><input type="button" value="查询" onclick="ys.modules.SignRoom.queryRenters()"></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <div data-options="region:'center'">
+            <table class="renter"></table>
+        </div>
+    </div>
+</div>
+<div id="signRoomRenterDlgBtns">
+    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="javascript:ys.modules.SignRoom.selectRenter()" style="width:90px">确认</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('.easyui-dialog').dialog('close')" style="width:90px">取消</a>
+</div>
+
+<div id="signRoomEditRenterDlg" class="easyui-dialog" style="width:600px;padding:10px 20px"  modal="true"
+     closed="true" buttons="#signRoomEditRenterDlgBtns">
+    <form id="fm" method="post" novalidate>
+        <input name="TenantID" type="hidden">
+        <div class="fitem">
+            <label>姓名:</label>
+            <input name="TenantName" class="easyui-textbox" data-options="required:true">
+        </div>
+        <div class="fitem">
+            <label>手机:</label>
+            <input name="Phone" class="easyui-textbox" data-options="required:true">
+        </div>
+        <div class="fitem">
+            <label>性别:</label>
+            <select class="easyui-combobox" name="Gender" data-options="required:true">
+                <option value="1">男</option>
+                <option value="0">女</option>
+            </select>
+        </div>
+        <div class="fitem">
+            <label>国籍:</label>
+            <input name="Nationality" class="easyui-textbox">
+        </div>
+        <div class="fitem">
+            <label>证件类型:</label>
+            <input class="easyui-combobox"
+                   name="IDTypeID"
+                   style="width:300px"
+                   data-options="
+                    loader: ys.loaders.idTypeLoader,
+                    valueField:'IDTypeID',
+                    textField:'IDTypeIDName',
+                    panelHeight:'auto'
+            ">
+        </div>
+        <div class="fitem">
+            <label>证件号码:</label>
+            <input name="IDNo" class="easyui-textbox">
+        </div>
+        <div class="fitem">
+            <label>职业:</label>
+            <input name="Profession" class="easyui-textbox">
+        </div>
+        <div class="fitem">
+            <label>学历:</label>
+            <input class="easyui-combobox"
+                   name="EducationTypeID"
+                   data-options="
+					data:ys.Constant.EDUCATION,
+					method:'get',
+					valueField:'id',
+					textField:'text',
+					panelHeight:'auto'
+			">
+        </div>
+        <div class="fitem">
+            <label>出生日期:</label>
+            <input name="DateOfBirth" class="easyui-datebox">
+        </div>
+        <div class="fitem">
+            <label>星座:</label>
+            <input class="easyui-combobox"
+                   name="ConstellationID"
+                   data-options="
+					data:ys.Constant.CONSTELLATION,
+					method:'get',
+					valueField:'id',
+					textField:'text',
+					panelHeight:'auto'
+			">
+        </div>
+        <div class="fitem">
+            <label>爱好:</label>
+            <input name="Hobbies" class="easyui-textbox">
+        </div>
+        <div class="fitem">
+            <label>紧急联系人:</label>
+            <input name="EmergencyContact" class="easyui-textbox">
+        </div>
+        <div class="fitem">
+            <label>紧急联系人电话:</label>
+            <input name="EmergencyPhone" class="easyui-textbox">
+        </div>
+        <div class="fitem">
+            <label>来源:</label>
+            <input class="easyui-combobox"
+                   name="SourceID"
+                   data-options="
+					data:ys.Constant.SOURCE,
+					method:'get',
+					valueField:'id',
+					textField:'text',
+					panelHeight:'auto'
+			">
+        </div>
+    </form>
+</div>
+<div id="signRoomEditRenterDlgBtns">
+    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="ys.modules.SignRoom.saveRenter()" style="width:90px">保存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#signRoomEditRenterDlg').dialog('close')" style="width:90px">取消</a>
 </div>
 
 <div id="signRoomTabDiscountDlg" class="easyui-dialog" style="width:800px;"  modal="true"
@@ -261,7 +329,7 @@ ys.modules.SignRoom =  (function(){
         $.each(formData, function(i, v) {
             if(v.name.indexOf('TenantInfo.') == 0) {
                 var keys = v.name.split('.');
-                data[keys[0]][keys[1]] = keys[1]=='DateOfBirth'?  $.jsDateStr2WcfDate(v.value) : v.value;
+                //data[keys[0]][keys[1]] = keys[1]=='DateOfBirth'?  $.jsDateStr2WcfDate(v.value) : v.value;
             } else if (v.name == 'BeginDate' || v.name == 'EndDate') {
                 data[v.name] = $.jsDateStr2WcfDate(v.value);
             } else {
@@ -284,12 +352,119 @@ ys.modules.SignRoom =  (function(){
         });
     };
 
+    function openRenterDlg(){
+        $('#signRoomRenterDlg').dialog('open').dialog('center').dialog('setTitle','选择入住人');
+    };
+
+    function queryRenters(){
+        var params = $.form2JsonNotNull($('#signRoomRenterDlg').find('.dlg-search-form'));
+        $.ajax({
+            url: '/YSService/TenantService/GetDataList',
+            method: 'POST',
+            data: JSON.stringify(params),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (resp) {
+                $.each(resp, function(i,item){
+                    item['DateOfBirth'] = $.wcfDate2JsDateStr(item['DateOfBirth']);
+                });
+                $('#signRoomRenterDlg').find('table.renter').datagrid('loadData', {
+                    total: resp.length,
+                    rows: resp
+                });
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    function selectRenter(i, data){
+        var tbl = $('#signRoomRenterDlg').find('table.renter');
+        if(tbl.datagrid('getSelections').length < 1){
+            $.messager.alert('提示','请选择入住人！','info');
+            return;
+        }
+        var renter = tbl.datagrid('getSelected');
+        $('#signRoomTab').find('form.signForm').form('load',{
+            'TenantID': renter.TenantID,
+            'TenantInfo.TenantName': renter.TenantName,
+            'TenantInfo.Phone': renter.Phone,
+            'TenantInfo.Gender': renter.Gender,
+            'TenantInfo.IDNo': renter.IDNo
+        });
+        $('.easyui-dialog').dialog('close');
+    };
+
+    function saveRenter(){
+        var dlg = $('#signRoomEditRenterDlg'), form = dlg.find('form');
+        if(!form.form('validate'))return;
+        var formData =  form.serializeArray();
+        var data = {};
+        $.each(formData, function(i, v) {
+            if (v.name == 'DateOfBirth') {
+                data[v.name] = $.jsDateStr2WcfDate(v.value);
+            } else {
+                data[v.name] = v.value;
+            }
+        });
+        var url = '/YSService/TenantService/Add';
+        if(data['TenantID'] != '0'){
+            url = '/YSService/TenantService/Update';
+        }
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: JSON.stringify(data),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (msg) {
+                queryRenters();
+                dlg.dialog('close');
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    function deleteRenter(){
+        var mainTbl = $('#signRoomRenterDlg').find('table.renter');
+        if(mainTbl.datagrid('getSelections').length < 1){
+            $.messager.alert('提示','请先选择要删除的数据','info');
+            return;
+        }
+        var data = mainTbl.datagrid('getSelected');
+        $.messager.confirm('确认','确认删除?',function(r){
+            if (r){
+                $.ajax({
+                    url: '/YSService/TenantService/Delete',
+                    type: "POST",
+                    data: JSON.stringify({TenantID: data.TenantID}),
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (msg) {
+                        queryRenters();
+                    },
+                    error: function (XMLHttpRequest, textStatus, thrownError) {
+                        alert("Error Occured!");
+                    }
+                });
+            }
+        });
+    };
+
     return {
         onRoomTreeChange: onRoomTreeChange,
         loadMainData: loadMainData,
         openDiscountDlg: openDiscountDlg,
         selectDiscount: selectDiscount,
-        confirm: confirm
+        confirm: confirm,
+        openRenterDlg: openRenterDlg,
+        queryRenters: queryRenters,
+        selectRenter: selectRenter,
+        saveRenter: saveRenter,
+        deleteRenter: deleteRenter
     };
 })();
 
@@ -316,7 +491,62 @@ window.grid.cfg.signRoom = {
     }
 };
 
+window.grid.cfg.signRoom.renter =  {
+    singleSelect:true,
+    rownumbers: true,
+    pagination: true,
+    fit: true,
+    columns:[[
+        {field:'CK',checkbox:true,width:80},
+        {field:'TenantName',title:'姓名',width:100},
+        {field:'Phone',title:'手机',width:100},
+        {field:'Gender',title:'性别',width:40, formatter: function(v){return v? '男':'女';}},
+        {field:'Nationality',title:'国籍',width:100},
+        {field:'IDTypeName',title:'护照类型',width:70},
+        {field:'IDNo',title:'证件号码',width:100},
+        {field:'Profession',title:'职业',width:50},
+        {field:'EducationTypeID',title:'学历',width:50, formatter: function(v){return ys.Constant.EDUCATION[v-1].text;}},
+        {field:'DateOfBirth',title:'出生日期',width:70},
+        {field:'ConstellationID',title:'星座',width:50, formatter: function(v){return ys.Constant.CONSTELLATION[v-1].text;}},
+        {field:'Hobbies',title:'爱好',width:100},
+        {field:'EmergencyContact',title:'紧急联系人',width:100},
+        {field:'EmergencyPhone',title:'紧急联系人电话',width:100},
+        {field:'SourceID',title:'来源',width:70, formatter: function(v){return ys.Constant.SOURCE[v-1].text;}}
+    ]],
+    toolbar: [{
+        id: '',
+        text: '新增',
+        iconCls: 'icon-add',
+        handler: function () {
+            var dlg = $('#signRoomEditRenterDlg'), form = dlg.find('form');
+            dlg.dialog('open').dialog('center').dialog('setTitle','新增租客信息');
+            form.form('clear');
+            form.form('load', {TenantID:0})
+        }
+    }, "-", {
+        id: '',
+        text: '编辑',
+        iconCls: 'icon-edit',
+        handler: function () {
+            var dlg = $('#signRoomEditRenterDlg'), form = dlg.find('form'), mainTbl = $('#signRoomRenterDlg').find('table.renter');
+            if(mainTbl.datagrid('getSelections').length < 1){
+                $.messager.alert('提示','请先选择要编辑的数据','info');
+                return;
+            }
+            dlg.dialog('open').dialog('center').dialog('setTitle','编辑租客信息');
+            form.form('load', mainTbl.datagrid('getSelected'));
+        }
+    }, "-", {
+        id: '',
+        text: '删除',
+        iconCls: 'icon-remove',
+        handler: ys.modules.SignRoom.deleteRenter
+    }, "-"]
+};
+
 (function(){
+    $('#signRoomRenterDlg').find('table.renter').datagrid(window.grid.cfg.signRoom.renter);
+
     $.ajax({
         url: '/YSService/DiscountService/GetDataList',
         method: 'POST',

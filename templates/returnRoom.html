@@ -1,30 +1,32 @@
 <div class="easyui-layout" data-options="fit:true">
-    <div data-options="region:'north',split:true" style="height:60px;padding:10px;">
-        <form class="top-search-form">
-            <input type="hidden" name="CommunityID">
-            <input type="hidden" name="VillageID">
-            <input type="hidden" name="HouseID">
-            <input type="hidden" name="RoomID">
-            <table>
-                <tr>
-                    <td>房间：<input class="easyui-combotree" data-options="
-                    					url:'/YSService/BaseInfoService/GetTree3',
-                                        method:'get',
-                                        animate:true,
-                                        panelHeight: 'auto',
-                                        panelWidth: 300,
-                                        valueField:'id',
-                                        textField:'text',
-                                        onClick: ys.modules.ReturnRoom.onRoomTreeChange
-                             " style="width:200px;">
-                    </td>
-                    <td><input type="button" value="查询" onclick="ys.modules.ReturnRoom.loadMainData()"></input></td>
-                </tr>
-            </table>
-        </form>
+    <div class="easyui-layout" data-options="region:'center',fit:true">
+        <div data-options="region:'north',split:true" style="height:60px;padding:10px;">
+            <form class="top-search-form">
+                <input type="hidden" name="CommunityID">
+                <input type="hidden" name="VillageID">
+                <input type="hidden" name="HouseID">
+                <input type="hidden" name="RoomID">
+                <table>
+                    <tr>
+                        <td>房间：<input class="easyui-combotree" data-options="
+                                            url:'/YSService/BaseInfoService/GetTree3',
+                                            method:'get',
+                                            animate:true,
+                                            panelHeight: 'auto',
+                                            panelWidth: 300,
+                                            valueField:'id',
+                                            textField:'text',
+                                            onClick: ys.modules.ReturnRoom.onRoomTreeChange
+                                 " style="width:200px;">
+                        </td>
+                        <td><input type="button" value="查询" onclick="ys.modules.ReturnRoom.loadMainData()"></input></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <div data-options="region:'center'"><table class="main"></table></div>
     </div>
-    <div data-options="region:'center'"><table class="main"></table></div>
-    <div data-options="region:'south',split:true" style="height:260px;padding:10px;">
+    <div data-options="region:'east',split:true" style="width:700px;padding:10px;">
         <div class="easyui-layout" data-options="fit:true" style="overflow: auto;">
             <div>
                 <h5>入住人信息</h5>

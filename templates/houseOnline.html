@@ -1,56 +1,46 @@
 <div class="easyui-layout" data-options="fit:true">
-    <div data-options="region:'north',split:true" style="height:60px;padding:10px;">
-        <form class="top-search-form">
-            <input type="hidden" name="CommunityID">
-            <input type="hidden" name="VillageID">
-            <input type="hidden" name="HouseID">
-            <table>
-                <tr>
-                    <td>房间：<input class="easyui-combotree" data-options="
-                    					url:'/YSService/BaseInfoService/GetTree3',
-                                        method:'get',
-                                        animate:true,
-                                        panelHeight: 'auto',
-                                        panelWidth: 300,
-                                        valueField:'id',
-                                        textField:'text',
-                                        onClick: ys.modules.HouseOnline.onRoomTreeChange
-                             " style="width:200px;">
-                    </td>
-                    <td>状态：<select name="HouseStatus" >
-                        <option value="">--全部--</option>
-                        <option value="1">签约收房</option>
-                        <option value="2">信息交接</option>
-                        <option value="3">装修方案</option>
-                        <option value="4">拍照上传</option>
-                        <option value="5">定价上线</option></select>
-                    </td>
-                    <td><input type="button" value="查询" onclick="ys.modules.HouseOnline.loadMainData()"></td>
-                </tr>
-            </table>
-        </form>
+    <div class="easyui-layout" data-options="region:'center',fit:true">
+        <div data-options="region:'north',split:true,border:false" style="height:60px;padding:10px;">
+            <form class="top-search-form">
+                <input type="hidden" name="CommunityID">
+                <input type="hidden" name="VillageID">
+                <input type="hidden" name="HouseID">
+                <table>
+                    <tr>
+                        <td>房间：<input class="easyui-combotree" data-options="
+                                            url:'/YSService/BaseInfoService/GetTree3',
+                                            method:'get',
+                                            animate:true,
+                                            panelHeight: 'auto',
+                                            panelWidth: 300,
+                                            valueField:'id',
+                                            textField:'text',
+                                            onClick: ys.modules.HouseOnline.onRoomTreeChange
+                                 " style="width:200px;">
+                        </td>
+                        <td>状态：<select name="HouseStatus" class="easyui-combobox">
+                            <option value="">--全部--</option>
+                            <option value="1">签约收房</option>
+                            <option value="2">信息交接</option>
+                            <option value="3">装修方案</option>
+                            <option value="4">拍照上传</option>
+                            <option value="5">定价上线</option></select>
+                        </td>
+                        <td><input type="button" value="查询" onclick="ys.modules.HouseOnline.loadMainData()"></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <div data-options="region:'center'"><table class="main"></table></div>
     </div>
-
-                <!--
-                <form>
-                    <table>
-                        <tr>
-                            <td><input type="button" value="签约收房(5)" class="btn btn-danger" style="width:120px;height:50px;"></input></td>
-                            <td><input type="button" value="信息交接(4)" class="btn btn-warning" style="width:120px;height:50px;"></input></td>
-                            <td><input type="button" value="装修方案(6)" class="btn btn-info" style="width:120px;height:50px;"></input></td>
-                            <td><input type="button" value="拍照上传(0)" class="btn btn-success" style="width:120px;height:50px;"></input></td>
-                            <td><input type="button" value="定价上线(1)" class="btn btn-primary" style="width:120px;height:50px;"></input></td>
-                        </tr>
-                    </table>
-                </form>-->
-    <div data-options="region:'center'"><table class="main"></table></div>
-    <div data-options="region:'south',split:true" style="height:300px;">
+    <div data-options="region:'east',split:true" style="width:700px;">
         <div class="easyui-tabs" data-options="fit:true,border:false,plain:true">
             <div title="签约收房"><table class="contract"></table></div>
             <div title="信息交接"><table class="cost"></table></div>
-            <div title="装修方案"><table class="renovation"></table></div>
+            <!--<div title="装修方案"><table class="renovation"></table></div>
             <div title="拍照上传"><table class="upImg"></table></div>
-            <div title="定价上线"><table class="roomPrice"></table></div>
+            <div title="定价上线"><table class="roomPrice"></table></div>-->
+            <div title="公寓信息" class="rooms" style="padding:10px;"></div>
         </div>
     </div>
 </div>
@@ -138,6 +128,54 @@
     <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="ys.modules.HouseOnline.onLineRoom()" style="width:90px">保存</a>
     <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('.easyui-dialog').dialog('close')" style="width:90px">取消</a>
 </div>
+
+<script type="text/template" id="houseOnlineRoomFormTpl">
+    <div class="easyui-panel" title="公寓信息" style="width:100%;min-height:100px;padding:10px;"
+         data-options="style:{marginTop:10},
+             tools:[
+				{
+					iconCls:'icon-ok',
+					text: '上线',
+					handler:ys.modules.HouseOnline.onLineRoom
+				},{
+					iconCls:'icon-cancel',
+					text: '下线',
+					handler:ys.modules.HouseOnline.downLineRoom
+				},{
+					iconCls:'icon-remove',
+					text: '删除',
+					handler:ys.modules.HouseOnline.deleteRoomRenovation
+				}]">
+        <form novalidate>
+            <input type="hidden" name="RoomID">
+            <input type="hidden" name="HouseID">
+            <table>
+                <tr>
+                    <td>
+                        <label>房间编号:</label>
+                        <input name="RoomNo" class="easyui-textbox" data-options="required:true" style="width:120px;">
+                        <label>朝向:</label>
+                        <select name="Direction" class="easyui-combobox"  data-options="required:true" style="width:120px;">
+                            <option value="0">无窗户</option>
+                            <option value="1">朝东</option>
+                            <option value="2">朝南</option>
+                            <option value="3">朝西</option>
+                            <option value="4">朝北</option>
+                        </select>
+                        <label>价格(元):</label>
+                        <input name="Rent" class="easyui-numberbox" data-options="precision:2" style="width:100px;">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="renovation-list"><label style="width:80px;">配套设施:</label></td>
+                </tr>
+                <tr>
+                    <td style="text-align: right;"><input type="button" value="保存" onclick="ys.modules.HouseOnline.saveRoomRenovation(this)"></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</script>
 
 <script>
 ys.modules.HouseOnline =  (function(){
@@ -372,6 +410,39 @@ ys.modules.HouseOnline =  (function(){
         });
     };
 
+    function loadHouseRenovations(params){
+        $.ajax({
+            url: '/YSService/OnLineService/GetRoomInfo',
+            method: 'POST',
+            data: JSON.stringify({HouseID:params.HouseID}),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (resp) {
+                var tab = $('#houseOnlineTab div.rooms'), i = 0;
+                var tpl = $('#houseOnlineRoomFormTpl').html();
+                tab.empty();
+                var htmlStr = '<div><button onclick="ys.modules.HouseOnline.addRoomRenovation()">+ 添加新房间</button></div>';
+                for(; i < resp.length; ++i){
+                    htmlStr += tpl;
+                }
+                tab.panel({
+                    content:htmlStr
+                });
+                tab.find('.renovation-list').append(ys.modules.HouseOnline.renovationOpts);
+                tab.find('form').each(function(i){
+                    $(this).form('load', resp[i]);
+                    var rr = resp[i].RommRenovation;
+                    for (var i = 0; rr && i < rr.length; i++) {
+                        $(this).find(".renovation-list [value=" + rr[i].RenovationID + "]").attr("checked", true);
+                    };
+                });
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
     function saveHouseRenovation(){
         var dlg = $('#editHouseRenovationDlg'), form = dlg.find('form');
         if(!form.form('validate'))return;
@@ -406,6 +477,42 @@ ys.modules.HouseOnline =  (function(){
         });
     };
 
+    function saveRoomRenovation(btn){
+        var form = $(btn).parentsUntil('#houseOnlineTab div.rooms', 'form');
+        if(!form.form('validate'))return;
+        var formData =  form.serializeArray();
+        var data = {RommRenovation:[]};
+        $.each(formData, function(i, v) {
+            if(v.name == 'RommRenovationItem'){
+                data['RommRenovation'].push({
+                    RenovationID: v.value
+                });
+            } else {
+                data[v.name] = v.value;
+            }
+        });
+        var url = '/YSService/OnLineService/AddRoomInfo';
+        if(data['RoomID'] != '0'){
+            url = '/YSService/OnLineService/UpdateRoomInfo';
+        }
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: JSON.stringify(data),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (msg) {
+                $.messager.alert('提示','公寓信息已保存成功！','info');
+                $(btn).parentsUntil('#houseOnlineTab div.rooms', '.panel').removeClass('new-item');
+                //loadHouseRenovation($('#houseOnlineTab').find('table.main').datagrid('getSelected'));
+                //dlg.dialog('close');
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
     function deleteHouseRenovation(){
         var tbl = $('#houseOnlineTab').find('table.renovation');
         if(tbl.datagrid('getSelections').length < 1){
@@ -428,6 +535,47 @@ ys.modules.HouseOnline =  (function(){
                         alert("Error Occured!");
                     }
                 });
+            }
+        });
+    };
+
+    function addRoomRenovation(){
+        var mainTbl = $('#houseOnlineTab').find('table.main');
+        if(mainTbl.datagrid('getSelections').length < 1){
+            $.messager.alert('提示','请先选择一条房源记录','info');
+            return;
+        }
+        var tab = $('#houseOnlineTab div.rooms');
+        var newPanel = $($('#houseOnlineRoomFormTpl').html());
+        newPanel.insertBefore(tab.find('.panel').get(0)).panel();
+        $.parser.parse(newPanel);
+        newPanel.find('.panel').addClass('new-item');
+        newPanel.find('.renovation-list').append(ys.modules.HouseOnline.renovationOpts);
+        newPanel.find('form').form('load', {HouseID: mainTbl.datagrid('getSelected').HouseID, RoomID: 0});
+    };
+
+    function deleteRoomRenovation(){
+        var panel = $(this).parentsUntil('#houseOnlineTab div.rooms', '.panel');
+        var data = $.form2Json(panel.find('form'));
+        $.messager.confirm('确认','确认删除?',function(r){
+            if (r){
+                if(data.RoomID) {
+                    $.ajax({
+                        url: '/YSService/OnLineService/DeleteRoomInfo',
+                        type: "POST",
+                        data: JSON.stringify({RoomID: data.RoomID}),
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (msg) {
+                            panel.remove();
+                        },
+                        error: function (XMLHttpRequest, textStatus, thrownError) {
+                            alert("Error Occured!");
+                        }
+                    });
+                } else {
+                    panel.remove();
+                }
             }
         });
     };
@@ -529,7 +677,7 @@ ys.modules.HouseOnline =  (function(){
                         $.messager.alert('提示','已完成房源下线！','success');
                     },
                     error: function (XMLHttpRequest, textStatus, thrownError) {
-                        alert("Error Occured!");
+                        alert([XMLHttpRequest, textStatus, thrownError]);
                     }
                 });
             }
@@ -537,13 +685,14 @@ ys.modules.HouseOnline =  (function(){
     };
 
     function onLineRoom(){
-        var dlg = $('#editRoomPriceDlg'), form = dlg.find('form');
-        if(!form.form('validate'))return;
-        var formData =  form.serializeArray();
-        var data = {};
-        $.each(formData, function(i, v) {
-            data[v.name] = v.value;
-        });
+        var panel = $(this).parentsUntil('#houseOnlineTab div.rooms', '.panel');
+        var data = $.form2Json(panel.find('form'));
+        if(!data.Rent){
+            $.messager.alert('提示','请先填写房间价格后再进行房间上线！','info');
+            return;
+        }
+        //if(!form.form('validate'))return;
+        //var formData =  form.serializeArray();
         $.ajax({
             url: '/YSService/OnLineService/OnLine',
             method: 'POST',
@@ -552,8 +701,8 @@ ys.modules.HouseOnline =  (function(){
             contentType: "application/json; charset=utf-8",
             success: function (resp) {
                 $.messager.alert('提示','已完成房间上线！','success');
-                loadHouseRenovation($('#houseOnlineTab').find('table.main').datagrid('getSelected'));
-                dlg.dialog('close');
+                //loadHouseRenovation($('#houseOnlineTab').find('table.main').datagrid('getSelected'));
+                //dlg.dialog('close');
             },
             error: function (XMLHttpRequest, textStatus, thrownError) {
                 alert("Error Occured!");
@@ -561,16 +710,18 @@ ys.modules.HouseOnline =  (function(){
         });
     };
 
-    function downLineRoom(params){
+    function downLineRoom(){
+        var panel = $(this).parentsUntil('#houseOnlineTab div.rooms', '.panel');
+        var data = $.form2Json(panel.find('form'));
         $.ajax({
             url: '/YSService/OnLineService/DownLine',
             method: 'POST',
-            data: JSON.stringify({RoomID:params.RoomID}),
+            data: JSON.stringify({RoomID:data.RoomID}),
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             success: function (resp) {
                 $.messager.alert('提示','已完成房间下线！','success');
-                loadHouseRenovation($('#houseOnlineTab').find('table.main').datagrid('getSelected'));
+                //loadHouseRenovation($('#houseOnlineTab').find('table.main').datagrid('getSelected'));
             },
             error: function (XMLHttpRequest, textStatus, thrownError) {
                 alert("Error Occured!");
@@ -591,6 +742,10 @@ ys.modules.HouseOnline =  (function(){
         confirmInterfacing:confirmInterfacing,
 
         loadHouseRenovation: loadHouseRenovation,
+        loadHouseRenovations: loadHouseRenovations,
+        saveRoomRenovation: saveRoomRenovation,
+        deleteRoomRenovation: deleteRoomRenovation,
+        addRoomRenovation: addRoomRenovation,
         saveHouseRenovation: saveHouseRenovation,
         deleteHouseRenovation: deleteHouseRenovation,
         confirmRenovation: confirmRenovation,
@@ -622,6 +777,7 @@ window.grid.cfg.houseOnline = {
         ys.modules.HouseOnline.loadHouseContract(data);
         ys.modules.HouseOnline.loadHouseCost({HouseID: data.HouseID});
         ys.modules.HouseOnline.loadHouseRenovation(data);
+        ys.modules.HouseOnline.loadHouseRenovations(data);
     },
     toolbar: [{
         text: '签约收房',
@@ -828,9 +984,9 @@ window.grid.cfg.houseOnline.roomPrice = {
 
     $('#houseOnlineTab').find('table.contract').datagrid(window.grid.cfg.houseOnline.contract);
     $('#houseOnlineTab').find('table.cost').datagrid(window.grid.cfg.houseOnline.cost);
-    $('#houseOnlineTab').find('table.upImg').datagrid(window.grid.cfg.houseOnline.renovation);
-    $('#houseOnlineTab').find('table.renovation').datagrid(window.grid.cfg.houseOnline.renovation);
-    $('#houseOnlineTab').find('table.roomPrice').datagrid(window.grid.cfg.houseOnline.roomPrice);
+    //$('#houseOnlineTab').find('table.upImg').datagrid(window.grid.cfg.houseOnline.renovation);
+    //$('#houseOnlineTab').find('table.renovation').datagrid(window.grid.cfg.houseOnline.renovation);
+    //$('#houseOnlineTab').find('table.roomPrice').datagrid(window.grid.cfg.houseOnline.roomPrice);
 
     //获取房间配套基础信息
     $.ajax({
@@ -843,7 +999,7 @@ window.grid.cfg.houseOnline.roomPrice = {
             for(; i < resp.length; ++i){
                 str += '<label style="margin:8px 4px;"><input type="checkbox" name="RommRenovationItem" value="' + resp[i].RenovationID + '">' + resp[i].RenovationName + '</label>'
             }
-
+            ys.modules.HouseOnline.renovationOpts = str;
             $('#editHouseRenovationDlg .renovation-list').append(str);
         },
         error: function (XMLHttpRequest, textStatus, thrownError) {

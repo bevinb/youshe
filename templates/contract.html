@@ -136,15 +136,17 @@
                         <td>合同编号:</td>
                         <td>
                             <input name="ContractNo" class="easyui-textbox" style="width:150px;" data-options="required:true">
-                            <span class="label">房屋接收人:</span><input name="SendeeID" class="easyui-textbox" style="width:150px;">
+                            <span class="label">房屋接收人:</span><input name="SendeeID" class="easyui-textbox" style="width:150px;"  data-options="required:true">
                         </td>
                     </tr>
                     <tr>
                         <td>房屋租金:</td>
                         <td>
                             <input name="Rent" class="easyui-textbox" style="width:120px;" data-options="required:true">元/月
-                            <span class="label" style="padding-left:18px;">房屋押金:</span><input name="Deposit" class="easyui-numberbox" style="width:120px;">元/月
-                            <span class="label">付款方式:</span>押<input name="DepositCout" class="easyui-numberbox" style="width:50px;">付<input name="PayCout" class="easyui-numberbox" style="width:50px;">
+                            <span class="label" style="padding-left:18px;">房屋押金:</span><input name="Deposit" class="easyui-numberbox" style="width:120px;"  data-options="required:true">元/月
+                            <span class="label">付款方式:</span>
+                            押<select name="DepositCout" class="easyui-combobox" data-options="required:true" style="width:50px;"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select>
+                            付<select name="PayCout" class="easyui-combobox" data-options="required:true" style="width:50px;"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="6">6</option><option value="12">12</option></select>
                         </td>
                     </tr>
                     <tr>
@@ -449,15 +451,13 @@ window.grid.cfg.contract = {
         {field:'ContractNo',title:'合同编号',width:100},
         {field:'ContractStatusName',title:'状态',width:100},
         {field:'HouseNo',title:'房源编号',width:100, formatter:function(v,r){return r.HousInfo.HouseNO;}},
-        {field:'OwnerName',title:'业主姓名',width:100, formatter:function(v,r){return r.OwnerInfo.OwnerName;}},
+        {field:'OwnerName',title:'业主姓名',width:70, formatter:function(v,r){return r.OwnerInfo.OwnerName;}},
         {field:'OwnerPhone',title:'业主电话',width:100, formatter:function(v,r){return r.OwnerInfo.Phone;}},
-        {field:'Rent',title:'房屋租金',width:100},
-        {field:'Deposit',title:'房屋押金',width:100},
+        {field:'Rent',title:'房屋租金(元)',width:70},
+        {field:'Deposit',title:'房屋押金(元)',width:70},
         {field:'BeginDate',title:'开始时间',width:100},
         {field:'EndDate',title:'结束时间',width:100},
-        {field:'SendeeName',title:'房屋接收人',width:100},
-        {field:'CreateDate',title:'创建时间',width:100},
-        {field:'Creater',title:'创建人',width:100}
+        {field:'SendeeName',title:'房屋接收人',width:100}
     ]],
     onSelect:function(i, data){
         ys.modules.Contract.loadSubData(data);
@@ -470,20 +470,12 @@ window.grid.cfg.contract = {
             var dlg = $('#editContractDlg'), form = dlg.find('form');
             dlg.dialog('open').dialog('center').dialog('setTitle','新增合同');
             form.form('clear');
-            form.form('load', {ContractID:0,ContractStatus:1})
-        }
-    }, "-", {
-        id: '',
-        text: '编辑',
-        iconCls: 'icon-edit',
-        handler: function () {
-            var dlg = $('#editContractDlg'), form = dlg.find('form'), mainTbl = $('#contractTab').find('table.main');
-            if(mainTbl.datagrid('getSelections').length < 1){
-                $.messager.alert('提示','请先选择要编辑的数据','info');
-                return;
-            }
-            dlg.dialog('open').dialog('center').dialog('setTitle','编辑合同');
-            form.form('load', mainTbl.datagrid('getSelected'));
+            var start = new Date();
+            start = $.jsDate2jsDateStr(start);
+            var end = new Date();
+            end.setFullYear(end.getFullYear() + 1);
+            end = $.jsDate2jsDateStr(end);
+            form.form('load', {ContractID:0,ContractStatus:1,DepositCout:1,PayCout:3,BeginDate:start,EndDate:end});
         }
     }, "-", {
         id: '',
@@ -502,12 +494,12 @@ window.grid.cfg.contractSub =  {
     singleSelect:true,
     rownumbers: true,
     columns:[[
-        {field:'PayRentNo',title:'付款编号',width:100},
-        {field:'PayRentDate',title:'应付日期',width:100},
-        {field:'PayRent',title:'应付金额',width:100},
-        {field:'ActualPayRentDate',title:'实付日期',width:100},
-        {field:'PayTypeName',title:'付款方式',width:100},
-        {field:'Payee',title:'付款人',width:100},
+        {field:'PayRentNo',title:'付款编号',width:280},
+        {field:'PayRentDate',title:'应付日期',width:80},
+        {field:'PayRent',title:'应付金额(元)',width:70},
+        {field:'ActualPayRentDate',title:'实付日期',width:80},
+        {field:'PayTypeName',title:'付款方式',width:70},
+        {field:'Payee',title:'付款人',width:70},
         {field:'Remarks',title:'备注:',width:100}
     ]],
     toolbar: [{

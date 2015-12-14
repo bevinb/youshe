@@ -70,7 +70,7 @@
 
 <script>
 ys.modules.Community =  (function(){
-    function loadMainData(){
+    function loadMainData(){return
         var mainTb = $('#communityTab');
         var params = $.form2JsonNotNull(mainTb.find('.top-search-form'));
         params.CityID = ys.Session.currentCity;
@@ -154,6 +154,11 @@ ys.modules.Community =  (function(){
 })();
 
 window.grid.cfg.community = {
+    url: '/YSService/CommunityService/GetDataList',
+    method: 'POST',
+    params: JSON.stringify({}),
+    dataType: "json",
+    contentType: "application/json; charset=utf-8",
     singleSelect:true,
     rownumbers: true,
     pagination: true,

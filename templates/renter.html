@@ -160,9 +160,36 @@ ys.modules.Renter =  (function(){
         });
     };
 
+    function deleteMainItem(){
+        var mainTbl = $('#renterTab').find('table.main');
+        if(mainTbl.datagrid('getSelections').length < 1){
+            $.messager.alert('提示','请先选择要删除的数据','info');
+            return;
+        }
+        var data = mainTbl.datagrid('getSelected');
+        $.messager.confirm('确认','确认删除?',function(r){
+            if (r){
+                $.ajax({
+                    url: '/YSService/TenantService/Delete',
+                    type: "POST",
+                    data: JSON.stringify({TenantID: data.TenantID}),
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (msg) {
+                        loadMainData();
+                    },
+                    error: function (XMLHttpRequest, textStatus, thrownError) {
+                        alert("Error Occured!");
+                    }
+                });
+            }
+        });
+    };
+
     return {
         loadMainData: loadMainData,
-        saveMainItem: saveMainItem
+        saveMainItem: saveMainItem,
+        deleteMainItem: deleteMainItem
     };
 })();
 
@@ -214,7 +241,7 @@ window.grid.cfg.renter =  {
         id: '',
         text: '删除',
         iconCls: 'icon-remove',
-        handler: confirmRemove
+        handler: ys.modules.Renter.deleteMainItem
     }, "-"]
 };
 

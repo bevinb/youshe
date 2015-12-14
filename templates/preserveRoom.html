@@ -1,70 +1,72 @@
 <div class="easyui-layout" data-options="fit:true">
-    <div data-options="region:'north',split:true" style="height:60px;padding:10px;">
-        <form class="top-search-form">
-            <input type="hidden" name="CommunityID">
-            <input type="hidden" name="VillageID">
-            <input type="hidden" name="HouseID">
-            <input type="hidden" name="RoomID">
-            <table>
-                <tr>
-                    <td>房间：<input class="easyui-combotree" data-options="
-                    					url:'/YSService/BaseInfoService/GetTree3',
-                                        method:'get',
-                                        animate:true,
-                                        panelHeight: 'auto',
-                                        panelWidth: 300,
-                                        valueField:'id',
-                                        textField:'text',
-                                        onClick: ys.modules.PreserveRoom.onRoomTreeChange
-                             " style="width:200px;">
-                    </td>
-                    <td><input type="button" value="查询" onclick="ys.modules.PreserveRoom.loadMainData()"></input></td>
-                </tr>
-            </table>
-        </form>
-    </div>
-    <div data-options="region:'center'"><table class="main"></table></div>
-    <div data-options="region:'south',split:true" style="height:260px;padding:10px;">
-        <div>
-            <h5>预定人信息</h5>
-            <form class="preserveForm" method="post" novalidate>
-                <input name="RoomID" type="hidden" data-options="required:true">
-                <table cellpadding="5">
+    <div class="easyui-layout" data-options="region:'center',fit:true">
+        <div data-options="region:'north',split:true" style="height:60px;padding:10px;">
+            <form class="top-search-form">
+                <input type="hidden" name="CommunityID">
+                <input type="hidden" name="VillageID">
+                <input type="hidden" name="HouseID">
+                <input type="hidden" name="RoomID">
+                <table>
                     <tr>
-                        <td>入住人姓名:</td>
-                        <td><input name="TenName" class="easyui-textbox" style="width:150px;"  data-options="required:true"></td>
-                        <td>预计入住日期:</td>
-                        <td><input name="Sdate" class="easyui-datebox" data-options="required:true"></input></td>
-                    </tr>
-                    <tr>
-                        <td>入住人手机:</td>
-                        <td><input name="Phone" class="easyui-textbox" style="width:150px;"  data-options="required:true"></td>
-                        <td>预计签约日期:</td>
-                        <td><input name="Edate" class="easyui-datebox" data-options="required:true"></input></td>
-                    </tr>
-                    <tr>
-                        <td>入住人性别:</td>
-                        <td><input name="Gender" type="radio" value="1">男<input name="Gender" type="radio" value="0">女</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>订金金额:</td>
-                        <td><input name="Deposit" class="easyui-textbox" style="width:150px;" data-options="required:true"></td>
-                        <td>支付方式:</td>
-                        <td><input name="PayTypeID" class="easyui-textbox" style="width:150px;" data-options="required:true"></td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td>房间：<input class="easyui-combotree" data-options="
+                                            url:'/YSService/BaseInfoService/GetTree3',
+                                            method:'get',
+                                            animate:true,
+                                            panelHeight: 'auto',
+                                            panelWidth: 300,
+                                            valueField:'id',
+                                            textField:'text',
+                                            onClick: ys.modules.PreserveRoom.onRoomTreeChange
+                                 " style="width:200px;">
+                        </td>
+                        <td><input type="button" value="查询" onclick="ys.modules.PreserveRoom.loadMainData()"></input></td>
                     </tr>
                 </table>
             </form>
-            <div id="reserveTenantContractDlgBtns">
-                <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="ys.modules.PreserveRoom.confirm()" style="width:90px">确认</a>
-                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="ys.modules.PreserveRoom.cancel()" style="width:90px">取消</a>
+        </div>
+        <div data-options="region:'center'"><table class="main"></table></div>
+    </div>
+    <div class="easyui-layout" data-options="region:'east',split:true" style="width:700px;">
+        <div data-options="region:'center'"><table class="history"></table></div>
+        <div data-options="region:'south',split:true" style="height:400px;padding:10px;">
+            <div>
+                <h5>预定人信息</h5>
+                <form class="preserveForm" method="post" novalidate>
+                    <input name="RoomID" type="hidden" data-options="required:true">
+                    <table cellpadding="5">
+                        <tr>
+                            <td>入住人姓名:</td>
+                            <td><input name="TenName" class="easyui-textbox" style="width:150px;"  data-options="required:true"></td>
+                            <td>预计入住日期:</td>
+                            <td><input name="Sdate" class="easyui-datebox" data-options="required:true"></td>
+                        </tr>
+                        <tr>
+                            <td>入住人手机:</td>
+                            <td><input name="Phone" class="easyui-textbox" style="width:150px;"  data-options="required:true"></td>
+                            <td>预计签约日期:</td>
+                            <td><input name="Edate" class="easyui-datebox" data-options="required:true"></td>
+                        </tr>
+                        <tr>
+                            <td>入住人性别:</td>
+                            <td>
+                                <select class="easyui-combobox" name="Gender" data-options="required:true">
+                                <option value="1">男</option>
+                                <option value="0">女</option>
+                            </select></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>订金金额:</td>
+                            <td><input name="Deposit" class="easyui-textbox" style="width:150px;" data-options="required:true"></td>
+                            <td>支付方式:</td>
+                            <td><input name="PayTypeID" class="easyui-textbox" style="width:150px;" data-options="required:true"></td>
+                        </tr>
+                    </table>
+                </form>
+                <div>
+                    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="ys.modules.PreserveRoom.confirm()" style="width:90px">确认</a>
+                </div>
             </div>
         </div>
     </div>
@@ -136,22 +138,16 @@ ys.modules.PreserveRoom =  (function(){
     };
 
     function cancel(){
-        if($('#preserveRoomTab').find('table.main').datagrid('getSelections').length < 1){
-            $.messager.alert('提示','请先选择一个房间！','info');
+        if($('#preserveRoomTab').find('table.history').datagrid('getSelections').length < 1){
+            $.messager.alert('提示','请先选择要取消的订单！','info');
             return;
         }
-        var form = $('#preserveRoomTab').find('form.preserveForm');
-        if(!form.form('validate'))return;
-        var formData =  form.serializeArray();
-        var data = {};
-        $.each(formData, function(i, v) {
-            data[v.name] = v.value;
-        });
+        var data = $('#preserveRoomTab').find('table.history').datagrid('getSelected');
         var url = '/YSService/TenantContractService/CancelOrder';
         $.ajax({
             url: url,
             type: "POST",
-            data: JSON.stringify(data),
+            data: JSON.stringify({OrderID:data.OrderID}),
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             success: function (msg) {
@@ -163,11 +159,39 @@ ys.modules.PreserveRoom =  (function(){
         });
     };
 
+    function loadPreserveHistory(){
+        var data = $('#preserveRoomTab').find('table.main').datagrid('getSelected');
+        var start = new Date();
+        start.setMonth(start.getMonth() - 12);
+        start = $.jsDate2WcfDate(start);
+        var end = new Date();
+        end.setDate(end.getDate() + 1);
+        end = $.jsDate2WcfDate(end);
+        var params = { RoomID: data.RoomID, SDate: start, EDate: end };
+        $.ajax({
+            url: '/YSService/TenantContractService/GetOrder',
+            method: 'POST',
+            data: JSON.stringify(params),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (resp) {
+                $('#preserveRoomTab').find('table.history').datagrid('loadData', {
+                    total: resp.length,
+                    rows: resp
+                });
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
     return {
         onRoomTreeChange: onRoomTreeChange,
         loadMainData: loadMainData,
         confirm: confirm,
-        cancel: cancel
+        cancel: cancel,
+        loadPreserveHistory: loadPreserveHistory
     };
 })();
 
@@ -188,11 +212,53 @@ window.grid.cfg.preserveRoom = {
         }}
     ]],
     onSelect:function(i, data){
-        var form = $('#preserveRoomTab').find('form.preserveForm');
-        form.form('clear');
-        form.form('load', {RoomID: data.RoomID});
+        ys.modules.PreserveRoom.loadPreserveHistory();
     }
 };
+window.grid.cfg.preserveRoom.history = {
+    singleSelect:true,
+    rownumbers: true,
+    fit: true,
+    columns:[[
+        {field:'TenName',title:'入住人',width:70},
+        {field:'Gender',title:'性别',width:70, formatter: function(v){return v? '男':'女';}},
+        {field:'Phone',title:'入住人手机',width:40, formatter: function(v){return ys.Constant.DIRECTION[v].text;}},
+        {field:'OrderStateName',title:'预约状态',width:60},
+        {field:'Deposit',title:'订金金额',width:60},
+        {field:'PayTypeName',title:'支付方式',width:60},
+        {field:'Sdate',title:'预约日期',width:80},
+        {field:'Edate',title:'入住日期',width:80}
+    ]],
+    onSelect:function(i, data){
+        var form = $('#preserveRoomTab').find('form.preserveForm');
+        form.form('load', data);
+    },
+    toolbar: [{
+        id: '',
+        text: '新增',
+        iconCls: 'icon-add',
+        handler: function () {
+            var mainTbl = $('#preserveRoomTab').find('table.main');
+            if(mainTbl.datagrid('getSelections').length < 1){
+                $.messager.alert('提示','请先选择房间','info');
+                return;
+            }
+
+            var form = $('#preserveRoomTab').find('form.preserveForm');
+            form.form('clear');
+            form.form('load', {RoomID: data.RoomID});
+        }
+    }, "-", {
+        id: '',
+        text: '取消',
+        iconCls: 'icon-cancel',
+        handler: ys.modules.PreserveRoom.cancel
+    }]
+};
+
+(function(){
+    $('#preserveRoomTab').find('table.history').datagrid(window.grid.cfg.preserveRoom.history);
+})();
 </script>
 
 

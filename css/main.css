@@ -139,6 +139,10 @@ span.label {
 	min-width:90px;
 }
 
+.panel.new-item {
+  border: 2px solid #CD7F32;
+}
+
 
 
 .btn {
