@@ -54,6 +54,16 @@ $.extend({
 	print: function(htmlStr){
 		frames['printZone'].contentWindow.document.body.innerHTML = htmlStr;
 		frames['printZone'].contentWindow.print();
+	},
+
+	scheduleStyler: function(v){alert(v.length)
+		if(v == 'ÊÕ×â'){
+			return 'background-color:#0044BB;color:#fff;'
+		} else if(v == '½»×â'){
+			return 'background-color:#FF8800;color:#fff;'
+		} else {
+			return 'background-color:#FF3333;color:#fff;'
+		}
 	}
 });
 

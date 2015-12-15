@@ -135,63 +135,66 @@
 			<div title="工作台" style="padding:10px">
 				<div id="pp" style="width:100%;height:100%;position:relative">
 					<div style="width:45%;height:100%;float:left;">
-					    <div id="p" class="easyui-panel" title="付款提示" style="width:100%;height:50%;padding:10px;">
-							<table class="easyui-datagrid"
-									data-options="url:'datagrid_data1.json',method:'get',singleSelect:true,fit:true,fitColumns:true">
-								<thead>
-									<tr>
-										<th data-options="field:'itemid'" width="80">收支类型</th>
-										<th data-options="field:'productid'" width="100">合同编号</th>
-										<th data-options="field:'listprice'" width="80">金额</th>
-										<th data-options="field:'unitcost'" width="80">应付日期</th>
-									</tr>
-								</thead>
-                                <tbody>
-                                <tr>
-                                    <td data-options="field:'itemid'" width="80">收款</td>
-                                    <td data-options="field:'productid'" width="100">000001</td>
-                                    <td data-options="field:'listprice'" width="80">2000</td>
-                                    <td data-options="field:'unitcost',align:'right'" width="80">2015-08-09</td>
-                                </tr>
-                                <tr>
-                                    <td data-options="field:'itemid'" width="80">付款</td>
-                                    <td data-options="field:'productid'" width="100">000003</td>
-                                    <td data-options="field:'listprice'" width="80">6000</td>
-                                    <td data-options="field:'unitcost'" width="80">2015-08-01</td>
-                                </tr>
-                                </tbody>
-							</table>
+					    <div id="workbenchSchedulesTab" class="easyui-panel" title="付款提示" style="width:100%;height:50%;">
+                            <div class="easyui-tabs" data-options="fit:true,border:false">
+                                <div title="全部">
+                                    <table class="easyui-datagrid"
+                                           data-options="url:'/YSService/ReportService/GetAllTips',method:'GET',singleSelect:true,fit:true,border:false">
+                                        <thead>
+                                        <tr>
+                                            <th data-options="field:'TipName', styler:$.scheduleStyler" width="80" align="center"></th>
+                                            <th data-options="field:'TipText',fit:true"></th>
+                                        </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                                <div title="收租">
+                                    <table class="easyui-datagrid"
+                                           data-options="url:'/YSService/ReportService/GetTenantContractPayInfo',method:'GET',singleSelect:true,fit:true,border:false">
+                                        <thead>
+                                        <tr>
+                                            <th data-options="field:'TipName', styler:$.scheduleStyler" width="80" align="center"></th>
+                                            <th data-options="field:'TipText',fit:true"></th>
+                                        </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                                <div title="交租">
+
+                                </div>
+                                <div title="到期">
+                                    <table class="easyui-datagrid"
+                                           data-options="url:'/YSService/ReportService/GetTenantContractInfo',method:'GET',singleSelect:true,fit:true,border:false">
+                                        <thead>
+                                        <tr>
+                                            <th data-options="field:'TipName', styler:$.scheduleStyler" width="80" align="center"></th>
+                                            <th data-options="field:'TipText',fit:true"></th>
+                                        </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                                <div title="备忘">
+
+                                </div>
+                            </div>
 						</div>
-						<div id="p" class="easyui-panel" title="渠道分析" style="width:100%;height:50%;padding:10px;">
-							<img src="img/chart1.png" style="max-height:100%;max-width:100%;">
-						</div>
+                        <div id="workbenchHouseGrid" class="easyui-panel" title="最新房源信息" style="width:100%;height:50%;padding:0px;">
+                            <table class="easyui-datagrid house"
+                                   data-options="singleSelect:true,fit:true,fitColumns:true,border:false">
+                                <thead>
+                                <tr>
+                                    <th data-options="field:'CommunityName'" width="80">社区</th>
+                                    <th data-options="field:'VillageName'" width="100">小区</th>
+                                    <th data-options="field:'HouseNO'" width="80">房源编号</th>
+                                    <th data-options="field:'unitcost'" width="80">上线日期</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
 					</div>
 					<div style="margin-left:10px;width:45%;height:100%;float:left;">
-					    <div id="p" class="easyui-panel" title="最新房源信息" style="width:100%;height:50%;padding:10px;">
-							<table class="easyui-datagrid"
-									data-options="url:'datagrid_data1.json',method:'get',singleSelect:true,fit:true,fitColumns:true">
-								<thead>
-									<tr>
-										<th data-options="field:'itemid'" width="80">社区</th>
-										<th data-options="field:'productid'" width="100">小区</th>
-										<th data-options="field:'listprice'" width="80">房源编号</th>
-										<th data-options="field:'unitcost'" width="80">上线日期</th>
-									</tr>
-								</thead>
-                                <tbody>
-                                <tr>
-                                    <td data-options="field:'itemid'" width="80">中环宜家</td>
-                                    <td data-options="field:'productid'" width="100">天龙苑</td>
-                                    <td data-options="field:'listprice'" width="80">000001</td>
-                                    <td data-options="field:'unitcost',align:'right'" width="80">2015-08-09</td>
-                                </tr>
-
-                                </tbody>
-							</table>
-						</div>
-						<div id="p" class="easyui-panel" title="营业分析" style="width:100%;height:50%;padding:10px;">
-							<img src="img/chart2.png" style="max-height:100%;max-width:100%;">
-						</div>
+                        <div id="workbenchRoomReport" class="easyui-panel" title="房间统计" style="width:100%;height:50%;padding:10px;">加载中...</div>
+						<div id="workbenchFineInfoReport" class="easyui-panel" title="流水统计" style="width:100%;height:50%;padding:10px;">加载中...</div>
 					</div>
 				</div>
 			</div>
@@ -477,11 +480,13 @@
 <script type="text/javascript" src="lib/jquery.portal.js"></script>
 <script type="text/javascript" src="lib/datagrid-cellediting.js"></script>
 <script type="text/javascript" src="lib/masonry.pkgd.js"></script>
+<script type="text/javascript" src="lib/highcharts.js"></script>
 <script type="text/javascript" src="js/constant.js"></script>
 <script type="text/javascript" src="js/util.js"></script>
 <script type="text/javascript" src="js/session.js"></script>
 <script type="text/javascript" src="js/loader.js"></script>
 <script type="text/javascript" src="js/grid-config.js"></script>
+<script type="text/javascript" src="js/workbench.js"></script>
 <script type="text/javascript" src="js/main.js"></script>
 <script type="text/javascript" src="locale/easyui-lang-zh_CN.js"></script>
 </html>

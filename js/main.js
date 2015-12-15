@@ -35,6 +35,9 @@ $(function(){
 			}
 		}
 	});
+
+	//initialize workbench
+	ys.modules.Workbench.init();
 });
 
 function logout(){

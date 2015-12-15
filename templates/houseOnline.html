@@ -559,7 +559,7 @@ ys.modules.HouseOnline =  (function(){
         var data = $.form2Json(panel.find('form'));
         $.messager.confirm('确认','确认删除?',function(r){
             if (r){
-                if(data.RoomID) {
+                if(data.RoomID != '0') {
                     $.ajax({
                         url: '/YSService/OnLineService/DeleteRoomInfo',
                         type: "POST",
