@@ -55,10 +55,8 @@
         <div class="fitem">
             <label>社区图片:</label>
             <div>
-                <img src="img/b.jpg" style="width:80px;height:80px;vertical-align:middle;">
-                <img src="img/b.jpg" style="width:80px;height:80px;vertical-align:middle;">
-                <img src="img/b.jpg" style="width:80px;height:80px;vertical-align:middle;">
-                <span style="width:80px;height:80px;display:inline-block;border:1px solid gray;font-size:64px;text-align:center;vertical-align:middle;line-height:80px;color:gray;">+</span>
+                <!--<span class="file-upload-btn" style="width:80px;height:80px;display:inline-block;border:1px solid gray;font-size:64px;text-align:center;vertical-align:middle;line-height:80px;color:gray;">+</span>-->
+                <div class="file-upload-wrapper"></div>
             </div>
         </div>
     </form>
@@ -70,7 +68,9 @@
 
 <script>
 ys.modules.Community =  (function(){
-    function loadMainData(){return
+    var fileUploader = null;
+
+    function loadMainData(){
         var mainTb = $('#communityTab');
         var params = $.form2JsonNotNull(mainTb.find('.top-search-form'));
         params.CityID = ys.Session.currentCity;
@@ -146,19 +146,42 @@ ys.modules.Community =  (function(){
         });
     };
 
+    function initFileUploader(){
+        if(!fileUploader) {
+            fileUploader = new qq.FineUploader({
+                debug: true,
+                template: 'qq-template-gallery',
+                element: $("#editCommunityDlg .file-upload-wrapper")[0],
+                request: {
+                    endpoint: '/ysuploadfile/FileUpload.aspx'
+                },
+                thumbnails: {
+                    placeholders: {
+                        waitingPath: '/source/placeholders/waiting-generic.png',
+                        notAvailablePath: '/source/placeholders/not_available-generic.png'
+                    }
+                },
+                validation: {
+                    allowedExtensions: ['jpeg', 'jpg']
+                }
+            });
+        }
+    };
+
     return {
         loadMainData: loadMainData,
         saveMainItem: saveMainItem,
-        deleteMainItem: deleteMainItem
+        deleteMainItem: deleteMainItem,
+        initFileUploader: initFileUploader
     };
 })();
 
 window.grid.cfg.community = {
-    url: '/YSService/CommunityService/GetDataList',
-    method: 'POST',
-    params: JSON.stringify({}),
-    dataType: "json",
-    contentType: "application/json; charset=utf-8",
+    //url: '/YSService/CommunityService/GetDataList',
+   // method: 'POST',
+   // params: JSON.stringify({}),
+    //dataType: "json",
+    //contentType: "application/json; charset=utf-8",
     singleSelect:true,
     rownumbers: true,
     pagination: true,
@@ -183,6 +206,7 @@ window.grid.cfg.community = {
             dlg.dialog('open').dialog('center').dialog('setTitle','新增社区');
             form.form('clear')
             form.form('load', {CommunityID: '0', CityID: ys.Session.currentCity});
+            ys.modules.Community.initFileUploader();
         }
     }, "-", {
         id: '',
@@ -196,6 +220,7 @@ window.grid.cfg.community = {
             }
             dlg.dialog('open').dialog('center').dialog('setTitle','编辑社区');
             form.form('load', mainTbl.datagrid('getSelected'));
+            ys.modules.Community.initFileUploader();
         }
     }, "-", {
         id: '',
@@ -205,5 +230,9 @@ window.grid.cfg.community = {
     }, "-"]
 };
 
-ys.modules.Community.loadMainData();
+(function(){
+    ys.modules.Community.loadMainData();
+
+
+})();
 </script>

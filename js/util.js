@@ -56,7 +56,7 @@ $.extend({
 		frames['printZone'].contentWindow.print();
 	},
 
-	scheduleStyler: function(v){alert(v.length)
+	scheduleStyler: function(v){
 		if(v == 'ÊÕ×â'){
 			return 'background-color:#0044BB;color:#fff;'
 		} else if(v == '½»×â'){
