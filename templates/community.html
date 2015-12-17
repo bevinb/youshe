@@ -55,8 +55,7 @@
         <div class="fitem">
             <label>社区图片:</label>
             <div>
-                <!--<span class="file-upload-btn" style="width:80px;height:80px;display:inline-block;border:1px solid gray;font-size:64px;text-align:center;vertical-align:middle;line-height:80px;color:gray;">+</span>-->
-                <div class="file-upload-wrapper"></div>
+                <span class="file-upload-btn" style="width:80px;height:80px;display:inline-block;border:1px solid gray;font-size:64px;text-align:center;vertical-align:middle;line-height:80px;color:gray;">+</span>
             </div>
         </div>
     </form>
@@ -104,6 +103,15 @@ ys.modules.Community =  (function(){
         if(data['CommunityID'] != '0'){
             url = '/YSService/CommunityService/Update';
         }
+        var imgList = [];
+        $('#editCommunityDlg').find('.img-item').each(function(i,o){
+            imgList.push({
+                CommunityImgPathID: $(o).attr('data-id'),
+                CommunityID: data.CommunityID,
+                ImgPath: o.src
+            });
+        });
+        data.list_CommunityImgPath = imgList;
         $.ajax({
             url: url,
             type: "POST",
@@ -146,42 +154,14 @@ ys.modules.Community =  (function(){
         });
     };
 
-    function initFileUploader(){
-        if(!fileUploader) {
-            fileUploader = new qq.FineUploader({
-                debug: true,
-                template: 'qq-template-gallery',
-                element: $("#editCommunityDlg .file-upload-wrapper")[0],
-                request: {
-                    endpoint: '/ysuploadfile/FileUpload.aspx'
-                },
-                thumbnails: {
-                    placeholders: {
-                        waitingPath: '/source/placeholders/waiting-generic.png',
-                        notAvailablePath: '/source/placeholders/not_available-generic.png'
-                    }
-                },
-                validation: {
-                    allowedExtensions: ['jpeg', 'jpg']
-                }
-            });
-        }
-    };
-
     return {
         loadMainData: loadMainData,
         saveMainItem: saveMainItem,
-        deleteMainItem: deleteMainItem,
-        initFileUploader: initFileUploader
+        deleteMainItem: deleteMainItem
     };
 })();
 
 window.grid.cfg.community = {
-    //url: '/YSService/CommunityService/GetDataList',
-   // method: 'POST',
-   // params: JSON.stringify({}),
-    //dataType: "json",
-    //contentType: "application/json; charset=utf-8",
     singleSelect:true,
     rownumbers: true,
     pagination: true,
@@ -206,7 +186,7 @@ window.grid.cfg.community = {
             dlg.dialog('open').dialog('center').dialog('setTitle','新增社区');
             form.form('clear')
             form.form('load', {CommunityID: '0', CityID: ys.Session.currentCity});
-            ys.modules.Community.initFileUploader();
+            $('#editCommunityDlg').find('.img-item').remove();
         }
     }, "-", {
         id: '',
@@ -219,8 +199,12 @@ window.grid.cfg.community = {
                 return;
             }
             dlg.dialog('open').dialog('center').dialog('setTitle','编辑社区');
-            form.form('load', mainTbl.datagrid('getSelected'));
-            ys.modules.Community.initFileUploader();
+            var data = mainTbl.datagrid('getSelected');
+            form.form('load', data);
+            $('#editCommunityDlg').find('.img-item').remove();
+            $.each(data.list_CommunityImgPath, function(i, o){
+                $('#editCommunityDlg').find('.file-upload-btn').before('<img class="img-item" data-id="' + o.CommunityImgPathID + '" src="' + o.ImgPath + '" style="width:80px;height:80px;display:inline-block;vertical-align:middle;margin:10px 10px 0 0;">');
+            })
         }
     }, "-", {
         id: '',
@@ -233,6 +217,16 @@ window.grid.cfg.community = {
 (function(){
     ys.modules.Community.loadMainData();
 
+    $('#editCommunityDlg').find('.file-upload-btn').click(function(){
+        var btn = $(this);
+        ys.modules.FileUploader.open({
+            callback: function(images){
+                $.each(images, function(i, v){
+                    btn.before('<img data-id="0" src="//' + v + '" class="img-item" style="width:80px;height:80px;display:inline-block;vertical-align:middle;margin:10px 10px 0 0;">');
+                })
+            }
+        });
+    });
 
 })();
 </script>
