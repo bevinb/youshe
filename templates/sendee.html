@@ -3,10 +3,18 @@
         <form class="top-search-form">
             <table>
                 <tr>
-                    <td>姓名:<input name="OwnerName" class="f1 easyui-textbox" style="width:100px"></td>
+                    <td>姓名:<input name="SendeeName" class="f1 easyui-textbox" style="width:100px"></td>
+                    <td>类别：<input class="easyui-combobox"
+                      name="SendeeType"
+                      data-options="
+                        data:ys.Constant.SENDEE_TYPE,
+                        method:'get',
+                        valueField:'id',
+                        textField:'text',
+                        panelHeight:'auto'
+                "></td>
                     <td>电话：<input name="Phone" class="f1 easyui-textbox" style="width:100px"></td>
-                    <td>身份证号：<input name="IDNO" class="f1 easyui-textbox" style="width:100px"></td>
-                    <td><input type="button" value="查询" onclick="ys.modules.Owner.loadMainData()"></td>
+                    <td><input type="button" value="查询" onclick="ys.modules.Sendee.loadMainData()"></td>
                 </tr>
             </table>
         </form>
@@ -14,54 +22,50 @@
     <div data-options="region:'center'"><table class="main"></table></div>
 </div>
 
-<div id="editOwnerDlg" class="easyui-dialog" style="width:500px;padding:10px 20px"  modal="true"
-     closed="true" buttons="#editOwnerDlgBtns">
+<div id="editSendeeDlg" class="easyui-dialog" style="width:500px;padding:10px 20px"  modal="true"
+     closed="true" buttons="#editSendeeDlgBtns">
     <form novalidate>
-        <input name="OwnerID" type="hidden">
+        <input name="SendeeID" type="hidden">
         <div class="fitem">
-            <label>业主姓名:</label>
-            <input name="OwnerName" class="easyui-textbox" data-options="required:true">
+            <label>姓名:</label>
+            <input name="SendeeName" class="easyui-textbox">
+        </div>
+        <div class="fitem">
+            <label>类别:</label>
+            <input class="easyui-combobox"
+                   name="SendeeType"
+                   style="width:300px"
+                   data-options="
+					data:ys.Constant.SENDEE_TYPE,
+					method:'get',
+					valueField:'id',
+					textField:'text',
+					panelHeight:'auto'
+			">
         </div>
         <div class="fitem">
             <label>联系电话:</label>
-            <input name="Phone" class="easyui-textbox" data-options="required:true">
-        </div>
-        <div class="fitem">
-            <label>证件类型:</label>
-            <input class="easyui-combobox"
-                   name="IDTypeID"
-                   style="width:300px"
-                   data-options="
-                    loader: ys.loaders.idTypeLoader,
-                    valueField:'IDTypeID',
-                    textField:'IDTypeIDName',
-                    panelHeight:'auto',
-                    required: true
-            ">
-        </div>
-        <div class="fitem">
-            <label>证件号码:</label>
-            <input name="IDNO" class="easyui-textbox" data-options="required:true">
+            <input name="Phone" class="easyui-textbox">
         </div>
     </form>
 </div>
-<div id="editOwnerDlgBtns">
-    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="ys.modules.Owner.saveMainItem()" style="width:90px">保存</a>
+<div id="editSendeeDlgBtns">
+    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="ys.modules.Sendee.saveMainItem()" style="width:90px">保存</a>
     <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('.easyui-dialog').dialog('close')" style="width:90px">取消</a>
 </div>
 
 <script>
-ys.modules.Owner =  (function(){
+ys.modules.Sendee =  (function(){
     function loadMainData(){
-        var params = $.form2JsonNotNull($('#ownerTab').find('.top-search-form'));
+        var params = $.form2JsonNotNull($('#sendeeTab').find('.top-search-form'));
         $.ajax({
-            url: '/YSService/OwnerService/GetDataList',
+            url: '/YSService/SendeeService/GetDataList',
             method: 'POST',
             data: JSON.stringify(params),
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             success: function (resp) {
-                $('#ownerTab').find('table.main').datagrid('loadData', {
+                $('#sendeeTab').find('table.main').datagrid('loadData', {
                     total: resp.length,
                     rows: resp
                 });
@@ -73,16 +77,16 @@ ys.modules.Owner =  (function(){
     };
 
     function saveMainItem(){
-        var dlg = $('#editOwnerDlg'), form = dlg.find('form');
+        var dlg = $('#editSendeeDlg'), form = dlg.find('form');
         if(!form.form('validate'))return;
         var formData =  form.serializeArray();
         var data = {};
         $.each(formData, function(i, v) {
             data[v.name] = v.value;
         });
-        var url = '/YSService/OwnerService/Add';
-        if(data['OwnerID'] != '0'){
-            url = '/YSService/OwnerService/Update';
+        var url = '/YSService/SendeeService/Add';
+        if(data['SendeeID'] != '0'){
+            url = '/YSService/SendeeService/Update';
         }
         $.ajax({
             url: url,
@@ -101,7 +105,7 @@ ys.modules.Owner =  (function(){
     };
 
     function deleteMainItem(){
-        var mainTbl = $('#ownerTab').find('table.main');
+        var mainTbl = $('#sendeeTab').find('table.main');
         if(mainTbl.datagrid('getSelections').length < 1){
             $.messager.alert('提示','请先选择要删除的数据','info');
             return;
@@ -110,9 +114,9 @@ ys.modules.Owner =  (function(){
         $.messager.confirm('确认','确认删除?',function(r){
             if (r){
                 $.ajax({
-                    url: '/YSService/OwnerService/Delete',
+                    url: '/YSService/SendeeService/Delete',
                     type: "POST",
-                    data: JSON.stringify({OwnerID: data.OwnerID}),
+                    data: JSON.stringify({SendeeID: data.SendeeID}),
                     dataType: "json",
                     contentType: "application/json; charset=utf-8",
                     success: function (msg) {
@@ -133,49 +137,49 @@ ys.modules.Owner =  (function(){
     };
 })();
 
-window.grid.cfg.owner = {
+window.grid.cfg.sendee = {
     singleSelect:true,
     rownumbers: true,
     pagination: true,
     fit: true,
     columns:[[
-        {field:'OwnerName',title:'业主姓名',width:100},
-        {field:'Phone',title:'联系电话',width:100},
-        {field:'IDTypeName',title:'证件类型',width:100},
-        {field:'IDNO',title:'证件号码',width:150}
+        {field:'SendeeName',title:'姓名',width:100},
+        {field:'SendeeType',title:'类别',width:100, formatter: function(v){return ys.Constant.SENDEE_TYPE[v-1].text;}},
+        {field:'Phone',title:'联系电话',width:100}
     ]],
     toolbar: [{
         id: '',
         text: '新增',
         iconCls: 'icon-add',
         handler: function () {
-            var dlg = $('#editOwnerDlg'), form = dlg.find('form');
-            dlg.dialog('open').dialog('center').dialog('setTitle','新增业主');
+            var dlg = $('#editSendeeDlg'), form = dlg.find('form');
+            dlg.dialog('open').dialog('center').dialog('setTitle','新增接收人/管家');
             form.form('clear');
-            form.form('load', {OwnerID:0})
+            form.form('load', {SendeeID:0, SendeeType: 1})
         }
     }, "-", {
         id: '',
         text: '编辑',
         iconCls: 'icon-edit',
         handler: function () {
-            var dlg = $('#editOwnerDlg'), form = dlg.find('form'), mainTbl = $('#ownerTab').find('table.main');
+            var dlg = $('#editSendeeDlg'), form = dlg.find('form'), mainTbl = $('#sendeeTab').find('table.main');
             if(mainTbl.datagrid('getSelections').length < 1){
                 $.messager.alert('提示','请先选择要编辑的数据','info');
                 return;
             }
-            dlg.dialog('open').dialog('center').dialog('setTitle','编辑业主');
+            dlg.dialog('open').dialog('center').dialog('setTitle','编辑接收人/管家');
             form.form('load', mainTbl.datagrid('getSelected'));
         }
     }, "-", {
         id: '',
         text: '删除',
         iconCls: 'icon-remove',
-        handler: ys.modules.Owner.deleteMainItem
+        handler: ys.modules.Sendee.deleteMainItem
     }, "-"]
 };
 
-(function() {
-    ys.modules.Owner.loadMainData();
+(function(){
+    ys.modules.Sendee.loadMainData();
 })();
+
 </script>

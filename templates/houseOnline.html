@@ -53,7 +53,7 @@
         <div class="fitem">
             <label>费用类型:</label>
             <input class="easyui-combobox"
-                   name="CostPayType"
+                   name="HouseCostTypeID"
                    style="width:300px;"
                    data-options="
                     loader: ys.loaders.houseCostTypeLoader,
@@ -69,7 +69,16 @@
         </div>
         <div class="fitem">
             <label>账号所属公司:</label>
-            <input name="AccountCompanyID" class="easyui-textbox" data-options="required:true">
+            <input class="easyui-combobox"
+                   name="AccountCompanyID"
+                   style="width:300px;"
+                   data-options="
+                    loader: ys.loaders.accountCompanyLoader,
+                    valueField:'AccountCompanyID',
+                    textField:'AccountCompanyName',
+                    required: true,
+                    panelHeight:'auto'
+            ">
         </div>
         <div class="fitem">
             <label>查询电话:</label>

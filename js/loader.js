@@ -124,5 +124,54 @@ window.ys.loaders = {
 				error.apply(this, arguments);
 			}
 		});
+	},
+	//房屋接收人列表
+	sendeeLoader: function(param,success,error){
+		$.ajax({
+			url: '/YSService/SendeeService/GetDataList',
+			method: 'POST',
+			data: JSON.stringify({SendeeType: 1}),
+			dataType: "json",
+			contentType: "application/json; charset=utf-8",
+			success: function ( resp) {
+				success(resp);
+			},
+			error: function (XMLHttpRequest, textStatus, thrownError) {
+				error.apply(this, arguments);
+			}
+		});
+	},
+	//管家列表
+	houseKeeperLoader: function(param,success,error){
+		$.ajax({
+			url: '/YSService/SendeeService/GetDataList',
+			method: 'POST',
+			data: JSON.stringify({SendeeType: 2}),
+			dataType: "json",
+			contentType: "application/json; charset=utf-8",
+			success: function ( resp) {
+				success(resp);
+			},
+			error: function (XMLHttpRequest, textStatus, thrownError) {
+				error.apply(this, arguments);
+			}
+		});
+	},
+
+	//公司列表
+	accountCompanyLoader: function(param,success,error){
+		$.ajax({
+			url: '/YSService/AccountCompanyService/GetDataList',
+			method: 'GET',
+			data: JSON.stringify({SendeeType: 2}),
+			dataType: "json",
+			contentType: "application/json; charset=utf-8",
+			success: function ( resp) {
+				success(resp);
+			},
+			error: function (XMLHttpRequest, textStatus, thrownError) {
+				error.apply(this, arguments);
+			}
+		});
 	}
 };

@@ -17,6 +17,7 @@
         <div class="logo"  style="float:left;">
             <img src="img/logo.png" style="float:left;height:34px;margin-top: 7px;">
             <h1 style="color:#fff;font-size:18px;float:left;margin-left:10px;font-weight:normal;margin-top:0;">房源管理系统</h1>
+            <span class="clearfix" style="float:left;font-size:14px;font-weight:normal;color:white;margin-left:10px;position:relative;">[上海]</span>
         </div>
         <div id="Headermenu" style="float:right;">
             <ul id="topnav">
@@ -35,9 +36,7 @@
             </ul>
         </div>
         <div style="text-align:center">
-            <img src="img/location.png"  style="position:relative;height:16px;top:16px;">
             <span class="clearfix" style="font-size:14px;color:white;margin-left:10px;position:relative;top:14px;">
-                上海
                 <div class="pull-left dropdown" style="float:left;margin-left:25px;">
                     <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 
@@ -62,6 +61,7 @@
 							<li data-options="tabLink:'village'">楼盘字典</li>
 							<li data-options="tabLink:'house'">房源管理</li>
 							<li data-options="tabLink:'owner'">业主管理</li>
+                            <li data-options="tabLink:'sendee'">接收人/管家</li>
 							<li data-options="tabLink:'contract'">合同管理</li>					
 						</ul>
 					</li>
@@ -86,7 +86,7 @@
                             <li data-options="tabLink:'trends'">公寓房态</li>
                             <li data-options="tabLink:'preserveRoom'">预定</li>
                             <li data-options="tabLink:'signRoom'">签约</li>
-                            <li data-options="tabLink:'returnRoom'">退房</li>
+                            <!--<li data-options="tabLink:'returnRoom'">退房</li>-->
                             <li data-options="tabLink:'tenantContract'">合同列表</li>
 							<li data-options="tabLink:'renter'">租客管理</li>
                             <li data-options="tabLink:'discount'">优惠项</li>
@@ -111,8 +111,8 @@
 					<li>
 						<span>数据统计</span>
 						<ul>
-                            <li data-options="">运营数据</li>
-							<li data-options="">渠道分析</li>
+                            <li data-options="">运营数据</li>流水
+							<li data-options="">渠道分析</li>租客来源
 							<li data-options="">营业分析</li>
 						</ul>
 					</li>
@@ -125,7 +125,6 @@
 						<ul>
                             <li data-options="">城市管理</li>
 						    <li data-options="">用户角色</li>
-							<li data-options="">操作日志</li>
 						</ul>
 					</li>
 				</ul>
@@ -150,9 +149,9 @@
                                         </thead>
                                     </table>
                                 </div>
-                                <div title="收租">
+                                <div title="业主合同过期">
                                     <table class="easyui-datagrid"
-                                           data-options="url:'/YSService/ReportService/GetTenantContractPayInfo',method:'GET',singleSelect:true,fit:true,border:false">
+                                           data-options="url:'/YSService/ReportService/GetContractInfo',method:'GET',singleSelect:true,fit:true,border:false">
                                         <thead>
                                         <tr>
                                             <th data-options="field:'TipName', styler:$.scheduleStyler" width="80" align="center"></th>
@@ -161,10 +160,18 @@
                                         </thead>
                                     </table>
                                 </div>
-                                <div title="交租">
-
+                                <div title="业主支付提示">
+                                    <table class="easyui-datagrid"
+                                           data-options="url:'/YSService/ReportService/GetContractPayInfo',method:'GET',singleSelect:true,fit:true,border:false">
+                                        <thead>
+                                        <tr>
+                                            <th data-options="field:'TipName', styler:$.scheduleStyler" width="80" align="center"></th>
+                                            <th data-options="field:'TipText',fit:true"></th>
+                                        </tr>
+                                        </thead>
+                                    </table>
                                 </div>
-                                <div title="到期">
+                                <div title="租客合同过期">
                                     <table class="easyui-datagrid"
                                            data-options="url:'/YSService/ReportService/GetTenantContractInfo',method:'GET',singleSelect:true,fit:true,border:false">
                                         <thead>
@@ -175,8 +182,16 @@
                                         </thead>
                                     </table>
                                 </div>
-                                <div title="备忘">
-
+                                <div title="租客支付提示">
+                                    <table class="easyui-datagrid"
+                                           data-options="url:'/YSService/ReportService/GetTenantContractPayInfo',method:'GET',singleSelect:true,fit:true,border:false">
+                                        <thead>
+                                        <tr>
+                                            <th data-options="field:'TipName', styler:$.scheduleStyler" width="80" align="center"></th>
+                                            <th data-options="field:'TipText',fit:true"></th>
+                                        </tr>
+                                        </thead>
+                                    </table>
                                 </div>
                             </div>
 						</div>
@@ -188,7 +203,7 @@
                                     <th data-options="field:'CommunityName'" width="80">社区</th>
                                     <th data-options="field:'VillageName'" width="100">小区</th>
                                     <th data-options="field:'HouseNO'" width="80">房源编号</th>
-                                    <th data-options="field:'unitcost'" width="80">上线日期</th>
+                                    <th data-options="field:'CreateDate', formatter: $.wcfDate2JsDateStr" width="80">上线日期</th>
                                 </tr>
                                 </thead>
                             </table>

@@ -1,7 +1,7 @@
-<div class="easyui-layout" data-options="fit:true">
+<div class="easyui-layout" data-options="fit:true,border:false">
     <div data-options="region:'center'">
         <div class="easyui-layout" data-options="fit:true">
-            <div data-options="region:'north',split:true" style="height:90px;">
+            <div data-options="region:'north',split:true" style="height:56px;padding:10px;">
                 <form class="top-search-form">
                     <input type="hidden" name="CommunityID">
                     <input type="hidden" name="VillageID">
@@ -9,8 +9,7 @@
                     <input type="hidden" name="RoomID">
                     <table>
                         <tr>
-                            <td>房间：</td>
-                            <td><input class="easyui-combotree" data-options="
+                            <td>房间：<input class="easyui-combotree" data-options="
                     					url:'/YSService/BaseInfoService/GetTree3',
                                         method:'get',
                                         animate:true,
@@ -21,21 +20,16 @@
                                         onClick: ys.modules.TenantContract.onRoomTreeChange
                              " style="width:200px;">
                             </td>
-                            <td>房东电话：<input name="phone" class="f1 easyui-textbox" style="width:100px">房东姓名：<input name="phone" class="f1 easyui-textbox" style="width:100px"></td>
-                        </tr>
-                        <tr>
-                            <td>合同编号：</td>
-                            <td><input name="phone" class="f1 easyui-textbox" style="width:100px"></td>
+                            <td>合同编号：<input name="TenantContractNo" class="f1 easyui-textbox" style="width:100px"></td>
                             <td>
-                                打款状态：
-                                <label><input type="radio" name="pay">已逾期</label>
-                                <label><input type="radio" name="pay">本月需打款</label>
+                                合同状态：
+                                <select name="ContractStatus" class="f1 easyui-combobox">
+                                    <option value="1">正常</option>
+                                    <option value="2">中途结束</option>
+                                    <option value="0">正常完结</option>
+                                </select>
                             </td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td><input type="button" value="查询" onclick="ys.modules.TenantContract.loadMainData()"></input></td>
-                            <td></td>
+                            <td><td><input type="button" onclick="ys.modules.TenantContract.loadMainData()" value="查询"></td>
                         </tr>
                     </table>
                 </form>
@@ -43,108 +37,79 @@
             <div data-options="region:'center'"><table class="main"></table></div>
             <div data-options="region:'south',split:true" style="height:300px;">
                 <div class="easyui-tabs" data-options="fit:true,border:false,plain:true">
-                    <div title="付款信息" style="padding:10px"><table class="subPay"></table></div>
+                    <div title="付款信息"><table class="subPay"></table></div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<div id="editContractDlg" class="easyui-dialog" style="width:900px;"
-     closed="true" data-options="buttons: '#editContractDlgBtns'">
-    <div style="padding:10px 60px 20px 60px">
-        <form id="fm" method="post" novalidate>
-            <table cellpadding="5">
-                <tr>
-                    <td>房源名称:</td>
-                    <td colspan=5><input name="firstname" class="easyui-textbox"></td>
-                </tr>
-                <tr>
-                    <td>所属社区:</td>
-                    <td>
-                        <input name="lastname" class="easyui-textbox" style="width:150px;" readonly>
-                        <span class="label">房源编号:</span><input name="lastname" class="easyui-textbox" style="width:150px;" readonly>
-                    </td>
-                </tr>
-                <tr>
-                    <td>小区地址:</td>
-                    <td>
-                        <input name="lastname" class="easyui-textbox" style="width:70px;" readonly><span class="label">区</span>
-                        <input name="lastname" class="easyui-textbox" style="width:70px;" readonly><span class="label">路</span>
-                        <input name="lastname" class="easyui-textbox" style="width:70px;" readonly><span class="label">弄（号）</span>
-                        <input name="lastname" class="easyui-textbox" style="width:70px;" readonly><span class="label">栋</span>
-                        <input name="lastname" class="easyui-textbox" style="width:70px;" readonly><span class="label">单元</span>
-                        <input name="lastname" class="easyui-textbox" style="width:70px;" readonly><span class="label">号</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>所在楼层:</td>
-                    <td>
-                        <input name="lastname" class="easyui-textbox" style="width:70px;" readonly><span class="label">楼</span>
-                        <span class="label">共</span><input name="lastname" class="easyui-textbox" style="width:70px;" readonly><span class="label">楼</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>房屋面积:</td>
-                    <td>
-                        <input name="lastname" class="easyui-textbox" style="width:70px;" readonly><span class="label">室</span>
-                        <input name="lastname" class="easyui-textbox" style="width:70px;" readonly><span class="label">厅</span>
-                        <input name="lastname" class="easyui-textbox" style="width:70px;" readonly><span class="label">厨</span>
-                        <input name="lastname" class="easyui-textbox" style="width:70px;" readonly><span class="label">卫</span>
-                        <span class="label">面积</span><input name="lastname" class="easyui-textbox" style="width:70px;" readonly><span class="label">平方米</span>
-                    </td>
-                </tr>
-            </table>
-            <hr/>
-            <table cellpadding="5">
-                <tr>
-                    <td>业主姓名:</td>
-                    <td><input name="firstname" class="easyui-textbox" style="width:150px;" readonly></td>
-                    <td>联系电话:</td>
-                    <td><input name="lastname" class="easyui-textbox" style="width:150px;" readonly></td>
-                    <td>身份证号:</td>
-                    <td><input name="lastname" class="easyui-textbox" style="width:150px;" readonly></td>
-                </tr>
-                <tr>
-                    <td>联系人:</td>
-                    <td><input name="lastname" class="easyui-textbox" style="width:150px;" readonly></td>
-                    <td>联系方式:</td>
-                    <td><input name="lastname" class="easyui-textbox" style="width:150px;" readonly></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </table>
-            <hr/>
-            <table cellpadding="5">
-                <tr>
-                    <td>合同编号:</td>
-                    <td>
-                        <input name="firstname" class="easyui-textbox" style="width:150px;">
-                        <span class="label">房屋接收人:</span><input name="lastname" class="easyui-textbox" style="width:150px;">
-                    </td>
-
-                </tr>
-                <tr>
-                    <td>房屋租金:</td>
-                    <td>
-                        <input name="lastname" class="easyui-textbox" style="width:150px;">元/月
-                        <span class="label">房屋押金:</span><input name="lastname" class="easyui-textbox" style="width:150px;">元/月
-                        <span class="label">付款方式:</span>押<select></select>付<select></select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>合同周期:</td>
-                    <td>
-                        <input class="easyui-datebox"></input> ~ <input class="easyui-datebox"></input>
-							<span class="label">免租期:<input name="lastname" class="easyui-textbox" style="width:150px;">月
-                    </td>
-                </tr>
-            </table>
-        </form>
-    </div>
+<div id="editTenantPayInfoDlg" class="easyui-dialog" style="width:600px;padding:10px 20px"  modal="true"
+     closed="true" buttons="#editTenantPayInfoDlgBtns">
+    <form novalidate>
+        <input name="PayRentID" type="hidden">
+        <input name="ContractID" type="hidden">
+        <input name="PayStatus" type="hidden">
+        <div class="fitem">
+            <label>付款编号:</label>
+            <input name="PayRentNo" class="easyui-textbox" data-options="required:true" readonly>
+        </div>
+        <div class="fitem">
+            <label>应付日期:</label>
+            <input name="PayRentDate" class="easyui-datebox" data-options="required:true" readonly>
+        </div>
+        <div class="fitem">
+            <label>应付租金:</label>
+            <input name="PayRent" class="easyui-numberbox" data-options="precision:2, required:true" readonly>
+        </div>
+        <div class="fitem">
+            <label>付款方式:</label>
+            <input class="easyui-combobox"
+                   name="PayTypeID"
+                   data-options="
+                    loader: ys.loaders.payTypeLoader,
+                    valueField:'PayTypeID',
+                    textField:'PayTypeName',
+                    required: true,
+                    panelHeight:'auto'
+            ">
+        </div>
+        <div class="fitem">
+            <label>实付日期:</label>
+            <input name="ActualPayRentDate" class="easyui-datebox" data-options="required:true">
+        </div>
+        <div class="fitem">
+            <label>付款银行:</label>
+            <input class="easyui-combobox"
+                   name="BankID"
+                   data-options="
+                    loader: ys.loaders.bankListLoader,
+                    valueField:'BankID',
+                    textField:'BankName',
+                    required: true,
+                    panelHeight:'auto'
+            ">
+        </div>
+        <div class="fitem">
+            <label>付款银行卡号:</label>
+            <input name="BankCardNo" class="easyui-textbox" data-options="required:true">
+        </div>
+        <div class="fitem">
+            <label>收款人:</label>
+            <input name="Payee" class="easyui-textbox" data-options="required:true">
+        </div>
+        <div class="fitem">
+            <label>收款人银行卡号:</label>
+            <input name="PayeeCardNo" class="easyui-textbox" data-options="required:true">
+        </div>
+        <div class="fitem">
+            <label>备注:</label>
+            <textarea name="Remarks" class="easyui-textarea"></textarea>
+        </div>
+    </form>
 </div>
-<div id="editContractDlgBtns">
-    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="javascript:$('.easyui-dialog').dialog('close')" style="width:90px">保存</a>
+<div id="editTenantPayInfoDlgBtns">
+    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="ys.modules.TenantContract.saveSubPay()" style="width:90px">保存</a>
     <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('.easyui-dialog').dialog('close')" style="width:90px">取消</a>
 </div>
 
@@ -186,15 +151,121 @@
             }
         };
 
-        function loadSubPay(){
+        function cancelContract(){
+            var mainTbl = $('#tenantContractTab').find('table.main');
+            if(mainTbl.datagrid('getSelections').length < 1){
+                $.messager.alert('提示','请先选择要编辑的数据','info');
+                return;
+            }
+            var data = mainTbl.datagrid('getSelected');
+            $.messager.confirm('确认','确认作废该合同?',function(r){
+                if (r){
+                    $.ajax({
+                        url: '/YSService/TenantContractService/CancelContract',
+                        method: 'POST',
+                        data: JSON.stringify({TenantContractID: data.TenantContractID}),
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (resp) {
+                            $.messager.alert('提示','已作废合同！','success');
+                            loadMainData();
+                        },
+                        error: function (XMLHttpRequest, textStatus, thrownError) {
+                            alert("Error Occured!");
+                        }
+                    });
+                }
+            });
+        };
 
+        function stopContract(){
+            var mainTbl = $('#tenantContractTab').find('table.main');
+            if(mainTbl.datagrid('getSelections').length < 1){
+                $.messager.alert('提示','请先选择要编辑的数据','info');
+                return;
+            }
+            var data = mainTbl.datagrid('getSelected');
+            $.messager.confirm('确认','确认终止该合同?',function(r){
+                if (r){
+                    $.ajax({
+                        url: '/YSService/TenantContractService/StopContract',
+                        method: 'POST',
+                        data: JSON.stringify({TenantContractID: data.TenantContractID}),
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (resp) {
+                            $.messager.alert('提示','已终止合同！','success');
+                            loadMainData();
+                        },
+                        error: function (XMLHttpRequest, textStatus, thrownError) {
+                            alert("Error Occured!");
+                        }
+                    });
+                }
+            });
+        };
+
+        function loadSubPay(params){
+            $.ajax({
+                url: '/YSService/TenantContractService/GetContractPayByContractID',
+                method: 'POST',
+                data: JSON.stringify({TenantContractID:params.TenantContractID}),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (resp) {
+                    $.each(resp, function(i,item){
+                        item['ActualPayRentDate'] = $.wcfDate2JsDateStr(item['ActualPayRentDate']);
+                        item['PayRentDate'] = $.wcfDate2JsDateStr(item['PayRentDate']);
+                        item['CreateDate'] = $.wcfDate2JsDateStr(item['CreateDate']);
+                    });
+                    $('#tenantContractTab').find('table.subPay').datagrid('loadData', {
+                        total: resp.length,
+                        rows: resp
+                    });
+                },
+                error: function (XMLHttpRequest, textStatus, thrownError) {
+                    alert("Error Occured!");
+                }
+            });
+        };
+
+        function saveSubPay(){
+            var dlg = $('#editTenantPayInfoDlg'), form = dlg.find('form');
+            if(!form.form('validate'))return;
+            var formData =  form.serializeArray();
+            var data = {};
+            $.each(formData, function(i, v) {
+                if (v.name == 'ActualPayRentDate' || v.name == 'PayRentDate' || v.name == 'CreateDate') {
+                    data[v.name] = $.jsDateStr2WcfDate(v.value);
+                } else {
+                    data[v.name] = v.value;
+                }
+            });
+            var url = '/YSService/TenantContractService/Pay';
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: JSON.stringify(data),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (msg) {
+                    loadSubPay({TenantContractID: data.ContractID});
+                    dlg.dialog('close');
+                },
+                error: function (XMLHttpRequest, textStatus, thrownError) {
+                    alert("Error Occured!");
+                }
+            });
         };
 
 
         return {
             onRoomTreeChange: onRoomTreeChange,
             loadMainData: loadMainData,
-            loadSubPay: loadSubPay
+            cancelContract: cancelContract,
+            stopContract: stopContract,
+            loadSubPay: loadSubPay,
+            saveSubPay: saveSubPay
         };
     })();
 
@@ -204,21 +275,30 @@ window.grid.cfg.tenantContract = {
     pagination: true,
     fit: true,
     columns:[[
-        {field:'TenantContractNo',title:'合同编号',width:100},
-        {field:'ContractStatusName',title:'状态',width:100},
-        {field:'BeginDate',title:'开始日期',width:100},
-        {field:'EndDate',title:'结束日期',width:100},
-        {field:'TenantName',title:'入住人',width:100, formatter:function(v,r){return r.TenantInfo.TenantName;}},
-        {field:'Rent',title:'月租金(元)',width:100},
-        {field:'Deposit',title:'押金(元)',width:100},
-        {field:'Remarks',title:'备注信息',width:100},
-        {field:'Creater',title:'录入人',width:100},
-        {field:'CreateDate',title:'录入日期',width:100}
+        {field:'TenantContractNo',title:'合同编号',width:150},
+        {field:'ContractStatusName',title:'状态',width:70},
+        {field:'RoomNo',title:'房间编号',width:100, formatter:function(v,r){return r.RoomInfo.RoomNo;}},
+        {field:'BeginDate',title:'开始日期',width:90},
+        {field:'EndDate',title:'结束日期',width:90},
+        {field:'TenantName',title:'入住人',width:70, formatter:function(v,r){return r.TenantInfo.TenantName;}},
+        {field:'Rent',title:'月租金(元)',width:70},
+        {field:'Deposit',title:'押金(元)',width:70},
+        {field:'Remarks',title:'备注信息',width:150},
+        {field:'Creater',title:'录入人',width:70},
+        {field:'CreateDate',title:'录入日期',width:90}
     ]],
     onSelect:function(i, data){
-        ys.modules.House.loadSubRoom(data);
-        ys.modules.House.loadSubPay(data);
-    }
+        ys.modules.TenantContract.loadSubPay(data);
+    },
+    toolbar: [{
+        text: '作废',
+        iconCls: 'icon-cancel',
+        handler: ys.modules.TenantContract.cancelContract
+    }, "-", {
+        text: '终止',
+        iconCls: 'icon-ok',
+        handler: ys.modules.TenantContract.stopContract
+    }, "-"]
 };
 
 window.grid.cfg.tenantContract.Pay = {
@@ -226,17 +306,29 @@ window.grid.cfg.tenantContract.Pay = {
     rownumbers: true,
     fit: true,
     columns:[[
-        {field:'TenantContractNo',title:'合同编号',width:100},
-        {field:'ContractStatusName',title:'状态',width:100},
-        {field:'BeginDate',title:'开始日期',width:100},
-        {field:'EndDate',title:'结束日期',width:100},
-        {field:'TenantName',title:'入住人',width:100, formatter:function(v,r){return r.TenantInfo.TenantName;}},
-        {field:'Rent',title:'月租金(元)',width:100},
-        {field:'Deposit',title:'押金(元)',width:100},
-        {field:'Remarks',title:'备注信息',width:100},
-        {field:'Creater',title:'录入人',width:100},
-        {field:'CreateDate',title:'录入日期',width:100}
-    ]]
+        {field:'PayRentNo',title:'付款编号',width:280},
+        {field:'PayStatusName',title:'状态',width:80},
+        {field:'PayRentDate',title:'应付日期',width:80},
+        {field:'PayRent',title:'应付金额(元)',width:70},
+        {field:'ActualPayRentDate',title:'实付日期',width:80},
+        {field:'PayTypeName',title:'付款方式',width:70},
+        {field:'Payee',title:'付款人',width:70},
+        {field:'Remarks',title:'备注:',width:100}
+    ]],
+    toolbar: [{
+        id: '',
+        text: '付款',
+        iconCls: 'icon-edit',
+        handler: function () {
+            var dlg = $('#editTenantPayInfoDlg'), form = dlg.find('form'), tbl = $('#tenantContractTab').find('table.subPay');
+            if(tbl.datagrid('getSelections').length < 1){
+                $.messager.alert('提示','请先选择要编辑的数据','info');
+                return;
+            }
+            $('#editTenantPayInfoDlg').dialog('open').dialog('center').dialog('setTitle','付款');
+            form.form('load', tbl.datagrid('getSelected'));
+        }
+    }]
 };
 
 (function(){

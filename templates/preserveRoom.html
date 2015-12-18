@@ -33,6 +33,7 @@
                 <h5>预定人信息</h5>
                 <form class="preserveForm" method="post" novalidate>
                     <input name="RoomID" type="hidden" data-options="required:true">
+                    <input name="OrderID" type="hidden" data-options="required:true">
                     <table cellpadding="5">
                         <tr>
                             <td>入住人姓名:</td>
@@ -60,7 +61,18 @@
                             <td>订金金额:</td>
                             <td><input name="Deposit" class="easyui-textbox" style="width:150px;" data-options="required:true"></td>
                             <td>支付方式:</td>
-                            <td><input name="PayTypeID" class="easyui-textbox" style="width:150px;" data-options="required:true"></td>
+                            <td>
+                                <input class="easyui-combobox"
+                                       name="PayTypeID"
+                                       style="width:150px;"
+                                       data-options="
+                                loader: ys.loaders.payTypeLoader,
+                                valueField:'PayTypeID',
+                                textField:'PayTypeName',
+                                required: true,
+                                panelHeight:'auto',
+                                readOnly: true
+                        "></td>
                         </tr>
                     </table>
                 </form>
@@ -175,6 +187,10 @@ ys.modules.PreserveRoom =  (function(){
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             success: function (resp) {
+                $.each(resp, function(i,item){
+                    item['Sdate'] = $.wcfDate2JsDateStr(item['Sdate']);
+                    item['Edate'] = $.wcfDate2JsDateStr(item['Edate']);
+                });
                 $('#preserveRoomTab').find('table.history').datagrid('loadData', {
                     total: resp.length,
                     rows: resp
@@ -200,7 +216,7 @@ window.grid.cfg.preserveRoom = {
     rownumbers: true,
     fit: true,
     columns:[[
-        {field:'RoomNo',title:'房间号',width:70},
+        {field:'RoomNo',title:'房间号',width:100},
         {field:'Direction',title:'朝向',width:40, formatter: function(v){return ys.Constant.DIRECTION[v].text;}},
         {field:'RoomArae',title:'面积(m<sup>2</sup>)',width:60},
         {field:'RommRenovation',title:'配套设施',width:300, formatter: function(v, r){
@@ -213,6 +229,9 @@ window.grid.cfg.preserveRoom = {
     ]],
     onSelect:function(i, data){
         ys.modules.PreserveRoom.loadPreserveHistory();
+        var form = $('#preserveRoomTab').find('form.preserveForm');
+        form.form('clear');
+        form.form('load', {RoomID: data.RoomID, OrderID: 0});
     }
 };
 window.grid.cfg.preserveRoom.history = {
@@ -221,10 +240,10 @@ window.grid.cfg.preserveRoom.history = {
     fit: true,
     columns:[[
         {field:'TenName',title:'入住人',width:70},
-        {field:'Gender',title:'性别',width:70, formatter: function(v){return v? '男':'女';}},
-        {field:'Phone',title:'入住人手机',width:40, formatter: function(v){return ys.Constant.DIRECTION[v].text;}},
+        {field:'Gender',title:'性别',width:40, formatter: function(v){return v? '男':'女';}},
+        {field:'Phone',title:'入住人手机',width:90},
         {field:'OrderStateName',title:'预约状态',width:60},
-        {field:'Deposit',title:'订金金额',width:60},
+        {field:'Deposit',title:'订金金额(元)',width:80},
         {field:'PayTypeName',title:'支付方式',width:60},
         {field:'Sdate',title:'预约日期',width:80},
         {field:'Edate',title:'入住日期',width:80}
@@ -245,8 +264,9 @@ window.grid.cfg.preserveRoom.history = {
             }
 
             var form = $('#preserveRoomTab').find('form.preserveForm');
+            var data = mainTbl.datagrid('getSelected');
             form.form('clear');
-            form.form('load', {RoomID: data.RoomID});
+            form.form('load', {RoomID: data.RoomID, OrderID: 0});
         }
     }, "-", {
         id: '',

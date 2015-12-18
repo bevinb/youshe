@@ -136,7 +136,17 @@
                         <td>合同编号:</td>
                         <td>
                             <input name="ContractNo" class="easyui-textbox" style="width:150px;" data-options="required:true">
-                            <span class="label">房屋接收人:</span><input name="SendeeID" class="easyui-textbox" style="width:150px;"  data-options="required:true">
+                            <span class="label">房屋接收人:</span>
+                            <input class="easyui-combobox"
+                                   name="SendeeID"
+                                   style="width:150px"
+                                   data-options="
+                               loader: ys.loaders.sendeeLoader,
+                                valueField:'SendeeID',
+                                textField:'SendeeName',
+                                panelHeight:'auto',
+                                required:true
+                        ">
                         </td>
                     </tr>
                     <tr>
@@ -174,7 +184,7 @@
 
 <div id="editOwnerPayInfoDlg" class="easyui-dialog" style="width:600px;padding:10px 20px"  modal="true"
      closed="true" buttons="#editOwnerPayInfoDlgBtns">
-    <form id="fm" method="post" novalidate>
+    <form novalidate>
         <input name="PayRentID" type="hidden">
         <input name="ContractID" type="hidden">
         <input name="PayStatus" type="hidden">
@@ -453,10 +463,10 @@ window.grid.cfg.contract = {
         {field:'HouseNo',title:'房源编号',width:100, formatter:function(v,r){return r.HousInfo.HouseNO;}},
         {field:'OwnerName',title:'业主姓名',width:70, formatter:function(v,r){return r.OwnerInfo.OwnerName;}},
         {field:'OwnerPhone',title:'业主电话',width:100, formatter:function(v,r){return r.OwnerInfo.Phone;}},
-        {field:'Rent',title:'房屋租金(元)',width:70},
-        {field:'Deposit',title:'房屋押金(元)',width:70},
-        {field:'BeginDate',title:'开始时间',width:100},
-        {field:'EndDate',title:'结束时间',width:100},
+        {field:'Rent',title:'房屋租金(元)',width:80},
+        {field:'Deposit',title:'房屋押金(元)',width:80},
+        {field:'BeginDate',title:'开始时间',width:90},
+        {field:'EndDate',title:'结束时间',width:90},
         {field:'SendeeName',title:'房屋接收人',width:100}
     ]],
     onSelect:function(i, data){

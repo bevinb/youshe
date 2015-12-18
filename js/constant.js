@@ -7,6 +7,12 @@ window.ys.Constant = {
 		id: 1, text: '男'
 	}],
 
+	SENDEE_TYPE: [{
+		id: 1, text: '房屋接收人'
+	}, {
+		id: 2, text: '房屋管家'
+	}],
+
 	CONSTELLATION: [{
 		id: 1, text: '白羊'
 	}, {
