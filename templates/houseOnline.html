@@ -60,7 +60,8 @@
                     valueField:'HouseCostTypeID',
                     textField:'HouseCostTypeName',
                     required: true,
-                    panelHeight:'auto'
+                    panelHeight:'auto',
+                    editable:false
             ">
         </div>
         <div class="fitem">
@@ -69,20 +70,7 @@
         </div>
         <div class="fitem">
             <label>账号所属公司:</label>
-            <input class="easyui-combobox"
-                   name="AccountCompanyID"
-                   style="width:300px;"
-                   data-options="
-                    loader: ys.loaders.accountCompanyLoader,
-                    valueField:'AccountCompanyID',
-                    textField:'AccountCompanyName',
-                    required: true,
-                    panelHeight:'auto'
-            ">
-        </div>
-        <div class="fitem">
-            <label>查询电话:</label>
-            <input name="QueryPhone" class="easyui-textbox" data-options="required:true">
+            <input name="AccountCompanyName" class="easyui-textbox" data-options="required:true">
         </div>
     </form>
 </div>
@@ -163,20 +151,30 @@
                     <td>
                         <label>房间编号:</label>
                         <input name="RoomNo" class="easyui-textbox" data-options="required:true" style="width:120px;">
-                        <label>朝向:</label>
-                        <select name="Direction" class="easyui-combobox"  data-options="required:true" style="width:120px;">
+                        <label style="margin-left:10px;">朝向:</label>
+                        <select name="Direction" class="easyui-combobox"  data-options="required:true" style="width:70px;">
                             <option value="0">无窗户</option>
                             <option value="1">朝东</option>
                             <option value="2">朝南</option>
                             <option value="3">朝西</option>
                             <option value="4">朝北</option>
                         </select>
-                        <label>价格(元):</label>
-                        <input name="Rent" class="easyui-numberbox" data-options="precision:2" style="width:100px;">
+                        <label style="margin-left:10px;">面积(m<sup>2</sup>):</label>
+                        <input name="RoomArae" class="easyui-numberbox" data-options="precision:2" style="width:70px;">
+                        <label style="margin-left:10px;">价格(元):</label>
+                        <input name="Rent" class="easyui-numberbox" data-options="precision:2" style="width:70px;">
                     </td>
                 </tr>
                 <tr>
                     <td class="renovation-list"><label style="width:80px;">配套设施:</label></td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>上传照片:</label>
+                        <div>
+                            <span class="file-upload-btn" style="width:80px;height:80px;display:inline-block;border:1px solid gray;font-size:64px;text-align:center;vertical-align:middle;margin-top:10px;line-height:80px;color:gray;">+</span>
+                        </div>
+                    </td>
                 </tr>
                 <tr>
                     <td style="text-align: right;"><input type="button" value="保存" onclick="ys.modules.HouseOnline.saveRoomRenovation(this)"></td>
@@ -439,11 +437,46 @@ ys.modules.HouseOnline =  (function(){
                 });
                 tab.find('.renovation-list').append(ys.modules.HouseOnline.renovationOpts);
                 tab.find('form').each(function(i){
-                    $(this).form('load', resp[i]);
-                    var rr = resp[i].RommRenovation;
+                    var room = resp[i], form = $(this);
+                    form.form('load', room);
+                    var rr = room.RommRenovation;
                     for (var i = 0; rr && i < rr.length; i++) {
-                        $(this).find(".renovation-list [value=" + rr[i].RenovationID + "]").attr("checked", true);
+                        form.find(".renovation-list [value=" + rr[i].RenovationID + "]").attr("checked", true);
                     };
+                    $.ajax({
+                        url: '/YSService/OnLineService/GetRoomImgPathInfo/' + room.RoomID,
+                        type: "GET",
+                        dataType: "json",
+                        success: function (imgs) {
+                            $.each(imgs, function(i, o) {
+                                form.find('.file-upload-btn').before('<a href="' + o.ImgPath + '" target="_blank"><img class="img-item" data-id="' + o.RoomImgPathID + '" src="' + o.ImgPath + '" style="width:80px;height:80px;display:inline-block;vertical-align:middle;margin:10px 10px 0 0;"></a>');
+                            });
+                            form.find('.file-upload-btn').click(function(){
+                                var btn = $(this);
+                                ys.modules.FileUploader.open({
+                                    callback: function(images){
+                                        $.each(images, function(i, v){
+                                            btn.before('<a href="' + v + '" target="_blank"><img data-id="0" src="' + v + '" class="img-item" style="width:80px;height:80px;display:inline-block;vertical-align:middle;margin:10px 10px 0 0;"></a>');
+                                            $.ajax({
+                                                url: '/YSService/OnLineService/InsertRoomImg',
+                                                method: 'POST',
+                                                data: JSON.stringify({RoomID:room.RoomID, ImgPath: v}),
+                                                dataType: "json",
+                                                contentType: "application/json; charset=utf-8",
+                                                success: function (imgs) {
+                                                },
+                                                error: function (XMLHttpRequest, textStatus, thrownError) {
+                                                }
+                                            });
+                                        });
+                                    }
+                                });
+                            });
+                        },
+                        error: function (XMLHttpRequest, textStatus, thrownError) {
+                            alert("Error Occured!");
+                        }
+                    });
                 });
             },
             error: function (XMLHttpRequest, textStatus, thrownError) {
@@ -556,7 +589,11 @@ ys.modules.HouseOnline =  (function(){
         }
         var tab = $('#houseOnlineTab div.rooms');
         var newPanel = $($('#houseOnlineRoomFormTpl').html());
-        newPanel.insertBefore(tab.find('.panel').get(0)).panel();
+        if(tab.find('.panel').length > 0) {
+            newPanel.insertBefore(tab.find('.panel').get(0)).panel();
+        } else {
+            newPanel.appendTo(tab).panel();
+        }
         $.parser.parse(newPanel);
         newPanel.find('.panel').addClass('new-item');
         newPanel.find('.renovation-list').append(ys.modules.HouseOnline.renovationOpts);
@@ -785,7 +822,7 @@ window.grid.cfg.houseOnline = {
     onSelect:function(i, data){
         ys.modules.HouseOnline.loadHouseContract(data);
         ys.modules.HouseOnline.loadHouseCost({HouseID: data.HouseID});
-        ys.modules.HouseOnline.loadHouseRenovation(data);
+        //ys.modules.HouseOnline.loadHouseRenovation(data);
         ys.modules.HouseOnline.loadHouseRenovations(data);
     },
     toolbar: [{
@@ -844,8 +881,7 @@ window.grid.cfg.houseOnline.cost = {
     columns:[[
         {field:'HouseCostTypeName',title:'费用类型',width:100},
         {field:'AccountNO',title:'账号',width:100},
-        {field:'AccountCompanyName',title:'账号所属公司',width:100},
-        {field:'QueryPhone',title:'查询电话',width:100}
+        {field:'AccountCompanyName',title:'账号所属公司',width:100}
     ]],
     toolbar: [{
         id: '',

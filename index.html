@@ -21,17 +21,12 @@
         </div>
         <div id="Headermenu" style="float:right;">
             <ul id="topnav">
-                <li id="metnav_1" class="list">
-                    <a id="nav_1" onclick="Replace();">
-                        系统首页
-                    </a>
-                </li>
-                <li id="metnav_5" class="list" onclick="PersonCenter()">
-                    <a id="nav_5">个人中心</a>
-                </li>
-                <li id="metnav_4" class="list" onclick="logout()">
-                    <a id="nav_4">安全退出
-                    </a>
+                <li class="list">
+                    <span class="username" style="display:block;color:#fff;font-size:12px;height: 22px;padding: 5px 7px 0px;"></span>
+                    <div id="userMenu">
+                        <div data-options="action:'pwd'">修改密码</div>
+                        <div data-options="action:'logout'">安全退出</div>
+                    </div>
                 </li>
             </ul>
         </div>
@@ -48,89 +43,7 @@
         </div>
 	</div>
 	<!--<div data-options="region:'south',split:true" style="height:50px;"></div>-->
-	<div id="leftMainMenu" data-options="region:'west',split:true" title="2015年8月29日" style="width:160px;">
-		<div class="easyui-accordion" data-options="fit:true,border:false">
-			<div title="物业中心" data-options="selected:true">
-				<ul class="easyui-tree">
-					<li>
-						<span>物业中心</span>
-						<ul>
-                            <li data-options="tabLink:'property'">物业公司</li>
-                            <li data-options="tabLink:'serviceCenter'">服务中心</li>
-						    <li data-options="tabLink:'community'">社区管理</li>
-							<li data-options="tabLink:'village'">楼盘字典</li>
-							<li data-options="tabLink:'house'">房源管理</li>
-							<li data-options="tabLink:'owner'">业主管理</li>
-                            <li data-options="tabLink:'sendee'">接收人/管家</li>
-							<li data-options="tabLink:'contract'">合同管理</li>					
-						</ul>
-					</li>
-				</ul>
-			</div>
-			<div title="物业管控">
-				<ul class="easyui-tree">
-					<li>
-						<span>物业管控</span>
-						<ul>
-						    <li data-options="tabLink:'houseOnline'">上线管控</li>
-						</ul>
-					</li>
-				</ul>
-			</div>
-			
-			<div title="运营中心">
-				<ul class="easyui-tree">
-					<li>
-						<span>运营中心</span>
-						<ul>
-                            <li data-options="tabLink:'trends'">公寓房态</li>
-                            <li data-options="tabLink:'preserveRoom'">预定</li>
-                            <li data-options="tabLink:'signRoom'">签约</li>
-                            <!--<li data-options="tabLink:'returnRoom'">退房</li>-->
-                            <li data-options="tabLink:'tenantContract'">合同列表</li>
-							<li data-options="tabLink:'renter'">租客管理</li>
-                            <li data-options="tabLink:'discount'">优惠项</li>
-						</ul>
-					</li>
-				</ul>
-			</div>
-			<div title="财务管理">
-				<ul class="easyui-tree">
-					<li>
-						<span>财务管理</span>
-						<ul>
-							<li data-options="tabLink:'documents'">收支凭证</li>
-                            <li data-options="tabLink:'otherPay'">其他费用</li>
-						</ul>
-					</li>
-				</ul>
-			</div>
-
-			<div title="数据统计">
-				<ul class="easyui-tree">
-					<li>
-						<span>数据统计</span>
-						<ul>
-                            <li data-options="">运营数据</li>流水
-							<li data-options="">渠道分析</li>租客来源
-							<li data-options="">营业分析</li>
-						</ul>
-					</li>
-				</ul>
-			</div>
-			<div title="系统管理">
-			    <ul class="easyui-tree">
-					<li>
-						<span>系统管理</span>
-						<ul>
-                            <li data-options="">城市管理</li>
-						    <li data-options="">用户角色</li>
-						</ul>
-					</li>
-				</ul>
-			</div>
-		</div>
-	</div>
+	<div id="leftMainMenu" data-options="region:'west',split:true" title="2015年8月29日" style="width:160px;"></div>
 	<div data-options="region:'center',iconCls:'icon-ok'">
 		<div id="mainPanel" class="easyui-tabs" data-options="fit:true,border:false,plain:true">
 			<div title="工作台" style="padding:10px">
@@ -218,14 +131,91 @@
 		</div>
 	</div>
 
-    <div id="fileUploaderDlg" class="easyui-dialog" style="width:600px;min-height:500px;padding:10px 20px"  modal="true"
-         closed="true" buttons="#fileUploaderDlgBtns">
-        <div class="file-uploader"></div>
+<div id="fileUploaderDlg" class="easyui-dialog" style="width:600px;min-height:500px;padding:10px 20px"  modal="true"
+     closed="true" buttons="#fileUploaderDlgBtns">
+    <div class="file-uploader"></div>
+</div>
+<div id="fileUploaderDlgBtns">
+    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="ys.modules.FileUploader.confirm()" style="width:90px">确认</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="ys.modules.FileUploader.cancel()" style="width:90px">取消</a>
+</div>
+
+<div id="changePwdDlg" class="easyui-dialog" style="width:500px;padding:10px 20px"  modal="true"
+     closed="true" data-options="buttons: '#changePwdDlgBtns', title:'修改密码'">
+    <form novalidate>
+        <div class="fitem">
+            <label>旧密码:</label>
+            <input name="OldPwd" type="password" class="easyui-validatebox" style="width:300px;" data-options="required:true">
+        </div>
+        <div class="fitem">
+            <label>新密码:</label>
+            <input name="NewPwd" type="password" class="easyui-validatebox" style="width:300px;" data-options="required:true">
+        </div>
+        <div class="fitem">
+            <label>确认新密码:</label>
+            <input name="ConfirmNewPwd" type="password" class="easyui-validatebox" style="width:300px;" data-options="required:true">
+        </div>
+    </form>
+</div>
+<div id="changePwdDlgBtns">
+    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="ys.Session.changePwd()" style="width:90px">保存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('.easyui-dialog').dialog('close')" style="width:90px">取消</a>
+</div>
+
+<script type="text/template" id="left-menu-tpl">
+    <div class="easyui-accordion" data-options="fit:true,border:false">
+        <div class="system-module" title="物业中心" data-options="selected:true">
+            <ul class="easyui-tree">
+                <li>
+                    <span>物业中心</span>
+                    <ul module-id="2"></ul>
+                </li>
+            </ul>
+        </div>
+        <div class="system-module" title="物业管控">
+            <ul class="easyui-tree">
+                <li>
+                    <span>物业管控</span>
+                    <ul module-id="3"></ul>
+                </li>
+            </ul>
+        </div>
+
+        <div class="system-module" title="运营中心">
+            <ul class="easyui-tree">
+                <li>
+                    <span>运营中心</span>
+                    <ul module-id="4"></ul>
+                </li>
+            </ul>
+        </div>
+        <div class="system-module" title="财务管理">
+            <ul class="easyui-tree">
+                <li>
+                    <span>财务管理</span>
+                    <ul module-id="5"></ul>
+                </li>
+            </ul>
+        </div>
+
+        <div class="system-module" title="数据统计">
+            <ul class="easyui-tree">
+                <li>
+                    <span>数据统计</span>
+                    <ul module-id="6"></ul>
+                </li>
+            </ul>
+        </div>
+        <div class="system-module" title="系统管理">
+            <ul class="easyui-tree">
+                <li>
+                    <span>系统管理</span>
+                    <ul module-id="1"></ul>
+                </li>
+            </ul>
+        </div>
     </div>
-    <div id="fileUploaderDlgBtns">
-        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="ys.modules.FileUploader.confirm()" style="width:90px">确认</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="ys.modules.FileUploader.cancel()" style="width:90px">取消</a>
-    </div>
+</script>
 
 <!--START GALLERY DEMO CODE-->
 <script type="text/template" id="qq-template-gallery">
@@ -305,9 +295,15 @@
     </div>
 </script>
 
+<div class="system-loading-mask">
+    <div class="loading-indicator"><span class="panel-loading"></span>系统初始化中...</div>
+</div>
 </body>
 
 <script type="text/javascript" src="lib/jquery.min.js"></script>
+<script src="./login_files/jquery.cookie.js"></script>
+<script src="./login_files/jQuery.md5.js"></script>
+<script type="text/javascript" src="js/util.js"></script>
 <script type="text/javascript" src="lib/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="lib/jquery.portal.js"></script>
 <script type="text/javascript" src="lib/datagrid-cellediting.js"></script>
@@ -315,7 +311,6 @@
 <script type="text/javascript" src="lib/highcharts.js"></script>
 <script type="text/javascript" src="lib/all.fine-uploader.min.js"></script>
 <script type="text/javascript" src="js/constant.js"></script>
-<script type="text/javascript" src="js/util.js"></script>
 <script type="text/javascript" src="js/session.js"></script>
 <script type="text/javascript" src="js/loader.js"></script>
 <script type="text/javascript" src="js/grid-config.js"></script>

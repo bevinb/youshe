@@ -1,0 +1,239 @@
+<div class="easyui-layout" data-options="fit:true">
+    <div data-options="region:'center'"><table class="main"></table></div>
+</div>
+
+<div id="editUserDlg" class="easyui-dialog" style="width:500px;padding:10px 20px"  modal="true"
+     closed="true" buttons="#editUserDlgBtns">
+    <form novalidate>
+        <input name="UserID" type="hidden">
+        <input name="CompanyID" type="hidden">
+        <input name="IsEnable" type="hidden">
+        <div class="fitem">
+            <label>用户名:</label>
+            <input name="UserName" class="easyui-textbox" data-options="required:true">
+        </div>
+        <div class="fitem">
+            <label>账号:</label>
+            <input name="UserAccountName" class="easyui-textbox" data-options="required:true">
+        </div>
+    </form>
+</div>
+<div id="editUserDlgBtns">
+    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="ys.modules.Users.saveMainItem()" style="width:90px">保存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('.easyui-dialog').dialog('close')" style="width:90px">取消</a>
+</div>
+
+<div id="usersEditRolesDlg" class="easyui-dialog" style="width:500px;"  modal="true"
+     closed="true" buttons="#usersEditRolesDlgBtns">
+    <div class="easyui-layout" data-options="fit:true" style="height:550px;">
+        <div data-options="region:'center'">
+            <table id="usersEditRolesGrid"></table>
+        </div>
+    </div>
+</div>
+<div id="usersEditRolesDlgBtns">
+    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="javascript:ys.modules.Users.saveRoles()" style="width:90px">确认</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('.easyui-dialog').dialog('close')" style="width:90px">取消</a>
+</div>
+
+<script>
+ys.modules.Users =  (function(){
+    var currentUserId = null;
+    function loadMainData(){
+        $.ajax({
+            url: '/YSLoginService/User/GetUserInfos',
+            method: 'POST',
+            //data: JSON.stringify({CompanyID:1}),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (resp) {
+                $('#usersTab').find('table.main').datagrid('loadData', {
+                    total: resp.length,
+                    rows: resp
+                });
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    function saveMainItem(){
+        var dlg = $('#editUserDlg'), form = dlg.find('form');
+        if(!form.form('validate'))return;
+        var formData =  form.serializeArray();
+        var data = {};
+        $.each(formData, function(i, v) {
+            data[v.name] = v.value;
+        });
+        var url = '/YSLoginService/User/SaveUserInfo';
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: JSON.stringify(data),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (msg) {
+                loadMainData();
+                dlg.dialog('close');
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    function editRoles(userId){
+        $('#usersEditRolesDlg').dialog('open').dialog('center').dialog('setTitle','角色设置');
+        currentUserId = userId;
+        $.ajax({
+            url: '/YSLoginService/Role/GetRoleInfos',
+            method: 'POST',
+            data: JSON.stringify({IsEnabledOnly: true}),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (roles) {
+                $.ajax({
+                    url: '/YSLoginService/User/GetUserRoles/' +  userId,
+                    method: 'GET',
+                    dataType: "json",
+                    success: function (user) {
+                        $.each(roles, function(i, v){
+                            v.checked = $.inArray(v.RoleID, user.RoleIDs) > -1;
+                        });
+                        $('#usersEditRolesGrid').datagrid(window.grid.cfg.users.Roles);
+                        $('#usersEditRolesGrid').datagrid('loadData', {
+                            total: roles.length,
+                            rows: roles
+                        });
+                    },
+                    error: function (XMLHttpRequest, textStatus, thrownError) {
+                        alert("Error Occured!");
+                    }
+                });
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    function saveRoles(){
+        var tbl = $('#usersEditRolesGrid');
+        var rows = tbl.datagrid('getSelections');
+        var roleIds = [];
+        for (var i = 0; i < rows.length; i++) {
+            roleIds.push(rows[i].RoleID);
+        }
+        var userId = currentUserId;
+        $.ajax({
+            url: '/YSLoginService/User/SaveUserRoles',
+            type: "POST",
+            data: JSON.stringify({UserID: currentUserId, RoleIDs: roleIds}),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (msg) {
+                $('#usersEditRolesDlg').dialog('close');
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    function enableUser(userId, toEnable){
+        var msg = toEnable? '确认启用此用户?' : '确认禁用此用户?';
+        $.messager.confirm('确认',msg,function(r){
+            if (r){
+                var msg = toEnable? '' : '';
+                var rows = $('#usersTab').find('table.main').datagrid("getRows");
+                var user = null;
+                $.each(rows, function (index, item) {
+                    if (item.UserID == userId) {
+                        user = {
+                            UserID: item.UserID,
+                            UserName: item.UserName,
+                            UserAccountName: item.UserAccountName,
+                            CompanyID: item.CompanyID,
+                            IsEnable: toEnable
+                        };
+                    }
+                });
+                $.ajax({
+                    url: '/YSLoginService/User/SaveUserInfo',
+                    type: "POST",
+                    data: JSON.stringify(user),
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (msg) {
+                        loadMainData();
+                    },
+                    error: function (XMLHttpRequest, textStatus, thrownError) {
+                        alert("Error Occured!");
+                    }
+                });
+            }
+        });
+    };
+
+    return {
+        loadMainData: loadMainData,
+        saveMainItem: saveMainItem,
+        editRoles: editRoles,
+        saveRoles: saveRoles,
+        enableUser: enableUser
+    };
+})();
+
+window.grid.cfg.users = {
+    singleSelect:true,
+    rownumbers: true,
+    pagination: true,
+    fit: true,
+    columns:[[
+        {field:'UserName',title:'用户名',width:100},
+        {field:'UserAccountName',title:'账号',width:100},
+        {field:'IsEnable',title:'启用',width:40, formatter: function(v){return v? '是' : '否'}},
+        {field:'UserID',title:'',width:120, formatter: function (v,r){
+            return '<a onclick="ys.modules.Users.editRoles('+v+')">角色设置</a>' + (r.IsEnable? ('<a onclick="ys.modules.Users.enableUser('+v+
+                    ', false)">禁用</a>') : ('<a onclick="ys.modules.Users.enableUser('+v+',true)">启用</a>'));
+        }}
+    ]],
+    toolbar: [{
+        id: '',
+        text: '新增',
+        iconCls: 'icon-add',
+        handler: function () {
+            var dlg = $('#editUserDlg'), form = dlg.find('form');
+            dlg.dialog('open').dialog('center').dialog('setTitle','新增用户');
+            form.form('clear');
+            form.form('load', {UserID:0, IsEnable: true, CompanyID: 1})
+        }
+    }]
+};
+
+window.grid.cfg.users.Roles = {
+    singleSelect: false,
+    rownumbers: true,
+    fit: true,
+    selectOnCheck:true,
+    checkOnSelect:true,
+    columns: [[
+        {field: 'CK',checkbox:true,width:80},
+        {field: 'RoleName', title: '角色名称', width: 100},
+    ]],
+    onLoadSuccess:function(data) {
+        if (data) {
+            $.each(data.rows, function (index, item) {
+                if (item.checked) {
+                    $('#usersEditRolesGrid').datagrid('checkRow', index);
+                }
+            });
+        }
+    }
+};
+
+(function() {
+    ys.modules.Users.loadMainData();
+})();
+</script>

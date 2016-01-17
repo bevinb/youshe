@@ -1,0 +1,70 @@
+<div class="easyui-layout" data-options="fit:true">
+    <div class="chart-ct" data-options="region:'center'"></div>
+</div>
+
+<script>
+ys.modules.Yysj =  (function(){
+    function initReport(){
+        $.ajax({
+            url: '/YSService/ReportService/GetFineInfo',
+            type: "GET",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (resp) {
+                var categories = [], income = [], expenditure = [];
+                $.each(resp, function(i, o){
+                    categories.push(o.StringDate);
+                    income.push(o.Income);
+                    expenditure.push(o.Expenditure);
+                });
+                $('#yysjTab .chart-ct').highcharts({
+                    title: {
+                        text: '运营数据',
+                        x: -20 //center
+                    },
+                    xAxis: {
+                        categories: categories
+                    },
+                    yAxis: {
+                        title: {
+                            text: '金额 (元)'
+                        },
+                        plotLines: [{
+                            value: 0,
+                            width: 1,
+                            color: '#808080'
+                        }]
+                    },
+                    tooltip: {
+                        valueSuffix: '元'
+                    },
+                    legend: {
+                        layout: 'vertical',
+                        align: 'right',
+                        verticalAlign: 'middle',
+                        borderWidth: 0
+                    },
+                    series: [{
+                        name: '收入',
+                        data: income
+                    }, {
+                        name: '支出',
+                        data: expenditure
+                    }]
+                });
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    return {
+        initReport: initReport
+    };
+})();
+
+(function(){
+    ys.modules.Yysj.initReport();
+})();
+</script>

@@ -86,10 +86,26 @@
                     <td>
                         <input name="Floor" class="easyui-numberbox" style="width:70px;"><span class="label">楼</span>
                         <span class="label">共</span><input name="FloorCount" class="easyui-numberbox" style="width:70px;"><span class="label">楼</span>
+                        <span class="label">电梯:</span>
+                        <select class="easyui-combobox" name="Elevator" data-options="required:true">
+                            <option value="1">有</option>
+                            <option value="0">无</option>
+                        </select>
+                        <span class="label">物业类型:</span>
+                        <input class="easyui-combobox"
+                               name="HouseType"
+                               data-options="
+                            required:true,
+                            data:ys.Constant.HOUSE_TYPE,
+                            method:'get',
+                            valueField:'id',
+                            textField:'text',
+                            panelHeight:'auto'
+                    ">
                     </td>
                 </tr>
                 <tr>
-                    <td>房屋面积:</td>
+                    <td>原始户型:</td>
                     <td>
                         <input name="Room" class="easyui-numberbox" style="width:70px;"><span class="label">室</span>
                         <input name="Hall" class="easyui-numberbox" style="width:70px;"><span class="label">厅</span>
@@ -393,7 +409,9 @@ window.grid.cfg.house = {
         {field:'OwnerName',title:'业主',width:70},
         {field:'Address',title:'地址',width:200},
         {field:'FloorInfo',title:'楼层',width:70},
-        {field:'HouseDetail',title:'详细信息',width:120},
+        {field:'Elevator',title:'电梯',width:40, formatter: function(v){return v? '有':'无';}},
+        {field:'HouseType',title:'物业类型',width:120, formatter: function(v){return ys.Constant.HOUSE_TYPE[v-1].text;}},
+        {field:'HouseDetail',title:'原始户型',width:120},
         {field:'HouseStatusName',title:'状态',width:100}
     ]],
     onSelect:function(i, data){

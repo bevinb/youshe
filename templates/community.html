@@ -55,7 +55,7 @@
         <div class="fitem">
             <label>社区图片:</label>
             <div>
-                <span class="file-upload-btn" style="width:80px;height:80px;display:inline-block;border:1px solid gray;font-size:64px;text-align:center;vertical-align:middle;line-height:80px;color:gray;">+</span>
+                <span class="file-upload-btn" style="width:80px;height:80px;display:inline-block;border:1px solid gray;font-size:64px;text-align:center;vertical-align:middle;margin-top:10px;line-height:80px;color:gray;">+</span>
             </div>
         </div>
     </form>
@@ -186,7 +186,7 @@ window.grid.cfg.community = {
             dlg.dialog('open').dialog('center').dialog('setTitle','新增社区');
             form.form('clear')
             form.form('load', {CommunityID: '0', CityID: ys.Session.currentCity});
-            $('#editCommunityDlg').find('.img-item').remove();
+            $('#editCommunityDlg').find('.img-item-link').remove();
         }
     }, "-", {
         id: '',
@@ -201,9 +201,9 @@ window.grid.cfg.community = {
             dlg.dialog('open').dialog('center').dialog('setTitle','编辑社区');
             var data = mainTbl.datagrid('getSelected');
             form.form('load', data);
-            $('#editCommunityDlg').find('.img-item').remove();
+            $('#editCommunityDlg').find('.img-item-link').remove();
             $.each(data.list_CommunityImgPath, function(i, o){
-                $('#editCommunityDlg').find('.file-upload-btn').before('<img class="img-item" data-id="' + o.CommunityImgPathID + '" src="' + o.ImgPath + '" style="width:80px;height:80px;display:inline-block;vertical-align:middle;margin:10px 10px 0 0;">');
+                $('#editCommunityDlg').find('.file-upload-btn').before('<a href="' + o.ImgPath + '" class="img-item-link" target="_blank"><img class="img-item" data-id="' + o.CommunityImgPathID + '" src="' + o.ImgPath + '" style="width:80px;height:80px;display:inline-block;vertical-align:middle;margin:10px 10px 0 0;"></a>');
             })
         }
     }, "-", {
@@ -222,7 +222,7 @@ window.grid.cfg.community = {
         ys.modules.FileUploader.open({
             callback: function(images){
                 $.each(images, function(i, v){
-                    btn.before('<img data-id="0" src="//' + v + '" class="img-item" style="width:80px;height:80px;display:inline-block;vertical-align:middle;margin:10px 10px 0 0;">');
+                    btn.before('<a href="' + v + '" class="img-item-link" target="_blank"><img data-id="0" src="' + v + '" class="img-item" style="width:80px;height:80px;display:inline-block;vertical-align:middle;margin:10px 10px 0 0;"></a>');
                 })
             }
         });

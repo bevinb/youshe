@@ -44,67 +44,32 @@
     </div>
 </div>
 
-<div id="editTenantPayInfoDlg" class="easyui-dialog" style="width:600px;padding:10px 20px"  modal="true"
+<div id="cancelTenantContractDlg" class="easyui-dialog" style="width:500px;padding:10px 20px"  modal="true"
+     closed="true" buttons="#cancelTenantContractDlgBtns">
+    <form novalidate>
+        <input name="TenantContractID" type="hidden">
+        <div class="fitem">
+            <label>退款金额(元):</label>
+            <input name="ReturnCount" class="easyui-numberbox" style="width:300px;" data-options="required:true,precision:2">
+        </div>
+    </form>
+</div>
+<div id="cancelTenantContractDlgBtns">
+    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="ys.modules.TenantContract.cancelContract()" style="width:90px">保存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('.easyui-dialog').dialog('close')" style="width:90px">取消</a>
+</div>
+
+<div id="editTenantPayInfoDlg" class="easyui-dialog" style="width:500px;padding:10px 20px"  modal="true"
      closed="true" buttons="#editTenantPayInfoDlgBtns">
     <form novalidate>
         <input name="PayRentID" type="hidden">
-        <input name="ContractID" type="hidden">
-        <input name="PayStatus" type="hidden">
-        <div class="fitem">
-            <label>付款编号:</label>
-            <input name="PayRentNo" class="easyui-textbox" data-options="required:true" readonly>
-        </div>
-        <div class="fitem">
-            <label>应付日期:</label>
-            <input name="PayRentDate" class="easyui-datebox" data-options="required:true" readonly>
-        </div>
-        <div class="fitem">
-            <label>应付租金:</label>
-            <input name="PayRent" class="easyui-numberbox" data-options="precision:2, required:true" readonly>
-        </div>
-        <div class="fitem">
-            <label>付款方式:</label>
-            <input class="easyui-combobox"
-                   name="PayTypeID"
-                   data-options="
-                    loader: ys.loaders.payTypeLoader,
-                    valueField:'PayTypeID',
-                    textField:'PayTypeName',
-                    required: true,
-                    panelHeight:'auto'
-            ">
-        </div>
         <div class="fitem">
             <label>实付日期:</label>
-            <input name="ActualPayRentDate" class="easyui-datebox" data-options="required:true">
-        </div>
-        <div class="fitem">
-            <label>付款银行:</label>
-            <input class="easyui-combobox"
-                   name="BankID"
-                   data-options="
-                    loader: ys.loaders.bankListLoader,
-                    valueField:'BankID',
-                    textField:'BankName',
-                    required: true,
-                    panelHeight:'auto'
-            ">
-        </div>
-        <div class="fitem">
-            <label>付款银行卡号:</label>
-            <input name="BankCardNo" class="easyui-textbox" data-options="required:true">
-        </div>
-        <div class="fitem">
-            <label>收款人:</label>
-            <input name="Payee" class="easyui-textbox" data-options="required:true">
-        </div>
-        <div class="fitem">
-            <label>收款人银行卡号:</label>
-            <input name="PayeeCardNo" class="easyui-textbox" data-options="required:true">
+            <input name="ActualPayRentDate" class="easyui-datebox" style="width:300px;" data-options="required:true">
         </div>
         <div class="fitem">
             <label>备注:</label>
-            <textarea name="Remarks" class="easyui-textarea"></textarea>
+            <textarea name="Remarks" style="width:300px;" class="easyui-textarea"></textarea>
         </div>
     </form>
 </div>
@@ -151,29 +116,39 @@
             }
         };
 
+        function openCancelContractDlg(){
+            var data = $.form2Json($('#cancelTenantContractDlg').find('form'));
+            $.ajax({
+                url: '/YSService/TenantContractService/CancelContract',
+                method: 'POST',
+                data: JSON.stringify(data),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (resp) {
+                    $.messager.alert('提示','已作废合同！','success');
+                    loadMainData();
+                },
+                error: function (XMLHttpRequest, textStatus, thrownError) {
+                    alert("Error Occured!");
+                }
+            });
+        };
+
         function cancelContract(){
-            var mainTbl = $('#tenantContractTab').find('table.main');
-            if(mainTbl.datagrid('getSelections').length < 1){
-                $.messager.alert('提示','请先选择要编辑的数据','info');
-                return;
-            }
-            var data = mainTbl.datagrid('getSelected');
-            $.messager.confirm('确认','确认作废该合同?',function(r){
-                if (r){
-                    $.ajax({
-                        url: '/YSService/TenantContractService/CancelContract',
-                        method: 'POST',
-                        data: JSON.stringify({TenantContractID: data.TenantContractID}),
-                        dataType: "json",
-                        contentType: "application/json; charset=utf-8",
-                        success: function (resp) {
-                            $.messager.alert('提示','已作废合同！','success');
-                            loadMainData();
-                        },
-                        error: function (XMLHttpRequest, textStatus, thrownError) {
-                            alert("Error Occured!");
-                        }
-                    });
+            var data = $.form2Json($('#cancelTenantContractDlg').find('form'));
+            $.ajax({
+                url: '/YSService/TenantContractService/CancelContract',
+                method: 'POST',
+                data: JSON.stringify(data),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (resp) {
+                    $.messager.alert('提示','已作废合同！','success');
+                    loadMainData();
+                    $('#cancelTenantContractDlg').dialog('close');
+                },
+                error: function (XMLHttpRequest, textStatus, thrownError) {
+                    alert("Error Occured!");
                 }
             });
         };
@@ -249,11 +224,65 @@
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
                 success: function (msg) {
-                    loadSubPay({TenantContractID: data.ContractID});
+                    loadSubPay({TenantContractID:  $('#tenantContractTab').find('table.subPay').datagrid('getSelected').ContractID});
                     dlg.dialog('close');
                 },
                 error: function (XMLHttpRequest, textStatus, thrownError) {
                     alert("Error Occured!");
+                }
+            });
+        };
+
+        function auditPay(){
+            var tbl = $('#tenantContractTab').find('table.subPay');
+            if (tbl.datagrid('getSelections').length < 1) {
+                $.messager.alert('提示', '请先选择要审核的付款记录', 'info');
+                return;
+            }
+            var data = tbl.datagrid('getSelected');
+            $.messager.confirm('确认', '确认审核通过此付款记录?', function (r) {
+                if (r) {
+                    var url = '/YSService/TenantContractService/CheckContractPay';
+                    $.ajax({
+                        url: url,
+                        type: "POST",
+                        data: JSON.stringify({PayRentID: data.PayRentID, IsCheck: 1}),
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (msg) {
+                            loadSubPay({TenantContractID:  $('#tenantContractTab').find('table.subPay').datagrid('getSelected').ContractID});
+                        },
+                        error: function (XMLHttpRequest, textStatus, thrownError) {
+                            alert("Error Occured!");
+                        }
+                    });
+                }
+            });
+        };
+
+        function unauditPay(){
+            var tbl = $('#tenantContractTab').find('table.subPay');
+            if (tbl.datagrid('getSelections').length < 1) {
+                $.messager.alert('提示', '请先选择要审核的付款记录', 'info');
+                return;
+            }
+            var data = tbl.datagrid('getSelected');
+            $.messager.confirm('确认', '确认取消审核此付款记录?', function (r) {
+                if (r) {
+                    var url = '/YSService/TenantContractService/CheckContractPay';
+                    $.ajax({
+                        url: url,
+                        type: "POST",
+                        data: JSON.stringify({PayRentID: data.PayRentID, IsCheck: 0}),
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (msg) {
+                            loadSubPay({TenantContractID:  $('#tenantContractTab').find('table.subPay').datagrid('getSelected').ContractID});
+                        },
+                        error: function (XMLHttpRequest, textStatus, thrownError) {
+                            alert("Error Occured!");
+                        }
+                    });
                 }
             });
         };
@@ -265,7 +294,9 @@
             cancelContract: cancelContract,
             stopContract: stopContract,
             loadSubPay: loadSubPay,
-            saveSubPay: saveSubPay
+            saveSubPay: saveSubPay,
+            auditPay: auditPay,
+            unauditPay: unauditPay
         };
     })();
 
@@ -277,13 +308,14 @@ window.grid.cfg.tenantContract = {
     columns:[[
         {field:'TenantContractNo',title:'合同编号',width:150},
         {field:'ContractStatusName',title:'状态',width:70},
-        {field:'RoomNo',title:'房间编号',width:100, formatter:function(v,r){return r.RoomInfo.RoomNo;}},
+        //{field:'RoomNo',title:'房间编号',width:100, formatter:function(v,r){return r.RoomInfo.RoomNo;}},
         {field:'BeginDate',title:'开始日期',width:90},
         {field:'EndDate',title:'结束日期',width:90},
         {field:'TenantName',title:'入住人',width:70, formatter:function(v,r){return r.TenantInfo.TenantName;}},
         {field:'Rent',title:'月租金(元)',width:70},
         {field:'Deposit',title:'押金(元)',width:70},
-        {field:'Remarks',title:'备注信息',width:150},
+        {field:'ServiceCharge',title:'服务费(元)',width:70},
+        //{field:'Remarks',title:'备注信息',width:150},
         {field:'Creater',title:'录入人',width:70},
         {field:'CreateDate',title:'录入日期',width:90}
     ]],
@@ -293,7 +325,18 @@ window.grid.cfg.tenantContract = {
     toolbar: [{
         text: '作废',
         iconCls: 'icon-cancel',
-        handler: ys.modules.TenantContract.cancelContract
+        handler: function () {
+            var mainTbl = $('#tenantContractTab').find('table.main');
+            if(mainTbl.datagrid('getSelections').length < 1){
+                $.messager.alert('提示','请先选择要编辑的数据','info');
+                return;
+            }
+            var data = mainTbl.datagrid('getSelected');
+            var dlg = $('#cancelTenantContractDlg'), form = dlg.find('form');
+            dlg.dialog('open').dialog('center').dialog('setTitle','作废合同');
+            form.form('clear')
+            form.form('load', {TenantContractID: data.TenantContractID});
+        }
     }, "-", {
         text: '终止',
         iconCls: 'icon-ok',
@@ -311,9 +354,10 @@ window.grid.cfg.tenantContract.Pay = {
         {field:'PayRentDate',title:'应付日期',width:80},
         {field:'PayRent',title:'应付金额(元)',width:70},
         {field:'ActualPayRentDate',title:'实付日期',width:80},
-        {field:'PayTypeName',title:'付款方式',width:70},
-        {field:'Payee',title:'付款人',width:70},
-        {field:'Remarks',title:'备注:',width:100}
+        //{field:'PayTypeName',title:'付款方式',width:70},
+        //{field:'Payee',title:'付款人',width:70},
+        {field:'Remarks',title:'备注',width:100},
+        { field: 'IsCheck', title: '已审核', width: 70, formatter: function(v){return v? '是':'否';} }
     ]],
     toolbar: [{
         id: '',
@@ -326,8 +370,20 @@ window.grid.cfg.tenantContract.Pay = {
                 return;
             }
             $('#editTenantPayInfoDlg').dialog('open').dialog('center').dialog('setTitle','付款');
-            form.form('load', tbl.datagrid('getSelected'));
+            var data = tbl.datagrid('getSelected');
+            form.form('load', {
+                PayRentID: data.PayRentID,
+                ActualPayRentDate: $.jsDate2jsDateStr(new Date())
+            });
         }
+    }, {
+        text: '审核通过',
+        iconCls: 'icon-ok',
+        handler: ys.modules.TenantContract.auditPay
+    }, {
+        text: '取消审核',
+        iconCls: 'icon-cancel',
+        handler: ys.modules.TenantContract.unauditPay
     }]
 };
 

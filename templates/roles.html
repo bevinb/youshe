@@ -1,0 +1,257 @@
+<div class="easyui-layout" data-options="fit:true">
+    <div data-options="region:'center'"><table class="main"></table></div>
+</div>
+
+<div id="editRoleDlg" class="easyui-dialog" style="width:500px;padding:10px 20px"  modal="true"
+     closed="true" buttons="#editRoleDlgBtns">
+    <form novalidate>
+        <input name="RoleID" type="hidden">
+        <input name="CompanyID" type="hidden">
+        <input name="IsEnable" type="hidden">
+        <div class="fitem">
+            <label>角色名:</label>
+            <input name="RoleName" class="easyui-textbox" data-options="required:true">
+        </div>
+    </form>
+</div>
+<div id="editRoleDlgBtns">
+    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="ys.modules.Roles.saveMainItem()" style="width:90px">保存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('.easyui-dialog').dialog('close')" style="width:90px">取消</a>
+</div>
+
+<div id="rolesEditPermissionsDlg" class="easyui-dialog" style="width:500px;"  modal="true"
+     closed="true" buttons="#rolesEditPermissionsDlgBtns">
+    <div class="easyui-layout" data-options="fit:true" style="height:550px;">
+        <div data-options="region:'center'">
+            <table id="rolesEditPermissionsGrid"></table>
+        </div>
+    </div>
+</div>
+<div id="rolesEditPermissionsDlgBtns">
+    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="javascript:ys.modules.Roles.savePermissions()" style="width:90px">确认</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('.easyui-dialog').dialog('close')" style="width:90px">取消</a>
+</div>
+
+<script>
+ys.modules.Roles =  (function(){
+    var currentRoleId = null;
+    function loadMainData(){
+        $.ajax({
+            url: '/YSLoginService/Role/GetRoleInfos',
+            method: 'POST',
+            data: JSON.stringify({CompanyID: 1}),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (resp) {
+                $('#rolesTab').find('table.main').datagrid('loadData', {
+                    total: resp.length,
+                    rows: resp
+                });
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    function saveMainItem(){
+        var dlg = $('#editRoleDlg'), form = dlg.find('form');
+        if(!form.form('validate'))return;
+        var formData =  form.serializeArray();
+        var data = {};
+        $.each(formData, function(i, v) {
+            data[v.name] = v.value;
+        });
+        var url = '/YSLoginService/Role/SaveRoleInfo';
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: JSON.stringify(data),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (msg) {
+                loadMainData();
+                dlg.dialog('close');
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    function deleteMainItem(){
+        var mainTbl = $('#rolesTab').find('table.main');
+        if(mainTbl.datagrid('getSelections').length < 1){
+            $.messager.alert('提示','请先选择要删除的数据','info');
+            return;
+        }
+        var data = mainTbl.datagrid('getSelected');
+        $.messager.confirm('确认','确认删除?',function(r){
+            if (r){
+                $.ajax({
+                    url: '/YSLoginService/Role/DeleteRoleInfo',
+                    type: "POST",
+                    data: JSON.stringify({RoleID: data.RoleID}),
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (msg) {
+                        loadMainData();
+                    },
+                    error: function (XMLHttpRequest, textStatus, thrownError) {
+                        alert("Error Occured!");
+                    }
+                });
+            }
+        });
+    };
+
+    function editPermissions(roleId){
+        $('#rolesEditPermissionsDlg').dialog('open').dialog('center').dialog('setTitle','角色权限设置');
+        currentRoleId = roleId;
+        $.ajax({
+            url: '/YSLoginService/Role/GetAllPermission',
+            method: 'GET',
+            dataType: "json",
+            success: function (permissions) {
+                $.ajax({
+                    url: '/YSLoginService/Role/GetRolePermissions/' +  roleId,
+                    method: 'GET',
+                    dataType: "json",
+                    success: function (role) {
+                        $.each(permissions, function(i, v){
+                            v.checked = $.inArray(v.PermissionID, role.PermissionIDs) > -1;
+                        });
+                        $('#rolesEditPermissionsGrid').datagrid(window.grid.cfg.roles.Permissions);
+                        $('#rolesEditPermissionsGrid').datagrid('loadData', {
+                            total: permissions.length,
+                            rows: permissions
+                        });
+                    },
+                    error: function (XMLHttpRequest, textStatus, thrownError) {
+                        alert("Error Occured!");
+                    }
+                });
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    function savePermissions(){
+        var tbl = $('#rolesEditPermissionsGrid');
+        var rows = tbl.datagrid('getSelections');
+        var permissionIds = [];
+        for (var i = 0; i < rows.length; i++) {
+            permissionIds.push(rows[i].PermissionID);
+        }
+        var roleId = currentRoleId;
+        $.ajax({
+            url: '/YSLoginService/Role/SaveRolePermissions',
+            type: "POST",
+            data: JSON.stringify({RoleID: roleId, PermissionIDs: permissionIds}),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (msg) {
+                $('#rolesEditPermissionsDlg').dialog('close');
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    function enableRole(roleId, toEnable) {
+        var msg = toEnable ? '确认启用此角色?' : '确认禁用此角色?';
+        $.messager.confirm('确认', msg, function (r) {
+            if (r) {
+                var msg = toEnable ? '' : '';
+                var rows = $('#rolesTab').find('table.main').datagrid("getRows");
+                var role = null;
+                $.each(rows, function (index, item) {
+                    if (item.RoleID == roleId) {
+                        role = {
+                            RoleID: item.RoleID,
+                            CompanyID: item.CompanyID,
+                            RoleName: item.RoleName,
+                            IsEnable: toEnable
+                        };
+                    }
+                });
+                $.ajax({
+                    url: '/YSLoginService/Role/SaveRoleInfo',
+                    type: "POST",
+                    data: JSON.stringify(role),
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (msg) {
+                        loadMainData();
+                    },
+                    error: function (XMLHttpRequest, textStatus, thrownError) {
+                        alert("Error Occured!");
+                    }
+                });
+            }
+        });
+    };
+
+    return {
+        loadMainData: loadMainData,
+        saveMainItem: saveMainItem,
+        deleteMainItem: deleteMainItem,
+        editPermissions: editPermissions,
+        savePermissions: savePermissions,
+        enableRole: enableRole
+    };
+})();
+
+window.grid.cfg.roles = {
+    singleSelect:true,
+    rownumbers: true,
+    fit: true,
+    columns:[[
+        {field:'RoleName',title:'角色名称',width:100},
+        {field:'IsEnable',title:'启用',width:40, formatter: function(v){return v? '是' : '否'}},
+        {field:'RoleID',title:'',width:120, formatter: function (v,r){
+            return '<a onclick="ys.modules.Roles.editPermissions('+v+')">权限设置</a>' + (r.IsEnable? ('<a onclick="ys.modules.Roles.enableRole('+v+
+                    ', false)">禁用</a>') : ('<a onclick="ys.modules.Roles.enableRole('+v+',true)">启用</a>'));
+        }}
+    ]],
+    toolbar: [{
+        id: '',
+        text: '新增',
+        iconCls: 'icon-add',
+        handler: function () {
+            var dlg = $('#editRoleDlg'), form = dlg.find('form');
+            dlg.dialog('open').dialog('center').dialog('setTitle','新增角色');
+            form.form('clear');
+            form.form('load', {RoleID:0, IsEnable: true, CompanyID: 1})
+        }
+    }]
+};
+
+window.grid.cfg.roles.Permissions = {
+    singleSelect: false,
+    rownumbers: true,
+    fit: true,
+    selectOnCheck:true,
+    checkOnSelect:true,
+    columns: [[
+        {field: 'CK',checkbox:true,width:80},
+        {field: 'PermissionName', title: '页面名称', width: 200},
+    ]],
+    onLoadSuccess:function(data) {
+        if (data) {
+            $.each(data.rows, function (index, item) {
+                if (item.checked) {
+                    $('#rolesEditPermissionsGrid').datagrid('checkRow', index);
+                }
+            });
+        }
+    }
+};
+
+(function() {
+    ys.modules.Roles.loadMainData();
+})();
+</script>

@@ -1,0 +1,140 @@
+<div class="easyui-layout" data-options="fit:true">
+    <div data-options="region:'center'"><table class="main"></table></div>
+</div>
+
+<div id="editOtherPayDlg" class="easyui-dialog" style="width:600px;padding:10px 20px"  modal="true"
+     closed="true" buttons="#editOtherPayDlgBtns">
+    <form id="fm" method="post" novalidate>
+        <input type="hidden" name="OtherPayRentID">
+        <div class="fitem">
+            <label>类型:</label>
+            <input name="PayTypeName" class="easyui-textbox" data-options="required:true">
+        </div>
+        <div class="fitem">
+            <label>金额:</label>
+            <input name="PayCount" class="easyui-numberbox" data-options="required:true">
+        </div>
+        <div class="fitem">
+            <label>应付日期:</label>
+            <input name="PayDate" class="easyui-datebox" data-options="required:true">
+        </div>
+        <div class="fitem">
+            <label>实付日期:</label>
+            <input name="ActualPayDate" class="easyui-datebox" data-options="required:true">
+        </div>
+        <div class="fitem">
+            <label>备注:</label>
+            <textarea name="Remarkes" class="easyui-textbox"></textarea>
+        </div>
+    </form>
+</div>
+<div id="editOtherPayDlgBtns">
+    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="ys.modules.OtherPay.saveMainItem()" style="width:90px">保存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('.easyui-dialog').dialog('close')" style="width:90px">取消</a>
+</div>
+
+<script>
+ys.modules.OtherPay =  (function(){
+    function loadMainData(){
+        $.ajax({
+            url: '/YSService/OtherPayService/GetDataList',
+            method: 'POST',
+            data: JSON.stringify({}),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (resp) {
+                $.each(resp, function(i,item){
+                    item['PayDate'] = $.wcfDate2JsDateStr(item['PayDate']);
+                    item['ActualPayDate'] = $.wcfDate2JsDateStr(item['ActualPayDate']);
+                });
+                $('#otherPayTab').find('table.main').datagrid('loadData', {
+                    total: resp.length,
+                    rows: resp
+                });
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    function saveMainItem(){
+        var dlg = $('#editOtherPayDlg'), form = dlg.find('form');
+        if(!form.form('validate'))return;
+        var formData =  form.serializeArray();
+        var data = {};
+        $.each(formData, function(i, v) {
+            if (v.name == 'PayDate' || v.name == 'ActualPayDate') {
+                data[v.name] = $.jsDateStr2WcfDate(v.value);
+            } else {
+                data[v.name] = v.value;
+            }
+        });
+        var url = '/YSService/OtherPayService/Add';
+        if(data['OtherPayRentID'] != '0'){
+            url = '/YSService/OtherPayService/Update';
+        }
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: JSON.stringify(data),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (msg) {
+                loadMainData();
+                dlg.dialog('close');
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    return {
+        loadMainData: loadMainData,
+        saveMainItem: saveMainItem
+    };
+})();
+
+window.grid.cfg.otherPay = {
+    singleSelect:true,
+    rownumbers: true,
+    pagination: true,
+    fit: true,
+    columns:[[
+        {field:'PayTypeName',title:'类型',width:100},
+        {field:'PayCount',title:'金额',width:100},
+        {field:'PayStatusName',title:'状态',width:100},
+        {field:'PayDate',title:'应付日期',width:100},
+        {field:'ActualPayDate',title:'实付日期',width:100},
+        {field:'Remarkes',title:'备注',width:100}
+    ]],
+    toolbar: [{
+        id: '',
+        text: '新增收入',
+        iconCls: 'icon-add',
+        handler: function () {
+            var dlg = $('#editOtherPayDlg'), form = dlg.find('form');
+            dlg.dialog('open').dialog('center').dialog('setTitle','新增收入');
+            form.form('clear');
+            form.form('load', {OtherPayRentID:0});
+        }
+    }, "-", {
+        id: '',
+        text: '新增支出',
+        iconCls: 'icon-add',
+        handler: function () {
+            var dlg = $('#editOtherPayDlg'), form = dlg.find('form');
+            dlg.dialog('open').dialog('center').dialog('setTitle','新增支出');
+            form.form('clear');
+            form.form('load', {HouseID:0});
+        }
+    }, "-", {
+        id: '',
+        text: '删除',
+        iconCls: 'icon-remove',
+        handler: confirmRemove
+    }, "-"]
+};
+ys.modules.OtherPay.loadMainData();
+</script>

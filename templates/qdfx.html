@@ -1,0 +1,49 @@
+<div class="easyui-layout" data-options="fit:true">
+    <div class="chart-ct" data-options="region:'center'"></div>
+</div>
+
+<script>
+ys.modules.Qdfx =  (function(){
+    function initReport(){
+        $.ajax({
+            url: '/YSService/ReportService/GetTenantSource',
+            type: "GET",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (resp) {
+                var data = [];
+                $.each(resp, function(i, v){
+                    data.push({
+                        name: v.SourceName,
+                        y: v.SourceTenantCount
+                    });
+                });
+                $('#qdfxTab .chart-ct').highcharts({
+                    chart: {
+                        type: 'pie'
+                    },
+                    title: {
+                        text: '渠道分析'
+                    },
+                    series: [{
+                        name: '数量',
+                        colorByPoint: true,
+                        data: data
+                    }]
+                });
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    return {
+        initReport: initReport
+    };
+})();
+
+(function(){
+    ys.modules.Qdfx.initReport();
+})();
+</script>

@@ -84,4 +84,39 @@ window.ys.Constant = {
 	}, {
 		id: 2, text: '未付,已作废'
 	}],
+
+	ROOM_STATUS: [{
+		id: -2, text: '全部'
+	}, {
+		id: 0, text: '待租'
+	}, {
+		id: 1, text: '预约'
+	}, {
+		id: 2, text: '入住'
+	}, {
+		id: 3, text: '维修'
+	}, {
+		id: -1, text: '拆除'
+	}],
+
+	NEXUS: [{
+		id: 1, text: '业主'
+	}, {
+		id: 2, text: '父母'
+	}, {
+		id: 3, text: '配偶'
+	}, {
+		id: 4, text: '子女'
+	}, {
+		id: 5, text: '其他'
+	}],
+
+	HOUSE_TYPE: [{
+		id: 1, text: '公寓'
+	}, {
+		id: 2, text: '别墅'
+	}, {
+		id: 3, text: '复式'
+	}]
+
 };

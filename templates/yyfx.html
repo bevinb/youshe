@@ -1,0 +1,53 @@
+<div class="easyui-layout" data-options="fit:true">
+    <div class="chart-ct" data-options="region:'center'"></div>
+</div>
+
+<script>
+ys.modules.Yyfx =  (function(){
+    function initReport(){
+        $.ajax({
+            url: '/YSService/ReportService/GetRoomReportInfo',
+            type: "GET",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (resp) {
+                $('#yyfxTab .chart-ct').highcharts({
+                    chart: {
+                        type: 'pie'
+                    },
+                    title: {
+                        text: '运营分析'
+                    },
+                    series: [{
+                        name: '数量',
+                        colorByPoint: true,
+                        data: [{
+                            name: '已租房间',
+                            y: resp.CheckCount
+                        }, {
+                            name: '未租房间',
+                            y: resp.WaitCount,
+                            sliced: true,
+                            selected: true
+                        }, {
+                            name: '预订房间',
+                            y: resp.OrderCount
+                        }]
+                    }]
+                });
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    return {
+        initReport: initReport
+    };
+})();
+
+(function(){
+    ys.modules.Yyfx.initReport();
+})();
+</script>
