@@ -340,7 +340,7 @@
             $.ajax({
                 url: '/YSService/HouseService/GetDataList',
                 method: 'POST',
-                data: JSON.stringify({ HouseID: node.HouseID }),
+                data: JSON.stringify({ HouseID: node.id }),
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
                 success: function (resp) {

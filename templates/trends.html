@@ -79,8 +79,9 @@ ys.modules.Trends =  (function(){
 
                 for(var i = 0;i < resp.ListHouseInfo.length; ++i){
                     var house = resp.ListHouseInfo[i];
+                    var tips = '<h5>地址：' + house.Address + '</h5>';
                     var htmlStr = '<div class="card">'
-                        + '<h5>' + house.CommunityName + '-' + house.HouseNO + '-' + house.VillageName + '</h5>'
+                        + '<h5 style="position:relative;">' + house.CommunityName + '-' + house.HouseNO + '-' + house.VillageName + '<i class="easyui-tooltip fa fa-info-circle" title="' + tips + '"style="position:absolute;right:10px;top:5px;color:green;font-size:18px;"></i></h5>'
                         + '<div class="card-content">';
                     for(var j = 0; j < house.RoomInfo.length; ++j){
                         var room = house.RoomInfo[j];
@@ -108,6 +109,7 @@ ys.modules.Trends =  (function(){
                     htmlStr += '</div></div>';
                     $('#trendsTab').find('.masonry-grid').append(htmlStr);
                 }
+                $('#trendsTab').find('.easyui-tooltip').tooltip();
                 $('#trendsTab').find('.masonry-grid').masonry({
                     // set itemSelector so .grid-sizer is not used in layout
                     itemSelector: '.card',

@@ -48,13 +48,13 @@
             <table cellpadding="5">
                 <tr>
                     <td>房源编号:</td>
-                    <td colspan=5><input name="HouseNO" class="easyui-textbox" data-options="required:true"></td>
+                    <td colspan=5><input name="HouseNO" class="easyui-textbox" style="width:532px;" data-options="required:true"></td>
                 </tr>
                 <tr>
                     <td>所属社区:</td>
                     <td><input class="easyui-combobox"
                                name="CommunityID"
-                               style="width:300px"
+                               style="width:532px"
                                data-options="
                             loader: ys.loaders.communityLoader,
                             onSelect: ys.modules.House.onCommunityChange,
@@ -69,7 +69,7 @@
                     <td><input class="easyui-combobox"
                                id=""
                                name="VillageID"
-                               style="width:300px"
+                               style="width:532px"
                                data-options="
                             valueField:'VillageID',
                             textField:'VillageName',
@@ -79,7 +79,7 @@
                 </tr>
                 <tr>
                     <td>详细地址:</td>
-                    <td colspan=5><input name="Address" class="easyui-textbox"></td>
+                    <td colspan=5><input name="VillageAddress" class="easyui-textbox" style="width:532px;" readonly></td>
                 </tr>
                 <tr>
                     <td>所在楼层:</td>
@@ -118,7 +118,7 @@
                     <td>业主:</td>
                     <td><input class="easyui-combobox"
                                name="OwnerID"
-                               style="width:300px"
+                               style="width:532px"
                                data-options="
                                loader: ys.loaders.ownersLoader,
                                 valueField:'OwnerID',
@@ -407,7 +407,7 @@ window.grid.cfg.house = {
         {field:'CommunityName',title:'社区',width:100},
         {field:'VillageName',title:'小区',width:100},
         {field:'OwnerName',title:'业主',width:70},
-        {field:'Address',title:'地址',width:200},
+        {field:'VillageAddress',title:'地址',width:200},
         {field:'FloorInfo',title:'楼层',width:70},
         {field:'Elevator',title:'电梯',width:40, formatter: function(v){return v? '有':'无';}},
         {field:'HouseType',title:'物业类型',width:120, formatter: function(v){return ys.Constant.HOUSE_TYPE[v-1].text;}},

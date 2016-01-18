@@ -31,13 +31,37 @@
 
 <div id="editVillageDlg" class="easyui-dialog" style="width:500px;" modal="true"
      closed="true" data-options="buttons: '#editVillageDlgBtns'">
-    <div style="padding:10px 60px 20px 60px">
+    <div style="padding:10px 20px 20px 20px">
         <form id="fm" method="post" novalidate>
             <input name="VillageID" type="hidden">
             <table cellpadding="5">
                 <tr>
-                    <td>小区名称:</td>
+                    <td style="width:80px;">小区名称:</td>
                     <td><input name="VillageName" class="easyui-textbox" data-options="required:true"></td>
+                </tr>
+                <tr>
+                    <td>区:</td>
+                    <td>
+                        <input class="easyui-combobox"
+                               name="VillArea"
+                               style="width: 302px;"
+                               data-options="
+									data:ys.Constant.SH_AREAS,
+									method:'get',
+									valueField:'id',
+									textField:'text',
+									required:true,
+									panelHeight:'auto'
+							">
+                    </td>
+                </tr>
+                <tr>
+                    <td>路:</td>
+                    <td><input name="VillRaod" class="easyui-textbox" data-options="required:true"></td>
+                </tr>
+                <tr>
+                    <td>弄:</td>
+                    <td><input name="VillNong" class="easyui-textbox" data-options="required:true"></td>
                 </tr>
                 <tr>
                     <td>小区地址:</td>
@@ -172,6 +196,9 @@ window.grid.cfg.village = {
     fit: true,
     columns:[[
         {field:'VillageName',title:'小区名称',width:100},
+        {field:'VillArea',title:'区',width:70, formatter: function(v){return ys.Constant.SH_AREAS[v-1].text;}},
+        {field:'VillRaod',title:'路',width:70},
+        {field:'VillNong',title:'弄',width:70},
         {field:'VillageAddress',title:'小区地址',width:100},
         {field:'PropertyName',title:'物业公司',width:100, formatter:function(v,r){return r.PropertyInfo.PropertyName;}},
         {field:'PropertyPhone',title:'物业联系电话:',width:100, formatter:function(v,r){return r.PropertyInfo.Phone;}},

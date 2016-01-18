@@ -117,6 +117,42 @@ window.ys.Constant = {
 		id: 2, text: '别墅'
 	}, {
 		id: 3, text: '复式'
+	}],
+
+	SH_AREAS: [{
+		id: 1, text: '黄浦'
+	}, {
+		id: 2, text: '徐汇'
+	}, {
+		id: 3, text: '长宁'
+	}, {
+		id: 4, text: '静安'
+	}, {
+		id: 5, text: '普陀'
+	}, {
+		id: 6, text: '闸北'
+	}, {
+		id: 7, text: '虹口'
+	}, {
+		id: 8, text: '杨浦'
+	}, {
+		id: 9, text: '闵行'
+	}, {
+		id: 10, text: '宝山'
+	}, {
+		id: 11, text: '嘉定'
+	}, {
+		id: 12, text: '浦东新区'
+	}, {
+		id: 13, text: '金山'
+	}, {
+		id: 14, text: '松江'
+	}, {
+		id: 15, text: '青浦'
+	}, {
+		id: 16, text: '奉贤'
+	}, {
+		id: 17, text: '崇明'
 	}]
 
 };
