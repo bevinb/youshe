@@ -1,4 +1,4 @@
-<div class="easyui-layout" data-options="fit:true">
+﻿<div class="easyui-layout" data-options="fit:true">
     <div data-options="region:'north',split:true" style="height:56px;padding:10px;">
         <form class="top-search-form">
             <input type="hidden" name="CommunityID">
@@ -66,15 +66,17 @@ window.grid.cfg.otherPay = {
     fit: true,
     columns:[[
         {field:'MoneyType',title:'资金流向',width:70},
+        {field:'Amount',title:'应付(元)',width:70},
         {field:'PayDate',title:'应付日期',width:100},
+        {field:'ActualAmount',title:'实付(元)',width:70},
         {field:'ActualPayDate',title:'实付日期',width:100},
         {field:'PayNo',title:'摘要',width:150},
         {field:'Subject',title:'科目',width:70},
-        {field:'PayStatus',title:'状态',width:70},
-        {field:'Amount',title:'金额(元)',width:70},
+        {field:'PayStatus',title:'状态',width:70},       
         {field:'HouseNo',title:'房源编号',width:100},
         {field:'RoomNo',title:'房间编号',width:100},
-        {field:'PayObjectName',title:'支付对象',width:100}
+        {field:'PayObjectName',title:'支付对象',width:100},
+        {field:'Remark',title:'备注',width:100}
     ]]
 };
 

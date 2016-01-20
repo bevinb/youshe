@@ -64,7 +64,7 @@
                     <tr>
                         <td>房源:</td>
                         <td colspan="5">
-                            <input name="HouseID" class="easyui-combotree" style="width:500px;" data-options="
+                            <input name="HouseID" class="easyui-combotree" data-options="
                                 url:'/YSService/BaseInfoService/GetTree3',
                                 method:'get',
                                 animate:true,
@@ -81,7 +81,7 @@
                     <tr>
                         <td>小区地址:</td>
                         <td>
-                            <input name="HouseInfo.Address" class="easyui-textbox" style="width: 500px;" readonly>
+                            <input name="HouseInfo.Address" class="easyui-textbox" style="width: 465px;" readonly>
                         </td>
                     </tr>
                     <tr>
@@ -90,7 +90,7 @@
                             <input name="HouseInfo.Floor" class="easyui-textbox" style="width: 50px;" readonly><span class="label">楼</span>
                             <span class="label">共</span><input name="HouseInfo.FloorCount" class="easyui-textbox" style="width: 50px;" readonly><span class="label">楼</span>
                             <span class="label">面积</span><input name="HouseInfo.Area" class="easyui-textbox" style="width: 50px;" readonly><span class="label">平方米</span>
-                            <span class="label">房屋特色:</span><input name="HouseInfo.HouseDetail" class="easyui-textbox" style="width: 130px;" readonly>
+                            <span class="label">房屋特色:</span><input name="HouseInfo.HouseDetail" class="easyui-textbox" style="width: 100px;" readonly>
                         </td>
                     </tr>
                     <tr>
@@ -105,10 +105,10 @@
                     <tr>
                         <td>业主姓名:</td>
                         <td>
-                            <input name="OwnerInfo.OwnerName" class="easyui-textbox" style="width: 212px;" readonly></td>
+                            <input name="OwnerInfo.OwnerName" class="easyui-textbox" style="width: 150px;" readonly></td>
                         <td>联系电话:</td>
                         <td>
-                            <input name="OwnerInfo.Phone" class="easyui-textbox" style="width: 212px;" readonly></td>
+                            <input name="OwnerInfo.Phone" class="easyui-textbox" style="width: 150px;" readonly></td>
                        <!-- <td>身份证号:</td>
                         <td>
                             <input name="OwnerInfo.IDNO" class="easyui-textbox" style="width: 150px;" readonly></td>-->
@@ -121,11 +121,11 @@
                     <tr>
                         <td>合同编号:</td>
                         <td>
-                            <input name="ContractNo" class="easyui-textbox" style="width: 203px;" data-options="required:true">
+                            <input name="ContractNo" class="easyui-textbox" style="width: 150px;" data-options="required:true">
                             <span class="label">收房员:</span>
                             <input class="easyui-combobox"
                                 name="SendeeID"
-                                style="width: 203px"
+                                style="width: 150px"
                                 data-options="
                                loader: ys.loaders.sendeeLoader,
                                 valueField:'SendeeID',
@@ -165,44 +165,13 @@
                     <tr>
                         <td>付款提前天数:</td>
                         <td>
-                            <input name="AdvanceDays" class="easyui-numberbox" style="width: 150px;" data-options="required:true">
-                        </td>
-                    </tr>
-					<tr>
-                        <td><input type="checkbox" name="IsAdd">每年递增：</td>
-                        <td>
-                            <span class="label">递增金额:</span><input name="AddNumber" class="easyui-numberbox" style="width: 203px;">
-                        </td>
-                    </tr>
-					<tr>
-                        <td>支付银行：</td>
-                        <td>
-						    <input name="BankName" class="easyui-textbox" style="width: 200px;">
-                            <span class="label" style="width: 90px;display:inline-block;">卡号:</span><input name="BankCard" class="easyui-textbox" style="width: 203px;">
-					    </td>
-                    </tr>
-					<tr>
-                        <td>收款人:</td>
-						<td>
-						    <input name="Payee" class="easyui-textbox" style="width: 203px;">
-							<span class="label" style="width: 90px;display:inline-block;">收款人关系:</span>
-							<input class="easyui-combobox"
-								   name="Nexus"
-								   style="width: 203px;"
-								   data-options="
-									data:ys.Constant.NEXUS,
-									method:'get',
-									valueField:'id',
-									textField:'text',
-									required:true,
-									panelHeight:'auto'
-							">
+                            <input name="AdvanceDays" class="easyui-numberbox" style="width: 50px;" data-options="required:true">
                         </td>
                     </tr>
                     <tr>
                         <td>备注:</td>
                         <td>
-                            <textarea name="Remarks" class="textarea easyui-validatebox" style="width: 500px;" data-options="required:true"></textarea>
+                            <textarea name="Remarks" class="textarea easyui-validatebox" style="width: 100%;" data-options="required:true"></textarea>
                         </td>
                     </tr>
                 </table>
@@ -215,73 +184,74 @@
     <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="javascript:$('.easyui-dialog').dialog('close')" style="width: 90px">取消</a>
 </div>
 
-<div id="addOwnerPaymentDlg" class="easyui-dialog" style="width: 500px; padding: 10px 20px" modal="true"
-     closed="true" buttons="#addOwnerPaymentDlgBtns">
+<div id="editOwnerPayInfoDlg" class="easyui-dialog" style="width: 500px; padding: 10px 20px" modal="true"
+    closed="true" buttons="#editOwnerPayInfoDlgBtns">
     <form novalidate>
-        <input name="FineID" type="hidden">
+        <input name="PayRentID" type="hidden">
         <input name="ContractID" type="hidden">
+        <input name="PayStatus" type="hidden">
         <div class="fitem">
-            <label>付款类型:</label>
-            <select name="FineType" class="easyui-combobox" data-options="required:true" style="width: 300px;">
-                <option value="1">收入</option>
-                <option value="2">支出</option>
-            </select>
-        </div>
-        <div class="fitem">
-            <label>摘要:</label>
-            <input name="FineName" class="easyui-textbox" style="width: 300px;" data-options="required:true">
+            <label>付款编号:</label>
+            <input name="PayRentNo" class="easyui-textbox" style="width: 300px;" data-options="required:true" readonly>
         </div>
         <div class="fitem">
             <label>应付日期:</label>
-            <input name="PayDate" class="easyui-datebox" style="width: 300px;" data-options="required:true">
+            <input name="PayRentDate" class="easyui-datebox" style="width: 300px;" data-options="required:true" readonly>
         </div>
         <div class="fitem">
-            <label>应付金额(元):</label>
-            <input name="Pay" class="easyui-numberbox" style="width: 300px;" data-options="precision:2, required:true">
+            <label>应付金额:</label>
+            <input name="PayRent" class="easyui-numberbox" style="width: 300px;" data-options="precision:2, required:true" readonly>
         </div>
         <div class="fitem">
-            <label>付款类型:</label>
+            <label>付款方式:</label>
             <input class="easyui-combobox"
-                   name="HouseCostTypeID"
-                   style="width:300px;"
+                   style="width: 300px;"
+                   name="PayTypeID"
                    data-options="
-                    loader: ys.loaders.houseCostTypeLoader,
-                    valueField:'HouseCostTypeID',
-                    textField:'HouseCostTypeName',
+                    loader: ys.loaders.payTypeLoader,
+                    valueField:'PayTypeID',
+                    textField:'PayTypeName',
                     required: true,
                     panelHeight:'auto'
             ">
         </div>
         <div class="fitem">
-            <label>支付对象:</label>
-            <input name="Payee" class="easyui-textbox" style="width: 300px;" data-options="required:true">
+            <label>实付日期:</label>
+            <input name="ActualPayRentDate" class="easyui-datebox" style="width: 300px;" data-options="required:true">
+        </div>
+  <div class="fitem">
+            <label>实付金额:</label>
+            <input name="ActualPayRent" class="easyui-textbox" style="width: 300px;" data-options="required:true">
         </div>
         <div class="fitem">
-            <label>备注:</label>
-            <textarea name="Remarks" class="easyui-textarea"style="width: 300px;" ></textarea>
-        </div>
-    </form>
-</div>
-<div id="addOwnerPaymentDlgBtns">
-    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconcls="icon-ok" onclick="ys.modules.Contract.savePayment()" style="width: 90px">保存</a>
-    <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="javascript:$('.easyui-dialog').dialog('close')" style="width: 90px">取消</a>
-</div>
-
-<div id="editOwnerPayInfoDlg" class="easyui-dialog" style="width: 500px; padding: 10px 20px" modal="true"
-    closed="true" buttons="#editOwnerPayInfoDlgBtns">
-    <form novalidate>
-        <input name="FineID" type="hidden">
-        <div class="fitem">
-            <label>付款日期:</label>
-            <input name="ActualPayDate" class="easyui-datebox" style="width: 300px;" data-options="required:true">
+            <label>付款银行:</label>
+            <input name="BankName" class="easyui-textbox" style="width: 300px;" data-options="required:true">
         </div>
         <div class="fitem">
-            <label>付款金额(元):</label>
-            <input name="ActualPay" class="easyui-numberbox" style="width: 300px;" data-options="precision:2, required:true">
+            <label>付款银行卡号:</label>
+            <input name="BankCardNo" class="easyui-textbox" style="width: 300px;" data-options="required:true">
         </div>
         <div class="fitem">
             <label>收款人:</label>
             <input name="Payee" class="easyui-textbox" style="width: 300px;" data-options="required:true">
+        </div>
+        <div class="fitem">
+            <label>收款人关系:</label>
+            <input class="easyui-combobox"
+                   style="width: 300px;"
+                   name="Nexus"
+                   data-options="
+					data:ys.Constant.NEXUS,
+					method:'get',
+					valueField:'id',
+					textField:'text',
+					required:true,
+					panelHeight:'auto'
+			">
+        </div>
+        <div class="fitem">
+            <label>收款人银行卡号:</label>
+            <input name="PayeeCardNo" class="easyui-textbox" style="width: 300px;" data-options="required:true">
         </div>
         <div class="fitem">
             <label>备注:</label>
@@ -343,7 +313,7 @@
             $.ajax({
                 url: '/YSService/HouseService/GetDataList',
                 method: 'POST',
-                data: JSON.stringify({ HouseID: node.id }),
+                data: JSON.stringify({ HouseID: node.HouseID }),
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
                 success: function (resp) {
@@ -380,7 +350,6 @@
             if (data['ContractID'] != '0') {
                 url = '/YSService/ContractService/Update';
             }
-            data.IsAdd = data.IsAdd == 'on'? 1:0;
             $.ajax({
                 url: url,
                 type: "POST",
@@ -453,15 +422,15 @@
 
         function loadSubData(params) {
             $.ajax({
-                url: '/YSService/PaymentService/GetPaymentList_YZ',
+                url: '/YSService/ContractService/GetContractPayRentInfoByContractID',
                 method: 'POST',
-                data: JSON.stringify({ intContractID: params.ContractID }),
+                data: JSON.stringify({ ContractID: params.ContractID }),
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
                 success: function (resp) {
                     $.each(resp, function (i, item) {
-                        item['ActualPayDate'] = $.wcfDate2JsDateStr(item['ActualPayDate']);
-                        item['PayDate'] = $.wcfDate2JsDateStr(item['PayDate']);
+                        item['ActualPayRentDate'] = $.wcfDate2JsDateStr(item['ActualPayRentDate']);
+                        item['PayRentDate'] = $.wcfDate2JsDateStr(item['PayRentDate']);
                         item['CreateDate'] = $.wcfDate2JsDateStr(item['CreateDate']);
                     });
                     $('#contractTab').find('table.sub').datagrid('loadData', {
@@ -475,48 +444,19 @@
             });
         };
 
-        function savePayment(){
-            var dlg = $('#addOwnerPaymentDlg'), form = dlg.find('form');
-            if (!form.form('validate')) return;
-            var formData = form.serializeArray();
-            var data = {};
-            $.each(formData, function (i, v) {
-                if (v.name == 'ActualPayDate' || v.name == 'PayDate' || v.name == 'CreateDate') {
-                    data[v.name] = $.jsDateStr2WcfDate(v.value);
-                } else {
-                    data[v.name] = v.value;
-                }
-            });
-            var url = '/YSService/PaymentService/InsertPaymentInfo_YZ';
-            $.ajax({
-                url: url,
-                type: "POST",
-                data: JSON.stringify(data),
-                dataType: "json",
-                contentType: "application/json; charset=utf-8",
-                success: function (msg) {
-                    loadSubData(data);
-                    dlg.dialog('close');
-                },
-                error: function (XMLHttpRequest, textStatus, thrownError) {
-                    alert("Error Occured!");
-                }
-            });
-        }
-
         function saveSubData() {
             var dlg = $('#editOwnerPayInfoDlg'), form = dlg.find('form');
             if (!form.form('validate')) return;
             var formData = form.serializeArray();
             var data = {};
             $.each(formData, function (i, v) {
-                if (v.name == 'ActualPayDate' || v.name == 'PayDate' || v.name == 'CreateDate') {
+                if (v.name == 'ActualPayRentDate' || v.name == 'PayRentDate' || v.name == 'CreateDate') {
                     data[v.name] = $.jsDateStr2WcfDate(v.value);
                 } else {
                     data[v.name] = v.value;
                 }
             });
-            var url = '/YSService/PaymentService/UpdatePaymentInfo_YZ';
+            var url = '/YSService/ContractService/Pay';
             $.ajax({
                 url: url,
                 type: "POST",
@@ -597,8 +537,7 @@
             loadSubData: loadSubData,
             saveSubData: saveSubData,
             auditPay: auditPay,
-            unauditPay: unauditPay,
-            savePayment: savePayment
+            unauditPay: unauditPay
         };
     })();
 
@@ -661,37 +600,17 @@
         singleSelect: true,
         rownumbers: true,
         columns: [[
-            { field: 'FineType', title: '类别', width: 50, formatter: function(v){return v == 1? '收入':'支出' } },
-            { field: 'FineName', title: '摘要', width: 150 },
-            { field: 'PayDate', title: '应付日期', width: 80 },
-            { field: 'Pay', title: '应付金额(元)', width: 70 },
-            { field: 'ActualPayDate', title: '实付日期', width: 80 },
-            { field: 'ActualPay', title: '实付金额(元)', width: 70 },
-            { field: 'HouseCostTypeName', title: '付款类型', width: 70 },
-{ field: 'BankName', title: '银行名称', width: 70 },
-{ field: 'BankCard', title: '卡号', width: 70 },
-            { field: 'Payee', title: '支付对象', width: 70 },
+            { field: 'PayRentNo', title: '付款编号', width: 280 },
+            { field: 'PayStatusName', title: '状态', width: 80 },
+            { field: 'PayRentDate', title: '应付日期', width: 80 },
+            { field: 'PayRent', title: '应付金额(元)', width: 70 },
+            { field: 'ActualPayRentDate', title: '实付日期', width: 80 },
+            { field: 'PayTypeName', title: '付款方式', width: 70 },
+            { field: 'Payee', title: '付款人', width: 70 },
             { field: 'Remarks', title: '备注', width: 100 },
             { field: 'IsCheck', title: '已审核', width: 70, formatter: function(v){return v? '是':'否';} }
         ]],
         toolbar: [{
-            id: '',
-            text: '新增',
-            iconCls: 'icon-add',
-            handler: function () {
-                var mainTbl = $('#contractTab').find('table.main');
-                if (mainTbl.datagrid('getSelections').length < 1) {
-                    $.messager.alert('提示', '请先选择一条合同记录', 'info');
-                    return;
-                }
-                var contract = mainTbl.datagrid('getSelected');
-
-                var dlg = $('#addOwnerPaymentDlg'), form = dlg.find('form');
-                dlg.dialog('open').dialog('center').dialog('setTitle', '新增合同付款');
-                form.form('clear');
-                form.form('load', { ContractID: contract.ContractID, FineID: 0 });
-            }
-        }, "-", {
             text: '付款',
             iconCls: 'icon-edit',
             handler: function () {

@@ -1,4 +1,4 @@
-<div class="easyui-layout" data-options="fit:true">
+﻿<div class="easyui-layout" data-options="fit:true">
     <div class="easyui-layout" data-options="region:'center',fit:true">
         <div data-options="region:'north',split:true" style="height:60px;padding:10px;">
             <form class="top-search-form">
@@ -520,7 +520,8 @@ window.grid.cfg.signRoom = {
                 result += i < list.length - 1? (list[i].RenovationName + ', ') : list[i].RenovationName;
             }
             return result;
-        }}
+        }},
+       {field:'Rent',title:'定价(元)',width:100}
     ]],
     onSelect:function(i, data){
         var form = $('#signRoomTab').find('form.signForm');

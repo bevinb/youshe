@@ -1,4 +1,4 @@
-<div class="easyui-layout" data-options="fit:true">
+﻿<div class="easyui-layout" data-options="fit:true">
     <div data-options="region:'north',split:true" style="height:56px;padding:10px;">
         <form class="top-search-form">
             <input type="hidden" name="CommunityID">
@@ -65,7 +65,7 @@
                     "></td>
                 </tr>
                 <tr>
-                    <td>所属小区:</td>
+                    <td>所属楼盘:</td>
                     <td><input class="easyui-combobox"
                                id=""
                                name="VillageID"
@@ -78,8 +78,12 @@
                     "></td>
                 </tr>
                 <tr>
-                    <td>详细地址:</td>
-                    <td colspan=5><input name="VillageAddress" class="easyui-textbox" style="width:532px;" readonly></td>
+                    <td>楼盘地址:</td>
+                    <td colspan=5><input name="VillageAddress" class="easyui-textbox" style="width:532px;" data-options="prompt:'楼盘地址无需输入'"title="" readonly></td>
+                </tr>
+                <tr>
+                    <td>房源地址:</td>
+                    <td colspan=5><input name="Address" class="easyui-textbox" style="width:532px;"></td>
                 </tr>
                 <tr>
                     <td>所在楼层:</td>
@@ -405,9 +409,10 @@ window.grid.cfg.house = {
     columns:[[
         {field:'HouseNO',title:'编号',width:100},
         {field:'CommunityName',title:'社区',width:100},
-        {field:'VillageName',title:'小区',width:100},
+        { field: 'VillageName', title: '楼盘', width: 100 },
         {field:'OwnerName',title:'业主',width:70},
-        {field:'VillageAddress',title:'地址',width:200},
+        {field:'VillageAddress',title:'楼盘地址',width:150},
+        {field:'Address',title:'房源地址',width:100},
         {field:'FloorInfo',title:'楼层',width:70},
         {field:'Elevator',title:'电梯',width:40, formatter: function(v){return v? '有':'无';}},
         {field:'HouseType',title:'物业类型',width:120, formatter: function(v){return ys.Constant.HOUSE_TYPE[v-1].text;}},

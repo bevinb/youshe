@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
 	<meta charset="UTF-8">
@@ -165,7 +165,15 @@
 
 <script type="text/template" id="left-menu-tpl">
     <div class="easyui-accordion" data-options="fit:true,border:false">
-        <div class="system-module" title="物业中心" data-options="selected:true">
+          <div class="system-module" title="公寓房态" data-options="selected:true">
+            <ul class="easyui-tree">
+                <li>
+                    <span>公寓房态</span>
+                    <ul module-id="7"></ul>
+                </li>
+            </ul>
+        </div>
+<div class="system-module" title="物业中心" >
             <ul class="easyui-tree">
                 <li>
                     <span>物业中心</span>
@@ -190,10 +198,10 @@
                 </li>
             </ul>
         </div>
-        <div class="system-module" title="财务管理">
+        <div class="system-module" title="财务中心">
             <ul class="easyui-tree">
                 <li>
-                    <span>财务管理</span>
+                    <span>财务</span>
                     <ul module-id="5"></ul>
                 </li>
             </ul>
@@ -207,6 +215,7 @@
                 </li>
             </ul>
         </div>
+
         <div class="system-module" title="系统管理">
             <ul class="easyui-tree">
                 <li>
