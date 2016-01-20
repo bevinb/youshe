@@ -79,7 +79,7 @@ ys.modules.Trends =  (function(){
 
                 for(var i = 0;i < resp.ListHouseInfo.length; ++i){
                     var house = resp.ListHouseInfo[i];
-                    var tips = '<h5>地址：' + house.Address + '</h5>';
+                    var tips = '<p><strong>地址：</strong>' + house.Address + '</p><p><strong>楼层：</strong>' + house.FloorInfo + '</p><p><strong>原始户型：</strong>' + house.HouseDetail + '</p>';
                     var htmlStr = '<div class="card">'
                         + '<h5 style="position:relative;">' + house.CommunityName + '-' + house.HouseNO + '-' + house.VillageName + '<i class="easyui-tooltip fa fa-info-circle" title="' + tips + '"style="position:absolute;right:10px;top:5px;color:green;font-size:18px;"></i></h5>'
                         + '<div class="card-content">';

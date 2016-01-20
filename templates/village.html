@@ -67,6 +67,26 @@
                     <td>小区地址:</td>
                     <td><input name="VillageAddress" class="easyui-textbox" data-options="required:true"></td>
                 </tr>
+                <tr>
+                    <td>地铁:</td>
+                    <td>
+                        <input class="easyui-combotree"
+                               name="listMetroLine"
+                               data-options="
+                                url:'/YSService/BaseInfoService/GetMetroLine',
+                                method:'get',
+                                animate:true,
+                                panelHeight: '400',
+                                panelWidth: 300,
+                                valueField:'id',
+                                textField:'text',
+                                state:'closed',
+                                onBeforeCheck: function(node){if(node.type==1)return false;},
+                                onClick: ys.modules.Village.onMetroLineChange
+
+                     " style="width:302px;" multiple>
+                    </td>
+                </tr>
                 <tr class="fitem">
                     <td>物业公司:</td>
                     <td><input class="easyui-combobox"
@@ -107,6 +127,8 @@
 
 <script>
 ys.modules.Village =  (function(){
+    var metroLines = [];
+
     function loadMainData(){
         var mainTb = $('#villageTab');
         var params = $.form2JsonNotNull(mainTb.find('.top-search-form'));
@@ -128,6 +150,17 @@ ys.modules.Village =  (function(){
         });
     };
 
+    function editMainItem() {
+        var dlg = $('#editVillageDlg'), form = dlg.find('form'), mainTbl = $('#villageTab').find('table.main');
+        if(mainTbl.datagrid('getSelections').length < 1){
+            $.messager.alert('提示','请先选择要编辑的数据','info');
+            return;
+        }
+        dlg.dialog('open').dialog('center').dialog('setTitle','编辑小区');
+        var data = mainTbl.datagrid('getSelected');
+        form.form('load', data);
+    };
+
     function saveMainItem(){
         var dlg = $('#editVillageDlg'), form = dlg.find('form');
         if(!form.form('validate'))return;
@@ -136,6 +169,7 @@ ys.modules.Village =  (function(){
         $.each(formData, function(i, v) {
             data[v.name] = v.value;
         });
+        data.listMetroLine = $('#editVillageDlg').find('.easyui-combotree').combotree('getValues');
         var url = '/YSService/VillageService/Add';
         if(data['VillageID'] != '0'){
             url = '/YSService/VillageService/Update';
@@ -182,10 +216,26 @@ ys.modules.Village =  (function(){
         });
     };
 
+    function onMetroLineChange(){
+        var result = [];
+        var nodes = $('#editVillageDlg').find('.easyui-combotree').combotree('getChecked');
+        for(var i = 0; i < nodes.length; ++i){
+            result.push({
+                MetroLineID: node.getParent().id,
+                MetroLineName: node.getParent().text,
+                MetroStationID: node.id,
+                MetroStationName: node.text
+            });
+        }
+        metroLines = result;
+    };
+
     return {
         loadMainData: loadMainData,
+        editMainItem: editMainItem,
         saveMainItem: saveMainItem,
-        deleteMainItem: deleteMainItem
+        deleteMainItem: deleteMainItem,
+        onMetroLineChange: onMetroLineChange
     };
 })();
 
@@ -219,15 +269,7 @@ window.grid.cfg.village = {
         id: '',
         text: '编辑',
         iconCls: 'icon-edit',
-        handler: function () {
-            var dlg = $('#editVillageDlg'), form = dlg.find('form'), mainTbl = $('#villageTab').find('table.main');
-            if(mainTbl.datagrid('getSelections').length < 1){
-                $.messager.alert('提示','请先选择要编辑的数据','info');
-                return;
-            }
-            dlg.dialog('open').dialog('center').dialog('setTitle','编辑小区');
-            form.form('load', mainTbl.datagrid('getSelected'));
-        }
+        handler: ys.modules.Village.editMainItem
     }, "-", {
         id: '',
         text: '删除',

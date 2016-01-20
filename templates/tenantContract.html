@@ -59,23 +59,83 @@
     <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('.easyui-dialog').dialog('close')" style="width:90px">取消</a>
 </div>
 
-<div id="editTenantPayInfoDlg" class="easyui-dialog" style="width:500px;padding:10px 20px"  modal="true"
-     closed="true" buttons="#editTenantPayInfoDlgBtns">
+<div id="addTenantPaymentDlg" class="easyui-dialog" style="width: 500px; padding: 10px 20px" modal="true"
+     closed="true" buttons="#addTenantPaymentDlgBtns">
     <form novalidate>
-        <input name="PayRentID" type="hidden">
+        <input name="FineID" type="hidden">
+        <input name="ContractID" type="hidden">
         <div class="fitem">
-            <label>实付日期:</label>
-            <input name="ActualPayRentDate" class="easyui-datebox" style="width:300px;" data-options="required:true">
+            <label>付款类型:</label>
+            <select name="FineType" class="easyui-combobox" data-options="required:true" style="width: 300px;">
+                <option value="1">收入</option>
+                <option value="2">支出</option>
+            </select>
+        </div>
+        <div class="fitem">
+            <label>摘要:</label>
+            <input name="FineName" class="easyui-textbox" style="width: 300px;" data-options="required:true">
+        </div>
+        <div class="fitem">
+            <label>应付日期:</label>
+            <input name="PayDate" class="easyui-datebox" style="width: 300px;" data-options="required:true">
+        </div>
+        <div class="fitem">
+            <label>应付金额(元):</label>
+            <input name="Pay" class="easyui-numberbox" style="width: 300px;" data-options="precision:2, required:true">
+        </div>
+        <div class="fitem">
+            <label>付款类型:</label>
+            <input class="easyui-combobox"
+                   name="HouseCostTypeID"
+                   style="width:300px;"
+                   data-options="
+                    loader: ys.loaders.houseCostTypeLoader,
+                    valueField:'HouseCostTypeID',
+                    textField:'HouseCostTypeName',
+                    required: true,
+                    panelHeight:'auto'
+            ">
+        </div>
+        <div class="fitem">
+            <label>支付对象:</label>
+            <input name="Payee" class="easyui-textbox" style="width: 300px;" data-options="required:true">
         </div>
         <div class="fitem">
             <label>备注:</label>
-            <textarea name="Remarks" style="width:300px;" class="easyui-textarea"></textarea>
+            <textarea name="Remarks" class="easyui-textarea"style="width: 300px;" ></textarea>
+        </div>
+    </form>
+</div>
+<div id="addTenantPaymentDlgBtns">
+    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconcls="icon-ok" onclick="ys.modules.TenantContract.savePayment()" style="width: 90px">保存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="javascript:$('.easyui-dialog').dialog('close')" style="width: 90px">取消</a>
+</div>
+
+<div id="editTenantPayInfoDlg" class="easyui-dialog" style="width: 500px; padding: 10px 20px" modal="true"
+     closed="true" buttons="#editTenantPayInfoDlgBtns">
+    <form novalidate>
+        <input name="FineID" type="hidden">
+        <div class="fitem">
+            <label>付款日期:</label>
+            <input name="ActualPayDate" class="easyui-datebox" style="width: 300px;" data-options="required:true">
+        </div>
+        <div class="fitem">
+            <label>付款金额(元):</label>
+            <input name="ActualPay" class="easyui-numberbox" style="width: 300px;" data-options="precision:2, required:true">
+        </div>
+        <div class="fitem">
+            <label>收款人:</label>
+            <input name="Payee" class="easyui-textbox" style="width: 300px;" data-options="required:true">
+        </div>
+        <div class="fitem">
+            <label>备注:</label>
+            <textarea name="Remarks" class="easyui-textarea"style="width: 300px;" ></textarea>
         </div>
     </form>
 </div>
 <div id="editTenantPayInfoDlgBtns">
-    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="ys.modules.TenantContract.saveSubPay()" style="width:90px">保存</a>
-    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('.easyui-dialog').dialog('close')" style="width:90px">取消</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconcls="icon-ok" onclick="ys.modules.TenantContract.saveSubPay()" style="width: 90px">保存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="javascript:$('.easyui-dialog').dialog('close')" style="width: 90px">取消</a>
 </div>
 
 <script>
@@ -182,15 +242,15 @@
 
         function loadSubPay(params){
             $.ajax({
-                url: '/YSService/TenantContractService/GetContractPayByContractID',
+                url: '/YSService/PaymentService/GetPaymentList_ZK',
                 method: 'POST',
-                data: JSON.stringify({TenantContractID:params.TenantContractID}),
+                data: JSON.stringify({intContractID:params.TenantContractID}),
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
                 success: function (resp) {
                     $.each(resp, function(i,item){
-                        item['ActualPayRentDate'] = $.wcfDate2JsDateStr(item['ActualPayRentDate']);
-                        item['PayRentDate'] = $.wcfDate2JsDateStr(item['PayRentDate']);
+                        item['ActualPayDate'] = $.wcfDate2JsDateStr(item['ActualPayDate']);
+                        item['PayDate'] = $.wcfDate2JsDateStr(item['PayDate']);
                         item['CreateDate'] = $.wcfDate2JsDateStr(item['CreateDate']);
                     });
                     $('#tenantContractTab').find('table.subPay').datagrid('loadData', {
@@ -204,19 +264,48 @@
             });
         };
 
+        function savePayment(){
+            var dlg = $('#addTenantPaymentDlg'), form = dlg.find('form');
+            if (!form.form('validate')) return;
+            var formData = form.serializeArray();
+            var data = {};
+            $.each(formData, function (i, v) {
+                if (v.name == 'ActualPayDate' || v.name == 'PayDate' || v.name == 'CreateDate') {
+                    data[v.name] = $.jsDateStr2WcfDate(v.value);
+                } else {
+                    data[v.name] = v.value;
+                }
+            });
+            var url = '/YSService/PaymentService/InsertPaymentInfo_ZK';
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: JSON.stringify(data),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (msg) {
+                    loadSubPay(data);
+                    dlg.dialog('close');
+                },
+                error: function (XMLHttpRequest, textStatus, thrownError) {
+                    alert("Error Occured!");
+                }
+            });
+        }
+
         function saveSubPay(){
             var dlg = $('#editTenantPayInfoDlg'), form = dlg.find('form');
             if(!form.form('validate'))return;
             var formData =  form.serializeArray();
             var data = {};
             $.each(formData, function(i, v) {
-                if (v.name == 'ActualPayRentDate' || v.name == 'PayRentDate' || v.name == 'CreateDate') {
+                if (v.name == 'ActualPayDate' || v.name == 'PayDate' || v.name == 'CreateDate') {
                     data[v.name] = $.jsDateStr2WcfDate(v.value);
                 } else {
                     data[v.name] = v.value;
                 }
             });
-            var url = '/YSService/TenantContractService/Pay';
+            var url = '/YSService/PaymentService/UpdatePaymentInfo_ZK';
             $.ajax({
                 url: url,
                 type: "POST",
@@ -296,7 +385,8 @@
             loadSubPay: loadSubPay,
             saveSubPay: saveSubPay,
             auditPay: auditPay,
-            unauditPay: unauditPay
+            unauditPay: unauditPay,
+            savePayment: savePayment
         };
     })();
 
@@ -348,18 +438,36 @@ window.grid.cfg.tenantContract.Pay = {
     singleSelect:true,
     rownumbers: true,
     fit: true,
-    columns:[[
-        {field:'PayRentNo',title:'付款编号',width:280},
-        {field:'PayStatusName',title:'状态',width:80},
-        {field:'PayRentDate',title:'应付日期',width:80},
-        {field:'PayRent',title:'应付金额(元)',width:70},
-        {field:'ActualPayRentDate',title:'实付日期',width:80},
-        //{field:'PayTypeName',title:'付款方式',width:70},
-        //{field:'Payee',title:'付款人',width:70},
-        {field:'Remarks',title:'备注',width:100},
+    columns: [[
+        { field: 'FineType', title: '类别', width: 50, formatter: function(v){return v == 1? '收入':'支出' } },
+        { field: 'FineName', title: '摘要', width: 150 },
+        { field: 'PayDate', title: '应付日期', width: 80 },
+        { field: 'Pay', title: '应付金额(元)', width: 70 },
+        { field: 'ActualPayDate', title: '实付日期', width: 80 },
+        { field: 'ActualPay', title: '实付金额(元)', width: 70 },
+        { field: 'HouseCostTypeName', title: '付款类型', width: 70 },
+        { field: 'Payee', title: '支付对象', width: 70 },
+        { field: 'Remarks', title: '备注', width: 100 },
         { field: 'IsCheck', title: '已审核', width: 70, formatter: function(v){return v? '是':'否';} }
     ]],
     toolbar: [{
+        id: '',
+        text: '新增',
+        iconCls: 'icon-add',
+        handler: function () {
+            var mainTbl = $('#tenantContractTab').find('table.main');
+            if (mainTbl.datagrid('getSelections').length < 1) {
+                $.messager.alert('提示', '请先选择一条合同记录', 'info');
+                return;
+            }
+            var contract = mainTbl.datagrid('getSelected');
+
+            var dlg = $('#addTenantPaymentDlg'), form = dlg.find('form');
+            dlg.dialog('open').dialog('center').dialog('setTitle', '新增合同付款');
+            form.form('clear');
+            form.form('load', { ContractID: contract.TenantContractID, FineID: 0 });
+        }
+    }, "-", {
         id: '',
         text: '付款',
         iconCls: 'icon-edit',
@@ -371,10 +479,7 @@ window.grid.cfg.tenantContract.Pay = {
             }
             $('#editTenantPayInfoDlg').dialog('open').dialog('center').dialog('setTitle','付款');
             var data = tbl.datagrid('getSelected');
-            form.form('load', {
-                PayRentID: data.PayRentID,
-                ActualPayRentDate: $.jsDate2jsDateStr(new Date())
-            });
+            form.form('load', data);
         }
     }, {
         text: '审核通过',

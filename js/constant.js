@@ -62,7 +62,27 @@ window.ys.Constant = {
 	}, {
 		id: 3, text: '58同城'
 	}, {
-		id: 4, text: '其他'
+		id: 4, text: '丁丁'
+	}, {
+		id: 5, text: '搜房'
+	}, {
+		id: 6, text: '安居客'
+	}, {
+		id: 7, text: '中介'
+	}, {
+		id: 8, text: '巴乐兔'
+	}, {
+		id: 9, text: '官网'
+	}, {
+		id: 10, text: '微信'
+	}, {
+		id: 11, text: '微博'
+	}, {
+		id: 12, text: '豆瓣'
+	}, {
+		id: 13, text: '朋友介绍'
+	}, {
+		id: 14, text: '其他'
 	}],
 
 	DIRECTION: [{
