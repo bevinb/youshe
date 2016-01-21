@@ -33,10 +33,115 @@
         </div>
         <div data-options="region:'center'"><table class="main"></table></div>
     </div>
-    <div data-options="region:'east',split:true" style="width:700px;">
-        <div class="easyui-tabs" data-options="fit:true,border:false,plain:true">
+    <div class="easyui-layout" data-options="region:'east',split:true" style="width:700px;">
+        <div class="house-img-list" data-options="region:'north',split:true,border:false" style="height:360px;padding:10px;">
+            <span class="file-upload-btn" style="width:80px;height:80px;display:inline-block;border:1px solid gray;font-size:64px;text-align:center;vertical-align:middle;margin-top:10px;line-height:80px;color:gray;">+</span>
+        </div>
+        <div class="easyui-tabs" data-options="region:'center',fit:true,border:false,plain:true">
             <div title="签约收房"><table class="contract"></table></div>
-            <div title="信息交接"><table class="cost"></table></div>
+            <div title="信息交接" >
+                <div style="padding:10px;overflow: auto;">
+                    <form class="signForm" novalidate >
+                        <input name="HouseID" type="hidden">
+                        <h5>水费信息</h5>
+                        <fieldset>
+                            <table>
+                                <tr>
+                                    <td>户号:</td>
+                                    <td><input name="TenantContractNo" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                    <td>所属公司:</td>
+                                    <td><input name="Rent" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                    <td>查询电话:</td>
+                                    <td><input name="Deposit" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                </tr>
+                                <tr>
+                                    <td>付款方式:</td>
+                                    <td><select name="DepositCout" class="easyui-combobox" data-options="required:true" style="width:120px;"><option value="1">线上</option><option value="2">线下</option></select></td>
+                                    <td>首次付款日:</td>
+                                    <td>
+                                        <input name="PayDate" class="easyui-datebox" data-options="required:true" style="width:120px;">
+                                    </td>
+                                    <td>付款周期:</td>
+                                    <td>
+                                        <select name="PayCout" class="easyui-combobox" data-options="required:true" style="width:120px;"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="6">6</option><option value="12">12</option></select>
+                                    </td>
+                                </tr>
+                            </table>
+                        </fieldset>
+                        <h5>电费信息</h5>
+                        <fieldset>
+                            <table>
+                                <tr>
+                                    <td>户号:</td>
+                                    <td><input name="TenantContractNo" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                    <td>所属公司:</td>
+                                    <td><input name="Rent" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                    <td>查询电话:</td>
+                                    <td><input name="Deposit" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                </tr>
+                                <tr>
+                                    <td>付款方式:</td>
+                                    <td><select name="DepositCout" class="easyui-combobox" data-options="required:true" style="width:120px;"><option value="1">线上</option><option value="2">线下</option></select></td>
+                                    <td>首次付款日:</td>
+                                    <td>
+                                        <input name="PayDate" class="easyui-datebox" data-options="required:true" style="width:120px;">
+                                    </td>
+                                    <td>付款周期:</td>
+                                    <td>
+                                        <select name="PayCout" class="easyui-combobox" data-options="required:true" style="width:120px;"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="6">6</option><option value="12">12</option></select>
+                                    </td>
+                                </tr>
+                            </table>
+                        </fieldset>
+                        <h5>煤气费信息</h5>
+                        <fieldset>
+                            <table>
+                                <tr>
+                                    <td>户号:</td>
+                                    <td><input name="TenantContractNo" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                    <td>所属公司:</td>
+                                    <td><input name="Rent" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                    <td>查询电话:</td>
+                                    <td><input name="Deposit" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                </tr>
+                                <tr>
+                                    <td>付款方式:</td>
+                                    <td><select name="DepositCout" class="easyui-combobox" data-options="required:true" style="width:120px;"><option value="1">线上</option><option value="2">线下</option></select></td>
+                                    <td>首次付款日:</td>
+                                    <td>
+                                        <input name="PayDate" class="easyui-datebox" data-options="required:true" style="width:120px;">
+                                    </td>
+                                    <td>付款周期:</td>
+                                    <td>
+                                        <select name="PayCout" class="easyui-combobox" data-options="required:true" style="width:120px;"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="6">6</option><option value="12">12</option></select>
+                                    </td>
+                                </tr>
+                            </table>
+                        </fieldset>
+                        <h5>宽带信息</h5>
+                        <fieldset>
+                            <table>
+                                <tr>
+                                    <td>宽带账号:</td>
+                                    <td><input name="TenantContractNo" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                    <td>所属公司:</td>
+                                    <td><input name="Rent" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                    <td>带宽:</td>
+                                    <td><input name="Deposit" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                </tr>
+                                <tr>
+                                    <td>宽带密码:</td>
+                                    <td><input name="TenantContractNo" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                    <td>办理人:</td>
+                                    <td><input name="TenantContractNo" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                    <td>身份证号:</td>
+                                    <td><input name="TenantContractNo" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                </tr>
+                            </table>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
             <!--<div title="装修方案"><table class="renovation"></table></div>
             <div title="拍照上传"><table class="upImg"></table></div>
             <div title="定价上线"><table class="roomPrice"></table></div>-->
@@ -229,6 +334,43 @@ ys.modules.HouseOnline =  (function(){
             success: function (msg) {
                 loadMainData();
                 dlg.dialog('close');
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    function loadHouseImgList(params){
+        $.ajax({
+            url: '/YSService/OnLineService/GetHouseImgPathInfo/' + params.HouseID,
+            type: "GET",
+            dataType: "json",
+            success: function (imgs) {
+                $.each(imgs, function(i, o) {
+                    $('#houseOnlineTab').find('.house-img-list .file-upload-btn').before('<a href="' + o.ImgPath + '" target="_blank"><img class="img-item" data-id="' + o.RoomImgPathID + '" src="' + o.ImgPath + '" style="width:80px;height:80px;display:inline-block;vertical-align:middle;margin:10px 10px 0 0;"></a>');
+                });
+                $('#houseOnlineTab').find('.house-img-list .file-upload-btn').click(function(){
+                    var btn = $(this);
+                    ys.modules.FileUploader.open({
+                        callback: function(images){
+                            $.each(images, function(i, v){
+                                btn.before('<a href="' + v + '" target="_blank"><img data-id="0" src="' + v + '" class="img-item" style="width:80px;height:80px;display:inline-block;vertical-align:middle;margin:10px 10px 0 0;"></a>');
+                                $.ajax({
+                                    url: '/YSService/OnLineService/InsertHouseImg',
+                                    method: 'POST',
+                                    data: JSON.stringify({HouseID:params.HouseID, ImgPath: v}),
+                                    dataType: "json",
+                                    contentType: "application/json; charset=utf-8",
+                                    success: function (imgs) {
+                                    },
+                                    error: function (XMLHttpRequest, textStatus, thrownError) {
+                                    }
+                                });
+                            });
+                        }
+                    });
+                });
             },
             error: function (XMLHttpRequest, textStatus, thrownError) {
                 alert("Error Occured!");
@@ -770,6 +912,9 @@ ys.modules.HouseOnline =  (function(){
         onRoomTreeChange: onRoomTreeChange,
         loadMainData: loadMainData,
         saveMainItem: saveMainItem,
+
+        loadHouseImgList: loadHouseImgList,
+
         loadHouseContract: loadHouseContract,
         confirmContract: confirmContract,
 
@@ -811,6 +956,7 @@ window.grid.cfg.houseOnline = {
         {field:'price',title:'备注',width:100}
     ]],
     onSelect:function(i, data){
+        ys.modules.HouseOnline.loadHouseImgList(data);
         ys.modules.HouseOnline.loadHouseContract(data);
         ys.modules.HouseOnline.loadHouseCost({HouseID: data.HouseID});
         //ys.modules.HouseOnline.loadHouseRenovation(data);
@@ -1019,7 +1165,7 @@ window.grid.cfg.houseOnline.roomPrice = {
     ys.modules.HouseOnline.loadMainData();
 
     $('#houseOnlineTab').find('table.contract').datagrid(window.grid.cfg.houseOnline.contract);
-    $('#houseOnlineTab').find('table.cost').datagrid(window.grid.cfg.houseOnline.cost);
+    //$('#houseOnlineTab').find('table.cost').datagrid(window.grid.cfg.houseOnline.cost);
     //$('#houseOnlineTab').find('table.upImg').datagrid(window.grid.cfg.houseOnline.renovation);
     //$('#houseOnlineTab').find('table.renovation').datagrid(window.grid.cfg.houseOnline.renovation);
     //$('#houseOnlineTab').find('table.roomPrice').datagrid(window.grid.cfg.houseOnline.roomPrice);
