@@ -41,29 +41,30 @@
             <div title="签约收房"><table class="contract"></table></div>
             <div title="信息交接" >
                 <div style="padding:10px;overflow: auto;">
-                    <form class="signForm" novalidate >
+                    <form class="costForm" novalidate >
                         <input name="HouseID" type="hidden">
+                        <input name="FacingID" type="hidden">
                         <h5>水费信息</h5>
                         <fieldset>
                             <table>
                                 <tr>
                                     <td>户号:</td>
-                                    <td><input name="TenantContractNo" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                    <td><input name="Water_AccountNO" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
                                     <td>所属公司:</td>
-                                    <td><input name="Rent" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                    <td><input name="Water_Company" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
                                     <td>查询电话:</td>
-                                    <td><input name="Deposit" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                    <td><input name="Water_Phone" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
                                 </tr>
                                 <tr>
                                     <td>付款方式:</td>
-                                    <td><select name="DepositCout" class="easyui-combobox" data-options="required:true" style="width:120px;"><option value="1">线上</option><option value="2">线下</option></select></td>
+                                    <td><select name="Water_PayType" class="easyui-combobox" data-options="required:true" style="width:120px;"><option value="1">线上</option><option value="2">线下</option></select></td>
                                     <td>首次付款日:</td>
                                     <td>
-                                        <input name="PayDate" class="easyui-datebox" data-options="required:true" style="width:120px;">
+                                        <input name="Water_PayDate" class="easyui-datebox" data-options="required:true" style="width:120px;">
                                     </td>
                                     <td>付款周期:</td>
                                     <td>
-                                        <select name="PayCout" class="easyui-combobox" data-options="required:true" style="width:120px;"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="6">6</option><option value="12">12</option></select>
+                                        <select name="Water_PayCycle" class="easyui-combobox" data-options="required:true" style="width:120px;"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="6">6</option><option value="12">12</option></select>
                                     </td>
                                 </tr>
                             </table>
@@ -73,22 +74,22 @@
                             <table>
                                 <tr>
                                     <td>户号:</td>
-                                    <td><input name="TenantContractNo" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                    <td><input name="Electric_AccountNO" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
                                     <td>所属公司:</td>
-                                    <td><input name="Rent" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                    <td><input name="Electric_Company" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
                                     <td>查询电话:</td>
-                                    <td><input name="Deposit" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                    <td><input name="Electric_Phone" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
                                 </tr>
                                 <tr>
                                     <td>付款方式:</td>
-                                    <td><select name="DepositCout" class="easyui-combobox" data-options="required:true" style="width:120px;"><option value="1">线上</option><option value="2">线下</option></select></td>
+                                    <td><select name="Electric_PayType" class="easyui-combobox" data-options="required:true" style="width:120px;"><option value="1">线上</option><option value="2">线下</option></select></td>
                                     <td>首次付款日:</td>
                                     <td>
-                                        <input name="PayDate" class="easyui-datebox" data-options="required:true" style="width:120px;">
+                                        <input name="Electric_PayDate" class="easyui-datebox" data-options="required:true" style="width:120px;">
                                     </td>
                                     <td>付款周期:</td>
                                     <td>
-                                        <select name="PayCout" class="easyui-combobox" data-options="required:true" style="width:120px;"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="6">6</option><option value="12">12</option></select>
+                                        <select name="Electric_PayCycle" class="easyui-combobox" data-options="required:true" style="width:120px;"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="6">6</option><option value="12">12</option></select>
                                     </td>
                                 </tr>
                             </table>
@@ -98,22 +99,22 @@
                             <table>
                                 <tr>
                                     <td>户号:</td>
-                                    <td><input name="TenantContractNo" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                    <td><input name="Gas_AccountNO" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
                                     <td>所属公司:</td>
-                                    <td><input name="Rent" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                    <td><input name="Gas_Company" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
                                     <td>查询电话:</td>
-                                    <td><input name="Deposit" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                    <td><input name="Gas_Phone" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
                                 </tr>
                                 <tr>
                                     <td>付款方式:</td>
-                                    <td><select name="DepositCout" class="easyui-combobox" data-options="required:true" style="width:120px;"><option value="1">线上</option><option value="2">线下</option></select></td>
+                                    <td><select name="Gas_PayType" class="easyui-combobox" data-options="required:true" style="width:120px;"><option value="1">线上</option><option value="2">线下</option></select></td>
                                     <td>首次付款日:</td>
                                     <td>
-                                        <input name="PayDate" class="easyui-datebox" data-options="required:true" style="width:120px;">
+                                        <input name="Gas_PayDate" class="easyui-datebox" data-options="required:true" style="width:120px;">
                                     </td>
                                     <td>付款周期:</td>
                                     <td>
-                                        <select name="PayCout" class="easyui-combobox" data-options="required:true" style="width:120px;"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="6">6</option><option value="12">12</option></select>
+                                        <select name="Gas_PayCycle" class="easyui-combobox" data-options="required:true" style="width:120px;"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="6">6</option><option value="12">12</option></select>
                                     </td>
                                 </tr>
                             </table>
@@ -123,19 +124,19 @@
                             <table>
                                 <tr>
                                     <td>宽带账号:</td>
-                                    <td><input name="TenantContractNo" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                    <td><input name="Network_AccountNO" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
                                     <td>所属公司:</td>
-                                    <td><input name="Rent" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                    <td><input name="Network_Company" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
                                     <td>带宽:</td>
-                                    <td><input name="Deposit" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                    <td><input name="Network_Bandwidth" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
                                 </tr>
                                 <tr>
                                     <td>宽带密码:</td>
-                                    <td><input name="TenantContractNo" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                    <td><input name="Network_Password" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
                                     <td>办理人:</td>
-                                    <td><input name="TenantContractNo" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                    <td><input name="Network_Person" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
                                     <td>身份证号:</td>
-                                    <td><input name="TenantContractNo" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                    <td><input name="Network_ID" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
                                 </tr>
                             </table>
                         </fieldset>
@@ -430,16 +431,14 @@ ys.modules.HouseOnline =  (function(){
 
     function loadHouseCost(params){
         $.ajax({
-            url: '/YSService/HouseCostService/GetDataList',
+            url: '/YSService/OnLineService/GetInterfacing/' + params.HouseID,
             method: 'POST',
-            data: JSON.stringify(params),
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             success: function (resp) {
-                $('#houseOnlineTab').find('table.cost').datagrid('loadData', {
-                    total: resp.length,
-                    rows: resp
-                });
+                var form = $('#houseOnlineTab').find('.costForm');
+                form.form('clear');
+                form.form('load', resp);
             },
             error: function (XMLHttpRequest, textStatus, thrownError) {
                 alert("Error Occured!");
@@ -448,17 +447,11 @@ ys.modules.HouseOnline =  (function(){
     };
 
     function saveHouseCost(){
-        var dlg = $('#editHouseCostDlg'), form = dlg.find('form');
+        var form = $('#houseOnlineTab').find('.costForm');
         if(!form.form('validate'))return;
         var formData =  form.serializeArray();
         var data = {};
-        $.each(formData, function(i, v) {
-            data[v.name] = v.value;
-        });
-        var url = '/YSService/HouseCostService/Add';
-        if(data['HouseCostID'] != '0'){
-            url = '/YSService/HouseCostService/Update';
-        }
+        var url = '/YSService/OnLineService/EditInterfacing';
         $.ajax({
             url: url,
             type: "POST",
@@ -466,8 +459,7 @@ ys.modules.HouseOnline =  (function(){
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             success: function (msg) {
-                loadHouseCost({HouseID: data.HouseID});
-                dlg.dialog('close');
+
             },
             error: function (XMLHttpRequest, textStatus, thrownError) {
                 alert("Error Occured!");
