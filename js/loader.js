@@ -125,7 +125,7 @@ window.ys.loaders = {
 			}
 		});
 	},
-	//房屋接收人列表
+	//收房员列表
 	sendeeLoader: function(param,success,error){
 		$.ajax({
 			url: '/YSService/SendeeService/GetDataList',
@@ -141,7 +141,7 @@ window.ys.loaders = {
 			}
 		});
 	},
-	//管家列表
+	//销售员列表
 	houseKeeperLoader: function(param,success,error){
 		$.ajax({
 			url: '/YSService/SendeeService/GetDataList',

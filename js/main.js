@@ -46,6 +46,11 @@ $(function(){
 						var title = node.text;
 						var tt = $('#mainPanel');
 
+						tt.tabs({
+							onClose: function(title, index){
+							}
+						});
+
 						if (tt.tabs('exists', title)){
 							tt.tabs('select', title);
 						} else {
@@ -62,8 +67,8 @@ $(function(){
 										$('#' + link + 'Tab').find('table.sub').datagrid(window.grid.cfg[link + 'Sub']);
 									}
 								},
-								onClose:function(){
-
+								onDestroy:function(){
+                                    destroyDialogs(this.id);
 								}
 							});
 						}
@@ -76,6 +81,30 @@ $(function(){
 			}
 		});
 	});
+
+	//destroy dialogs after tab closed
+	function destroyDialogs(tabId){
+        switch(tabId) {
+			case 'communityTab': $('#editCommunityDlg').dialog('destroy');break;
+			case 'contractTab': $('#editContractDlg').dialog('destroy');$('#addOwnerPaymentDlg').dialog('destroy');$('#editOwnerPayInfoDlg').dialog('destroy');break;
+			case 'discountTab': $('#editDiscountDlg').dialog('destroy');break;
+			case 'houseTab': $('#editHouseDlg').dialog('destroy');$('#editHousePayDlg').dialog('destroy');break;
+			case 'houseOnlineTab': $('#editHouseCostDlg').dialog('destroy');$('#editHouseRenovationDlg').dialog('destroy');$('#editRoomPriceDlg').dialog('destroy');break;
+			case 'otherPayTab': break;
+			case 'ownerTab': $('#editOwnerDlg').dialog('destroy');break;
+			case 'preserveRoomTab': break;
+			case 'propertyTab': $('#editPropertyDlg').dialog('destroy');break;
+			case 'renterTab': $('#editRenterDlg').dialog('destroy');break;
+			case 'returnRoomTab': break;
+			case 'rolesTab': $('#editRoleDlg').dialog('destroy');$('#rolesEditPermissionsDlg').dialog('destroy');break;
+			case 'sendeeTab': $('#editSendeeDlg').dialog('destroy');break;
+			case 'serviceCenterTab': $('#editServiceCenterDlg').dialog('destroy');break;
+			case 'signRoomTab': $('#signRoomRenterDlg').dialog('destroy');$('#signRoomEditRenterDlg').dialog('destroy');$('#signRoomTabDiscountDlg').dialog('destroy');break;
+			case 'tenantContractTab': $('#cancelTenantContractDlg').dialog('destroy');$('#addTenantPaymentDlg').dialog('destroy');$('#editTenantPayInfoDlg').dialog('destroy');break;
+			case 'usersTab': $('#editUserDlg').dialog('destroy');$('#usersEditRolesDlg').dialog('destroy');break;
+			case 'villageTab': $('#editVillageDlg').dialog('destroy');break;
+		}
+	}
 
 	//initialize workbench
 	ys.modules.Workbench.init();

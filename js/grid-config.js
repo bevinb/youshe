@@ -29,7 +29,7 @@ window.grid.cfg = {
 			{field:'name',title:'租期',width:100},
 			{field:'name',title:'入住日期',width:100},
 			{field:'name',title:'租金付款方式',width:100},
-			{field:'name',title:'销售管家',width:100},
+			{field:'name',title:'销售员',width:100},
 			{field:'name',title:'紧急联系人',width:100},
 			{field:'name',title:'紧急联系人电话',width:100}
 		]],
@@ -56,7 +56,7 @@ window.grid.cfg = {
 			{field:'name',title:'租期',width:100},
 			{field:'name',title:'入住日期',width:100},
 			{field:'name',title:'租金付款方式',width:100},
-			{field:'name',title:'销售管家',width:100},
+			{field:'name',title:'销售员',width:100},
 			{field:'name',title:'紧急联系人',width:100},
 			{field:'name',title:'紧急联系人电话',width:100}
 		]]
@@ -77,7 +77,7 @@ window.grid.cfg = {
 			{field:'name',title:'租期',width:100},
 			{field:'name',title:'入住日期',width:100},
 			{field:'name',title:'租金付款方式',width:100},
-			{field:'name',title:'销售管家',width:100},
+			{field:'name',title:'销售员',width:100},
 			{field:'name',title:'紧急联系人',width:100},
 			{field:'name',title:'紧急联系人电话',width:100}
 		]],

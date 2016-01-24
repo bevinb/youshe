@@ -8,9 +8,9 @@ window.ys.Constant = {
 	}],
 
 	SENDEE_TYPE: [{
-		id: 1, text: '房屋接收人'
+		id: 1, text: '收房员'
 	}, {
-		id: 2, text: '房屋管家'
+		id: 2, text: '销售员'
 	}],
 
 	CONSTELLATION: [{

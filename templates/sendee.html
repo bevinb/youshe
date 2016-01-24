@@ -153,7 +153,7 @@ window.grid.cfg.sendee = {
         iconCls: 'icon-add',
         handler: function () {
             var dlg = $('#editSendeeDlg'), form = dlg.find('form');
-            dlg.dialog('open').dialog('center').dialog('setTitle','新增接收人/管家');
+            dlg.dialog('open').dialog('center').dialog('setTitle','新增收房员/销售员');
             form.form('clear');
             form.form('load', {SendeeID:0, SendeeType: 1})
         }
@@ -167,7 +167,7 @@ window.grid.cfg.sendee = {
                 $.messager.alert('提示','请先选择要编辑的数据','info');
                 return;
             }
-            dlg.dialog('open').dialog('center').dialog('setTitle','编辑接收人/管家');
+            dlg.dialog('open').dialog('center').dialog('setTitle','编辑收房员/销售员');
             form.form('load', mainTbl.datagrid('getSelected'));
         }
     }, "-", {

@@ -18,6 +18,19 @@
                                         textField:'text',
                                         onClick: ys.modules.Trends.onRoomTreeChange
                              " style="width:200px;">
+                                <label style="margin-left:10px;">地铁:</label>
+                                <input class="easyui-combotree"
+                                       name="listMetroLine"
+                                       data-options="
+                                url:'/YSService/BaseInfoService/GetMetroLine',
+                                method:'get',
+                                animate:true,
+                                panelHeight: '400',
+                                panelWidth: 300,
+                                valueField:'id',
+                                textField:'text',
+                                state:'closed',
+                                onBeforeCheck: function(node){if(node.type==1)return false;}"   multiple>
                                 <label style="margin-left:10px;">租金范围:</label>
                                 <input name="MinRent" class="easyui-numberbox" data-options="precision:2" style="width:70px;">&#160;-&#160;
                                 <input name="MaxRent" class="easyui-numberbox" data-options="precision:2" style="width:70px;">
@@ -86,8 +99,22 @@ ys.modules.Trends =  (function(){
                     for(var j = 0; j < house.RoomInfo.length; ++j){
                         var room = house.RoomInfo[j];
                         if(room.TenantInfo) {
+                            var  tenantTip = '<p><strong>租客：</strong>' + room.TenantInfo.TenantName + '</p>'+
+                                '<p><strong>手机：</strong>' + room.TenantInfo.Phone + '</p>'+
+                                '<p><strong>性别：</strong>' + room.TenantInfo.Profession + '</p>'+
+                                '<p><strong>国籍：</strong>' + (room.TenantInfo.Gender? '男':'女') + '</p>'+
+                                '<p><strong>护照类型：</strong>' + room.TenantInfo.IDTypeName + '</p>'+
+                                '<p><strong>证件号码：</strong>' + room.TenantInfo.IDNo + '</p>'+
+                                '<p><strong>职业：</strong>' + room.TenantInfo.Profession + '</p>'+
+                                    (room.TenantInfo.EducationTypeID? ('<p><strong>学历：</strong>' + ys.Constant.EDUCATION[room.TenantInfo.EducationTypeID-1].text + '</p>'): '')+
+                                '<p><strong>出生日期：</strong>' + room.TenantInfo.Profession + '</p>'+
+                                    (room.TenantInfo.ConstellationID? ('<p><strong>星座：</strong>' + ys.Constant.CONSTELLATION[room.TenantInfo.ConstellationID-1].text + '</p>'):'')+
+                                '<p><strong>爱好：</strong>' + room.TenantInfo.Hobbies + '</p>'+
+                                '<p><strong>紧急联系人：</strong>' + room.TenantInfo.EmergencyContact + '</p>'+
+                                '<p><strong>紧急联系人电话：</strong>' + room.TenantInfo.EmergencyPhone + '</p>'+
+                                    (room.TenantInfo.SOURCE? ('<p><strong>来源：</strong>' + ys.Constant.SOURCE[room.TenantInfo.SOURCE-1].text + '</p>'):'');
                             htmlStr += '<div class="card-content-item clearfix">'
-                                    + '<div class="pull-left item-head status' + room.RoomStatus + '">' + room.RoomNo + '<br>￥' + room.Rent + '</div>'
+                                    + '<div class="pull-left item-head status' + room.RoomStatus + ' easyui-tooltip" title="' + tenantTip + '">' + room.RoomNo + '<br>￥' + room.Rent + '</div>'
                                     + '<div class="pull-left item-content">'
                                     + '<p>' + ys.Constant.GENDER[room.TenantInfo.Gender].text + ' | ' + room.TenantInfo.Profession + ' | ' + ys.Constant.CONSTELLATION[room.TenantInfo.ConstellationID-1].text +  ' | ' + room.TenantInfo.Hobbies + '</p>'
                                     + '</div>'

@@ -34,119 +34,135 @@
         <div data-options="region:'center'"><table class="main"></table></div>
     </div>
     <div class="easyui-layout" data-options="region:'east',split:true" style="width:700px;">
-        <div class="house-img-list" data-options="region:'north',split:true,border:false" style="height:360px;padding:10px;">
-            <span class="file-upload-btn" style="width:80px;height:80px;display:inline-block;border:1px solid gray;font-size:64px;text-align:center;vertical-align:middle;margin-top:10px;line-height:80px;color:gray;">+</span>
-        </div>
-        <div class="easyui-tabs" data-options="region:'center',fit:true,border:false,plain:true">
-            <div title="签约收房"><table class="contract"></table></div>
-            <div title="信息交接" >
-                <div style="padding:10px;overflow: auto;">
-                    <form class="costForm" novalidate >
-                        <input name="HouseID" type="hidden">
-                        <input name="FacingID" type="hidden">
-                        <h5>水费信息</h5>
-                        <fieldset>
-                            <table>
-                                <tr>
-                                    <td>户号:</td>
-                                    <td><input name="Water_AccountNO" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
-                                    <td>所属公司:</td>
-                                    <td><input name="Water_Company" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
-                                    <td>查询电话:</td>
-                                    <td><input name="Water_Phone" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
-                                </tr>
-                                <tr>
-                                    <td>付款方式:</td>
-                                    <td><select name="Water_PayType" class="easyui-combobox" data-options="required:true" style="width:120px;"><option value="1">线上</option><option value="2">线下</option></select></td>
-                                    <td>首次付款日:</td>
-                                    <td>
-                                        <input name="Water_PayDate" class="easyui-datebox" data-options="required:true" style="width:120px;">
-                                    </td>
-                                    <td>付款周期:</td>
-                                    <td>
-                                        <select name="Water_PayCycle" class="easyui-combobox" data-options="required:true" style="width:120px;"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="6">6</option><option value="12">12</option></select>
-                                    </td>
-                                </tr>
-                            </table>
-                        </fieldset>
-                        <h5>电费信息</h5>
-                        <fieldset>
-                            <table>
-                                <tr>
-                                    <td>户号:</td>
-                                    <td><input name="Electric_AccountNO" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
-                                    <td>所属公司:</td>
-                                    <td><input name="Electric_Company" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
-                                    <td>查询电话:</td>
-                                    <td><input name="Electric_Phone" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
-                                </tr>
-                                <tr>
-                                    <td>付款方式:</td>
-                                    <td><select name="Electric_PayType" class="easyui-combobox" data-options="required:true" style="width:120px;"><option value="1">线上</option><option value="2">线下</option></select></td>
-                                    <td>首次付款日:</td>
-                                    <td>
-                                        <input name="Electric_PayDate" class="easyui-datebox" data-options="required:true" style="width:120px;">
-                                    </td>
-                                    <td>付款周期:</td>
-                                    <td>
-                                        <select name="Electric_PayCycle" class="easyui-combobox" data-options="required:true" style="width:120px;"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="6">6</option><option value="12">12</option></select>
-                                    </td>
-                                </tr>
-                            </table>
-                        </fieldset>
-                        <h5>煤气费信息</h5>
-                        <fieldset>
-                            <table>
-                                <tr>
-                                    <td>户号:</td>
-                                    <td><input name="Gas_AccountNO" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
-                                    <td>所属公司:</td>
-                                    <td><input name="Gas_Company" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
-                                    <td>查询电话:</td>
-                                    <td><input name="Gas_Phone" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
-                                </tr>
-                                <tr>
-                                    <td>付款方式:</td>
-                                    <td><select name="Gas_PayType" class="easyui-combobox" data-options="required:true" style="width:120px;"><option value="1">线上</option><option value="2">线下</option></select></td>
-                                    <td>首次付款日:</td>
-                                    <td>
-                                        <input name="Gas_PayDate" class="easyui-datebox" data-options="required:true" style="width:120px;">
-                                    </td>
-                                    <td>付款周期:</td>
-                                    <td>
-                                        <select name="Gas_PayCycle" class="easyui-combobox" data-options="required:true" style="width:120px;"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="6">6</option><option value="12">12</option></select>
-                                    </td>
-                                </tr>
-                            </table>
-                        </fieldset>
-                        <h5>宽带信息</h5>
-                        <fieldset>
-                            <table>
-                                <tr>
-                                    <td>宽带账号:</td>
-                                    <td><input name="Network_AccountNO" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
-                                    <td>所属公司:</td>
-                                    <td><input name="Network_Company" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
-                                    <td>带宽:</td>
-                                    <td><input name="Network_Bandwidth" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
-                                </tr>
-                                <tr>
-                                    <td>宽带密码:</td>
-                                    <td><input name="Network_Password" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
-                                    <td>办理人:</td>
-                                    <td><input name="Network_Person" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
-                                    <td>身份证号:</td>
-                                    <td><input name="Network_ID" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
-                                </tr>
-                            </table>
-                        </fieldset>
-                    </form>
+
+        <div data-options="region:'center',split:true" style="height: 500px;">
+            <div class="easyui-tabs" data-options="fit:true,border:false,plain:true">
+                <div title="签约收房"><table class="contract"></table></div>
+                <div title="信息交接" >
+                    <div style="padding:10px;overflow: auto;">
+                        <form class="costForm" novalidate >
+                            <input name="HouseID" type="hidden">
+                            <input name="FacingID" type="hidden">
+                            <h5>水费信息</h5>
+                            <fieldset>
+                                <table>
+                                    <tr>
+                                        <td>户号:</td>
+                                        <td><input name="Water_AccountNO" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                        <td>所属公司:</td>
+                                        <td><input name="Water_Company" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                        <td>查询电话:</td>
+                                        <td><input name="Water_Phone" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>付款类型:</td>
+                                        <td><select name="Water_PayType" class="easyui-combobox" data-options="required:true" style="width:120px;"><option value="1">线上</option><option value="2">线下</option></select></td>
+                                        <td>首次付款日:</td>
+                                        <td>
+                                            <input name="Water_PayDate" class="easyui-datebox" data-options="required:true" style="width:120px;">
+                                        </td>
+                                        <td>付款周期:</td>
+                                        <td>
+                                            <select name="Water_PayCycle" class="easyui-combobox" data-options="required:true" style="width:120px;">
+                                                <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option>
+                                                <option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </fieldset>
+                            <h5>电费信息</h5>
+                            <fieldset>
+                                <table>
+                                    <tr>
+                                        <td>户号:</td>
+                                        <td><input name="Electric_AccountNO" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                        <td>所属公司:</td>
+                                        <td><input name="Electric_Company" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                        <td>查询电话:</td>
+                                        <td><input name="Electric_Phone" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>付款类型:</td>
+                                        <td><select name="Electric_PayType" class="easyui-combobox" data-options="required:true" style="width:120px;"><option value="1">线上</option><option value="2">线下</option></select></td>
+                                        <td>首次付款日:</td>
+                                        <td>
+                                            <input name="Electric_PayDate" class="easyui-datebox" data-options="required:true" style="width:120px;">
+                                        </td>
+                                        <td>付款周期:</td>
+                                        <td>
+                                            <select name="Electric_PayCycle" class="easyui-combobox" data-options="required:true" style="width:120px;">
+                                                <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option>
+                                                <option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </fieldset>
+                            <h5>煤气费信息</h5>
+                            <fieldset>
+                                <table>
+                                    <tr>
+                                        <td>户号:</td>
+                                        <td><input name="Gas_AccountNO" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                        <td>所属公司:</td>
+                                        <td><input name="Gas_Company" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                        <td>查询电话:</td>
+                                        <td><input name="Gas_Phone" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>付款类型:</td>
+                                        <td><select name="Gas_PayType" class="easyui-combobox" data-options="required:true" style="width:120px;"><option value="1">线上</option><option value="2">线下</option></select></td>
+                                        <td>首次付款日:</td>
+                                        <td>
+                                            <input name="Gas_PayDate" class="easyui-datebox" data-options="required:true" style="width:120px;">
+                                        </td>
+                                        <td>付款周期:</td>
+                                        <td>
+                                            <select name="Gas_PayCycle" class="easyui-combobox" data-options="required:true" style="width:120px;">
+                                                <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option>
+                                                <option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </fieldset>
+                            <h5>宽带信息</h5>
+                            <fieldset>
+                                <table>
+                                    <tr>
+                                        <td>宽带账号:</td>
+                                        <td><input name="Network_AccountNO" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                        <td>所属公司:</td>
+                                        <td><input name="Network_Company" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                        <td>带宽:</td>
+                                        <td><input name="Network_Bandwidth" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>宽带密码:</td>
+                                        <td><input name="Network_Password" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                        <td>办理人:</td>
+                                        <td><input name="Network_Person" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                        <td>身份证号:</td>
+                                        <td><input name="Network_ID" class="easyui-textbox" style="width:120px;" data-options="required:true"></td>
+                                    </tr>
+                                </table>
+                            </fieldset>
+                        </form>
+                    </div>
+                    <div style="text-align: right;margin:10px 10px 20px 0;">
+                        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="ys.modules.HouseOnline.saveHouseCost()" style="width:90px">保存</a>
+                    </div>
+                </div>
+                <div title="公寓信息" class="rooms" style="padding:10px;"></div>
+                <div title="公共区域照片" class="house-img-list" style="padding:10px;">
+                    <span class="file-upload-btn" style="width:80px;height:80px;display:inline-block;border:1px solid gray;font-size:64px;text-align:center;vertical-align:middle;margin-top:10px;line-height:80px;color:gray;">+</span>
                 </div>
             </div>
             <!--<div title="装修方案"><table class="renovation"></table></div>
             <div title="拍照上传"><table class="upImg"></table></div>
             <div title="定价上线"><table class="roomPrice"></table></div>-->
-            <div title="公寓信息" class="rooms" style="padding:10px;"></div>
+
         </div>
     </div>
 </div>
@@ -343,20 +359,21 @@ ys.modules.HouseOnline =  (function(){
     };
 
     function loadHouseImgList(params){
+        $('#houseOnlineTab').find('.house-img-list .img-item-link').remove();
         $.ajax({
             url: '/YSService/OnLineService/GetHouseImgPathInfo/' + params.HouseID,
             type: "GET",
             dataType: "json",
             success: function (imgs) {
                 $.each(imgs, function(i, o) {
-                    $('#houseOnlineTab').find('.house-img-list .file-upload-btn').before('<a href="' + o.ImgPath + '" target="_blank"><img class="img-item" data-id="' + o.RoomImgPathID + '" src="' + o.ImgPath + '" style="width:80px;height:80px;display:inline-block;vertical-align:middle;margin:10px 10px 0 0;"></a>');
+                    $('#houseOnlineTab').find('.house-img-list .file-upload-btn').before('<a href="' + o.ImgPath + '" target="_blank" class="img-item-link"><img class="img-item" data-id="' + o.RoomImgPathID + '" src="' + o.ImgPath + '" style="width:80px;height:80px;display:inline-block;vertical-align:middle;margin:10px 10px 0 0;"></a>');
                 });
                 $('#houseOnlineTab').find('.house-img-list .file-upload-btn').click(function(){
                     var btn = $(this);
                     ys.modules.FileUploader.open({
                         callback: function(images){
                             $.each(images, function(i, v){
-                                btn.before('<a href="' + v + '" target="_blank"><img data-id="0" src="' + v + '" class="img-item" style="width:80px;height:80px;display:inline-block;vertical-align:middle;margin:10px 10px 0 0;"></a>');
+                                btn.before('<a href="' + v + '" target="_blank" class="img-item-link"><img data-id="0" src="' + v + '" class="img-item" style="width:80px;height:80px;display:inline-block;vertical-align:middle;margin:10px 10px 0 0;"></a>');
                                 $.ajax({
                                     url: '/YSService/OnLineService/InsertHouseImg',
                                     method: 'POST',
@@ -432,13 +449,17 @@ ys.modules.HouseOnline =  (function(){
     function loadHouseCost(params){
         $.ajax({
             url: '/YSService/OnLineService/GetInterfacing/' + params.HouseID,
-            method: 'POST',
+            method: 'GET',
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             success: function (resp) {
                 var form = $('#houseOnlineTab').find('.costForm');
                 form.form('clear');
-                form.form('load', resp);
+                if(resp && resp.length > 0) {
+                    form.form('load', resp[0]);
+                } else {
+                    form.form('load', {HouseID:params.HouseID,FacingID:0,Electric_PayCycle:1,Gas_PayCycle:1,Water_PayCycle:1,Electric_PayType:1,Gas_PayType:1,Water_PayType:1});
+                }
             },
             error: function (XMLHttpRequest, textStatus, thrownError) {
                 alert("Error Occured!");
@@ -451,6 +472,13 @@ ys.modules.HouseOnline =  (function(){
         if(!form.form('validate'))return;
         var formData =  form.serializeArray();
         var data = {};
+        $.each(formData, function(i, v) {
+            if (v.name == 'Water_PayDate' || v.name == 'Gas_PayDate' || v.name == 'Electric_PayDate') {
+                data[v.name] = $.jsDateStr2WcfDate(v.value);
+            } else {
+                data[v.name] = v.value;
+            }
+        });
         var url = '/YSService/OnLineService/EditInterfacing';
         $.ajax({
             url: url,
@@ -997,7 +1025,7 @@ window.grid.cfg.houseOnline.contract = {
         {field:'code',title:'付款方式',width:100},
         {field:'BeginDate',title:'开始时间',width:100},
         {field:'EndDate',title:'结束时间',width:100},
-        {field:'SendeeName',title:'房屋接收人',width:100},
+        {field:'SendeeName',title:'收房员',width:100},
         {field:'CreateDate',title:'创建时间',width:100},
         {field:'Creater',title:'创建人',width:100}
     ]]
