@@ -278,7 +278,7 @@
     </div>
 </div>
 <div id="editContractDlgBtns">
-    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconcls="icon-ok" onclick="ys.modules.Contract.saveMainItem()"
+    <a href="javascript:void(0)" class="easyui-linkbutton c6 btn-save" iconcls="icon-ok" onclick="ys.modules.Contract.saveMainItem()"
         style="width: 90px">保存</a> <a href="javascript:void(0)" class="easyui-linkbutton"
             iconcls="icon-cancel" onclick="javascript:$('.easyui-dialog').dialog('close')"
             style="width: 90px">取消</a>
@@ -367,7 +367,7 @@
     </form>
 </div>
 <div id="editOwnerPayInfoDlgBtns">
-    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconcls="icon-ok" onclick="ys.modules.Contract.saveSubData()"
+    <a href="javascript:void(0)" class="easyui-linkbutton c6 btn-save" iconcls="icon-ok" onclick="ys.modules.Contract.saveSubData()"
         style="width: 90px">保存</a> <a href="javascript:void(0)" class="easyui-linkbutton"
             iconcls="icon-cancel" onclick="javascript:$('.easyui-dialog').dialog('close')"
             style="width: 90px">取消</a>
@@ -714,6 +714,7 @@
             handler: function () {
                 var dlg = $('#editContractDlg'), form = dlg.find('form');
                 dlg.dialog('open').dialog('center').dialog('setTitle', '新增合同');
+                $('#editContractDlgBtns').find('.btn-save').show();
                 form.form('clear');
                 var start = new Date();
                 start = $.jsDate2jsDateStr(start);
@@ -723,12 +724,38 @@
                 form.form('load', { ContractID: 0, ContractStatus: 1, DepositCout: 1, PayCout: 3, BeginDate: start, EndDate: end });
             }
         }, "-", {
-            id: '',
+            text: '合同详情',
+            iconCls: 'icon-search',
+            handler: function () {
+                var dlg = $('#editContractDlg'), form = dlg.find('form'), tbl = $('#contractTab').find('table.main');
+                if (tbl.datagrid('getSelections').length < 1) {
+                    $.messager.alert('提示', '请先选择要编辑的数据', 'info');
+                    return;
+                }
+                $('#editContractDlg').dialog('open').dialog('center').dialog('setTitle', '合同详情');
+                $('#editContractDlgBtns').find('.btn-save').hide();
+                var data = tbl.datagrid('getSelected'), house = data.HousInfo, owner = data.OwnerInfo;
+                form.form('load', data);
+                form.form('load', {
+                    'HouseInfo.Address': house.Address,
+                    'HouseInfo.Area': house.Area,
+                    'HouseInfo.HouseDetail': house.HouseDetail,
+                    'HouseInfo.Floor': house.Floor,
+                    'HouseInfo.FloorCount': house.FloorCount,
+                    'OwnerInfo.OwnerName': owner.OwnerName,
+                    'OwnerInfo.Phone': owner.Phone
+                });
+
+                var isAddInput = form.find('input[name=IsAdd]');
+                if(isAddInput.length > 0){
+                    isAddInput[0].checked = data.IsAdd;
+                }
+            }
+        }, "-", {
             text: '作废',
             iconCls: 'icon-cancel',
             handler: ys.modules.Contract.cancelContract
         }, "-", {
-            id: '',
             text: '终止',
             iconCls: 'icon-ok',
             handler: ys.modules.Contract.stopContract
@@ -747,8 +774,8 @@
             { field: 'ActualPayDate', title: '实付日期', width: 80 },
             { field: 'ActualPay', title: '实付金额(元)', width: 70 },
             { field: 'HouseCostTypeName', title: '付款类型', width: 70 },
-{ field: 'BankName', title: '银行名称', width: 70 },
-{ field: 'BankCard', title: '卡号', width: 70 },
+            { field: 'BankName', title: '银行名称', width: 70 },
+            { field: 'BankCard', title: '卡号', width: 70 },
             { field: 'Payee', title: '支付对象', width: 70 },
             { field: 'Remarks', title: '备注', width: 100 },
             { field: 'IsCheck', title: '已审核', width: 70, formatter: function (v) { return v ? '是' : '否'; } }

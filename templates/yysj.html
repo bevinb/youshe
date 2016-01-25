@@ -18,6 +18,15 @@ ys.modules.Yysj =  (function(){
                     expenditure.push(o.Expenditure);
                 });
                 $('#yysjTab .chart-ct').highcharts({
+                    legend: {
+                        layout: 'vertical',
+                        backgroundColor: '#FFFFFF',
+                        align: 'right',
+                        verticalAlign: 'top',
+                        labelFormatter: function () {
+                            return this.name + ' (click to hide)';
+                        }
+                    },
                     title: {
                         text: '运营数据',
                         x: -20 //center
@@ -37,12 +46,6 @@ ys.modules.Yysj =  (function(){
                     },
                     tooltip: {
                         valueSuffix: '元'
-                    },
-                    legend: {
-                        layout: 'vertical',
-                        align: 'right',
-                        verticalAlign: 'middle',
-                        borderWidth: 0
                     },
                     series: [{
                         name: '收入',

@@ -203,7 +203,7 @@
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
                 success: function (resp) {
-                    $.messager.alert('提示','已作废合同！','success');
+                    $.messager.alert('提示','已完成临时退房！','success');
                     loadMainData();
                     $('#cancelTenantContractDlg').dialog('close');
                 },
@@ -220,7 +220,7 @@
                 return;
             }
             var data = mainTbl.datagrid('getSelected');
-            $.messager.confirm('确认','确认终止该合同?',function(r){
+            $.messager.confirm('确认','确认进行正常退房操作?',function(r){
                 if (r){
                     $.ajax({
                         url: '/YSService/TenantContractService/StopContract',
@@ -229,7 +229,7 @@
                         dataType: "json",
                         contentType: "application/json; charset=utf-8",
                         success: function (resp) {
-                            $.messager.alert('提示','已终止合同！','success');
+                            $.messager.alert('提示','已完成正常退房！','success');
                             loadMainData();
                         },
                         error: function (XMLHttpRequest, textStatus, thrownError) {
@@ -413,7 +413,7 @@ window.grid.cfg.tenantContract = {
         ys.modules.TenantContract.loadSubPay(data);
     },
     toolbar: [{
-        text: '作废',
+        text: '临时退房',
         iconCls: 'icon-cancel',
         handler: function () {
             var mainTbl = $('#tenantContractTab').find('table.main');
@@ -423,12 +423,12 @@ window.grid.cfg.tenantContract = {
             }
             var data = mainTbl.datagrid('getSelected');
             var dlg = $('#cancelTenantContractDlg'), form = dlg.find('form');
-            dlg.dialog('open').dialog('center').dialog('setTitle','作废合同');
+            dlg.dialog('open').dialog('center').dialog('setTitle','临时退房');
             form.form('clear')
             form.form('load', {TenantContractID: data.TenantContractID});
         }
     }, "-", {
-        text: '终止',
+        text: '正常退房',
         iconCls: 'icon-ok',
         handler: ys.modules.TenantContract.stopContract
     }, "-"]

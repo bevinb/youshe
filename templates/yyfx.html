@@ -12,6 +12,15 @@ ys.modules.Yyfx =  (function(){
             contentType: "application/json; charset=utf-8",
             success: function (resp) {
                 $('#yyfxTab .chart-ct').highcharts({
+                    legend: {
+                        align: 'right',
+                        layout: 'vertical',
+                        backgroundColor: '#FFFFFF',
+                        verticalAlign: 'top',
+                        labelFormatter: function () {
+                            return this.name;
+                        }
+                    },
                     chart: {
                         type: 'pie'
                     },
