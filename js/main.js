@@ -88,7 +88,7 @@ $(function(){
 			case 'communityTab': $('#editCommunityDlg').dialog('destroy');break;
 			case 'contractTab': $('#editContractDlg').dialog('destroy');$('#addOwnerPaymentDlg').dialog('destroy');$('#editOwnerPayInfoDlg').dialog('destroy');break;
 			case 'discountTab': $('#editDiscountDlg').dialog('destroy');break;
-			case 'houseTab': $('#editHouseDlg').dialog('destroy');$('#editHousePayDlg').dialog('destroy');break;
+			case 'houseTab': $('#editHouseDlg').dialog('destroy');$('#editHousePayDlg').dialog('destroy');$('#editHouseCommunityDlg').dialog('destroy');break;
 			case 'houseOnlineTab': $('#editHouseCostDlg').dialog('destroy');$('#editHouseRenovationDlg').dialog('destroy');$('#editRoomPriceDlg').dialog('destroy');break;
 			case 'otherPayTab': break;
 			case 'ownerTab': $('#editOwnerDlg').dialog('destroy');break;

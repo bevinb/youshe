@@ -54,7 +54,7 @@
                     <td>所属社区:</td>
                     <td><input class="easyui-combobox"
                                name="CommunityID"
-                               style="width:532px"
+                               style="width:452px"
                                data-options="
                             loader: ys.loaders.communityLoader,
                             onSelect: ys.modules.House.onCommunityChange,
@@ -62,7 +62,7 @@
                             textField:'CommunityName',
                             panelHeight:'auto',
                             required:true
-                    "></td>
+                    "><a onclick="ys.modules.House.addCommunity()" style="margin-left:10px;text-decoration:underline;color:blue;">新增社区</a></td>
                 </tr>
                 <tr>
                     <td>所属楼盘:</td>
@@ -176,6 +176,52 @@
 </div>
 <div id="editHousePayDlgBtns">
     <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="ys.modules.House.saveSubPay()" style="width:90px">保存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('.easyui-dialog').dialog('close')" style="width:90px">取消</a>
+</div>
+
+<div id="editHouseCommunityDlg" class="easyui-dialog" style="width:380px;padding:10px 20px"  modal="true"
+     closed="true" data-options="buttons: '#editHouseCommunityDlgBtns'">
+    <form id="fm" method="post" novalidate>
+        <input name="CommunityID" type="hidden">
+        <input name="CityID" type="hidden">
+        <div class="fitem">
+            <label>社区名称:</label>
+            <input name="CommunityName" class="easyui-textbox" data-options="required:true">
+        </div>
+        <div class="fitem">
+            <label>区位信息:</label>
+            <input name="AddressInfo" class="easyui-textbox" data-options="required:true">
+        </div>
+        <div class="fitem">
+            <label>服务中心:</label>
+            <input class="easyui-combobox"
+                   name="ServiceCenterID"
+                   style="width:300px;"
+                   data-options="
+                    loader: ys.loaders.serviceCenterLoader,
+                    valueField:'ServiceCenterID',
+                    textField:'ServiceCenterName',
+                    panelHeight:'auto',
+                    required:true,
+                    readOnly: true
+            ">
+        </div>
+        <div class="fitem">
+            <label>社区简介:</label>
+            <textarea name="CommunityInfo" class="easyui-textarea" data-options="required:true"></textarea>
+        </div>
+        <div class="fitem">
+            <label>交通信息:</label>
+            <textarea name="Transportation" class="easyui-textarea" data-options="required:true"></textarea>
+        </div>
+        <div class="fitem">
+            <label>备注信息:</label>
+            <textarea name="Remarks" class="easyui-textarea"></textarea>
+        </div>
+    </form>
+</div>
+<div id="editHouseCommunityDlgBtns">
+    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="ys.modules.House.saveCommunity()" style="width:90px">保存</a>
     <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('.easyui-dialog').dialog('close')" style="width:90px">取消</a>
 </div>
 
@@ -387,6 +433,39 @@ ys.modules.House =  (function(){
         });
     };
 
+    function addCommunity(){
+        var dlg = $('#editHouseCommunityDlg'), form = dlg.find('form');
+        dlg.dialog('open').dialog('center').dialog('setTitle','新增社区');
+        form.form('clear')
+        form.form('load', {CommunityID: '0', CityID: ys.Session.currentCity});
+    };
+
+    function saveCommunity(){
+        var dlg = $('#editHouseCommunityDlg'), form = dlg.find('form');
+        if(!form.form('validate'))return;
+        var formData =  form.serializeArray();
+        var data = {};
+        $.each(formData, function(i, v) {
+            data[v.name] = v.value;
+        });
+        var url = '/YSService/CommunityService/Add';
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: JSON.stringify(data),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (msg) {
+                //loadMainData();
+                $('#editHouseDlg').find('.easyui-combobox').combobox('reload');
+                dlg.dialog('close');
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
     return {
         loadMainData: loadMainData,
         onRoomTreeChange: onRoomTreeChange,
@@ -396,7 +475,9 @@ ys.modules.House =  (function(){
         loadSubRoom: loadSubRoom,
         loadSubPay: loadSubPay,
         saveSubPay: saveSubPay,
-        deleteSubPay: deleteSubPay
+        deleteSubPay: deleteSubPay,
+        addCommunity: addCommunity,
+        saveCommunity: saveCommunity
     };
 })();
 
