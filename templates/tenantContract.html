@@ -44,6 +44,91 @@
     </div>
 </div>
 
+<div id="viewTenantContractDlg" class="easyui-dialog" style="width: 700px; padding: 10px 20px" modal="true"
+     closed="true" buttons="#viewTenantContractDlgBtns">
+    <form class="signForm" novalidate>
+        <input name="RoomID" type="hidden">
+        <input name="TenantID" type="hidden">
+        <h5>合同信息</h5>
+        <fieldset>
+            <table>
+                <tr>
+                    <td>合同编号:</td>
+                    <td><input name="TenantContractNo" class="easyui-textbox" style="width:120px;" data-options="required:true" readonly></td>
+                    <td>房屋租金:</td>
+                    <td><input name="Rent" class="easyui-numberbox" style="width:120px;" data-options="precision:2,required:true" readonly>元/月</td>
+                    <td>房屋押金(元):</td>
+                    <td><input name="Deposit" class="easyui-numberbox" style="width:120px;" data-options="precision:2" readonly>元</td>
+                </tr>
+                <tr>
+                    <td>服务费(元):</td>
+                    <td><input name="ServiceCharge" class="easyui-numberbox" style="width:120px;" data-options="precision:2" readonly></td>
+                    <td>
+                        押
+                    </td>
+                    <td>
+                        <select name="DepositCout" class="easyui-combobox" data-options="required:true" style="width:120px;" readonly><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select>
+                    </td>
+                    <td>付</td>
+                    <td>
+                        <select name="PayCout" class="easyui-combobox" data-options="required:true" style="width:120px;" readonly><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="6">6</option><option value="12">12</option></select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>起租日:</td>
+                    <td><input class="easyui-datebox" name="BeginDate" style="width:120px;" readonly></td>
+                    <td>截止日:</td>
+                    <td><input class="easyui-datebox" name="EndDate" style="width:120px;" readonly></td>
+                    <td>销售员：</td>
+                    <td><input class="easyui-combobox"
+                               name="HousekeeperID"
+                               data-options="
+                                                loader: ys.loaders.houseKeeperLoader,
+                                                valueField:'SendeeID',
+                                                textField:'SendeeName',
+                                                panelHeight:'auto',
+                                                required:true
+                                        " style="width:120px;" readonly>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+        <h5>入住人</h5>
+        <fieldset>
+            <table>
+                <tr>
+                    <td>入住人姓名:</td>
+                    <td><input name="TenantInfo.TenantName" class="easyui-textbox" style="width:120px;" readonly></td>
+                    <td>入住人性别:</td>
+                    <td>
+                        <select class="easyui-combobox" name="TenantInfo.Gender" readonly style="width:120px;">
+                            <option value="1">男</option>
+                            <option value="0">女</option>
+                        </select>
+                    </td>
+                    <td>入住人手机:</td>
+                    <td><input name="TenantInfo.Phone" class="easyui-textbox" style="width:120px;" readonly></td>
+                </tr>
+                <tr>
+                    <td>证件类型:</td>
+                    <td><input name="TenantInfo.IDTypeName" class="easyui-textbox" style="width:120px;" readonly></td>
+                    <td>证件号码:</td>
+                    <td><input name="TenantInfo.IDNo" class="easyui-textbox" style="width:120px;" readonly></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+        </fieldset>
+        <h5>优惠项</h5>
+        <input type="text" class="easyui-textbox" style="width:100%" name="discountInfo" readonly>
+        <h5>签约备注</h5>
+        <div><textarea name="Remarks" style="width:100%;" rows="3" readonly></textarea></div>
+    </form>
+</div>
+<div id="viewTenantContractDlgBtns">
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('.easyui-dialog').dialog('close')" style="width:90px">取消</a>
+</div>
+
 <div id="cancelTenantContractDlg" class="easyui-dialog" style="width:500px;padding:10px 20px"  modal="true"
      closed="true" buttons="#cancelTenantContractDlgBtns">
     <form novalidate>
@@ -413,6 +498,34 @@ window.grid.cfg.tenantContract = {
         ys.modules.TenantContract.loadSubPay(data);
     },
     toolbar: [{
+        text: '合同详情',
+        iconCls: 'icon-search',
+        handler: function () {
+            var dlg = $('#viewTenantContractDlg'), form = dlg.find('form'), tbl = $('#tenantContractTab').find('table.main');
+            if (tbl.datagrid('getSelections').length < 1) {
+                $.messager.alert('提示', '请先选择要查看的合同', 'info');
+                return;
+            }
+            $('#viewTenantContractDlg').dialog('open').dialog('center').dialog('setTitle', '合同详情');
+            var data = tbl.datagrid('getSelected'), tenant = data.TenantInfo, discount = data.DiscountInfo;
+            var discountInfo = '';
+            if(discount){
+                discountInfo = discount.DiscountName + ': ' +
+                        (discount.FristAmount? (' 首次减免' + discount.FristAmount) : '')  + ', ' +
+                        (discount.MonthDiscount? (' 每月折扣' + discount.MonthDiscount) : '')  + ', ' +
+                        (discount.MonthAmount? (' 每月减免' + discount.MonthAmount) : '');
+            }
+            form.form('load', data);
+            form.form('load', {
+                'TenantInfo.TenantName': tenant.TenantName,
+                'TenantInfo.Gender': tenant.Gender,
+                'TenantInfo.Phone': tenant.Phone,
+                'TenantInfo.IDTypeName': tenant.IDTypeName,
+                'TenantInfo.IDNo': tenant.IDNo,
+                discountInfo: discountInfo
+            });
+        }
+    },"-",  {
         text: '临时退房',
         iconCls: 'icon-cancel',
         handler: function () {

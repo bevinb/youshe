@@ -8,7 +8,18 @@
                 <input type="hidden" name="RoomID">
                 <table>
                     <tr>
-                        <td>房间：<input class="easyui-combotree" data-options="
+                        <td>
+                            状态：
+                            <select name="RoomStatus" class="f1 easyui-combobox">
+                                <option value="">-全部-</option>
+                                <option value="-1">拆除</option>
+                                <option value="4">待租</option>
+                                <option value="1">预约</option>
+                                <option value="2">入住</option>
+                                <option value="3">维修</option>
+                            </select>
+                        </td>
+                        <td style="padding-left:10px;">房间：<input class="easyui-combotree" data-options="
                                             url:'/YSService/BaseInfoService/GetTree3',
                                             method:'get',
                                             animate:true,
@@ -18,6 +29,10 @@
                                             textField:'text',
                                             onClick: ys.modules.PreserveRoom.onRoomTreeChange
                                  " style="width:200px;">
+                        </td>
+                        <td style="padding-left:10px;">
+                            租金(元)：
+                            <input name="MinRent" class="easyui-numberbox" style="width:70px;"> ~ <input name="MaxRent" class="easyui-numberbox" style="width:70px;">
                         </td>
                         <td><input type="button" value="查询" onclick="ys.modules.PreserveRoom.loadMainData()"></input></td>
                     </tr>

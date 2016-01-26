@@ -29,11 +29,13 @@
     <div data-options="region:'center'"><table class="main"></table></div>
 </div>
 
-<div id="editVillageDlg" class="easyui-dialog" style="width:500px;" modal="true"
+<div id="editVillageDlg" class="easyui-dialog" style="width:900px;padding:10px 20px"  modal="true"
      closed="true" data-options="buttons: '#editVillageDlgBtns'">
-    <div style="padding:10px 20px 20px 20px">
+    <div class="pull-left" style="width:400px;">
         <form id="fm" method="post" novalidate>
             <input name="VillageID" type="hidden">
+            <input name="Lat" type="hidden">
+            <input name="Lng" type="hidden">
             <table cellpadding="5">
                 <tr>
                     <td style="width:80px;">小区名称:</td>
@@ -119,6 +121,7 @@
             </table>
         </form>
     </div>
+    <div id="villageMapCt" class="pull-left" style="width:440px;height:500px;"></div>
 </div>
 <div id="editVillageDlgBtns">
     <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="ys.modules.Village.saveMainItem()" style="width:90px">保存</a>
@@ -128,6 +131,7 @@
 <script>
 ys.modules.Village =  (function(){
     var metroLines = [];
+    var map = null;
 
     function loadMainData(){
         var mainTb = $('#villageTab');
@@ -148,6 +152,15 @@ ys.modules.Village =  (function(){
                 alert("Error Occured!");
             }
         });
+    };
+
+    function addMainItem(){
+        var dlg = $('#editVillageDlg'), form = dlg.find('form');
+        dlg.dialog('open').dialog('center').dialog('setTitle','新增小区');
+        form.form('clear')
+        form.form('load', {VillageID: 0});
+        initMap();
+        map.clearOverlays();
     };
 
     function editMainItem() {
@@ -230,8 +243,39 @@ ys.modules.Village =  (function(){
         metroLines = result;
     };
 
+    function initMap(){
+        if(!map){
+            map = new BMap.Map("villageMapCt");    // 创建Map实例
+            map.centerAndZoom("上海", 16);  // 初始化地图,设置中心点坐标和地图级别
+            map.addControl(new BMap.NavigationControl());  //添加地图缩放控件
+            //map.setCurrentCity("上海");          // 设置地图显示的城市 此项是必须设置的
+            map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+            map.addEventListener("click", function (e) {
+                map.clearOverlays();
+                var pt = e.point;
+                var form = $('#editVillageDlg').find('form');
+                //$scope.newCar.depot.lng = e.point.lng;
+                // $scope.newCar.depot.lat = e.point.lat;
+                var marker = new BMap.Marker(pt, {});  // 创建标注
+                map.addOverlay(marker);
+                form.form('load', {Lat: pt.lat, Lng: pt.lng, GpsPosition: pt.lng + ', ' + pt.lat});
+
+                var gc = new BMap.Geocoder();
+                gc.getLocation(pt, function (rs) {
+                    var addComp = rs.addressComponents;
+                    var result = addComp.district + ", " + addComp.street;
+                    if (addComp.streetNumber) {
+                        result += ", " + addComp.streetNumber;
+                    }
+                    form.form('load', {VillageAddress: result});
+                });
+            });
+        }
+    };
+
     return {
         loadMainData: loadMainData,
+        addMainItem: addMainItem,
         editMainItem: editMainItem,
         saveMainItem: saveMainItem,
         deleteMainItem: deleteMainItem,
@@ -260,12 +304,7 @@ window.grid.cfg.village = {
         id: '',
         text: '新增',
         iconCls: 'icon-add',
-        handler: function () {
-            var dlg = $('#editVillageDlg'), form = dlg.find('form');
-            dlg.dialog('open').dialog('center').dialog('setTitle','新增小区');
-            form.form('clear');
-            form.form('load', {VillageID:0});
-        }
+        handler: ys.modules.Village.addMainItem
     }, "-", {
         id: '',
         text: '编辑',

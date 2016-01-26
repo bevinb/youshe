@@ -51,9 +51,9 @@
             </div>
             <div data-options="region:'south',split:true" style="height: 300px;">
                 <div class="easyui-tabs" data-options="fit:true,border:false,plain:true">
-                    <div title="付款信息">
-                        <table class="sub">
-                        </table>
+                    <div title="付款信息"><table class="sub"></table></div>
+                    <div title="文件上传" class="contract-img-list" style="padding:10px;">
+                        <span class="file-upload-btn" style="width:80px;height:80px;display:inline-block;border:1px solid gray;font-size:64px;text-align:center;vertical-align:middle;margin-top:10px;line-height:80px;color:gray;">+</span>
                     </div>
                 </div>
             </div>
@@ -553,6 +553,44 @@
             });
         };
 
+        function loadContractImgList(params){
+            $('#contractTab').find('.contract-img-list .img-item-link').remove();
+            $.ajax({
+                url: '/YSService/FileUpService/Get_YZContractFile_Info/' + params.ContractID,
+                type: "GET",
+                dataType: "json",
+                success: function (imgs) {
+                    $.each(imgs, function(i, o) {
+                        $('#contractTab').find('.contract-img-list .file-upload-btn').before('<a href="' + o.FilePath + '" target="_blank" class="img-item-link"><img class="img-item" data-id="' + o.FilePathID + '" src="' + o.FilePath + '" style="width:80px;height:80px;display:inline-block;vertical-align:middle;margin:10px 10px 0 0;"></a>');
+                    });
+                    $('#contractTab').find('.contract-img-list .file-upload-btn').click(function(){
+                        var btn = $(this);
+                        ys.modules.FileUploader.open({
+                            callback: function(images){
+                                $.each(images, function(i, v){
+                                    btn.before('<a href="' + v + '" target="_blank" class="img-item-link"><img data-id="0" src="' + v + '" class="img-item" style="width:80px;height:80px;display:inline-block;vertical-align:middle;margin:10px 10px 0 0;"></a>');
+                                    $.ajax({
+                                        url: '/YSService/FileUpService/Insert_YZContractFile',
+                                        method: 'POST',
+                                        data: JSON.stringify({ID:params.ContractID, FilePath: v}),
+                                        dataType: "json",
+                                        contentType: "application/json; charset=utf-8",
+                                        success: function (imgs) {
+                                        },
+                                        error: function (XMLHttpRequest, textStatus, thrownError) {
+                                        }
+                                    });
+                                });
+                            }
+                        });
+                    });
+                },
+                error: function (XMLHttpRequest, textStatus, thrownError) {
+                    alert("Error Occured!");
+                }
+            });
+        };
+
         function savePayment() {
             var dlg = $('#addOwnerPaymentDlg'), form = dlg.find('form');
             if (!form.form('validate')) return;
@@ -672,6 +710,7 @@
             saveMainItem: saveMainItem,
             cancelContract: cancelContract,
             stopContract: stopContract,
+            loadContractImgList: loadContractImgList,
             loadSubData: loadSubData,
             saveSubData: saveSubData,
             auditPay: auditPay,
@@ -706,6 +745,7 @@
         ]],
         onSelect: function (i, data) {
             ys.modules.Contract.loadSubData(data);
+            ys.modules.Contract.loadContractImgList(data);
         },
         toolbar: [{
             id: '',

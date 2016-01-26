@@ -6,14 +6,33 @@
             <table>
                 <tr>
                     <td>
+                        状态：
+                        <select name="PayStatus" class="f1 easyui-combobox">
+                            <option value="">-全部-</option>
+                            <option value="1">未付</option>
+                            <option value="2">已付</option>
+                            <option value="3">未付,已作废</option>
+                        </select>
+                    </td>
+                    <td style="padding-left:10px;">
                         时间范围:
                         <input name="SDate" class="easyui-datebox" > -
                         <input name="EDate" class="easyui-datebox" >
                     </td>
-                    <td> 收支类型：<select name="MoneyType" >
+                    <td style="padding-left:10px;"> 收支类型：<select name="MoneyType" >
                         <option value="0">--全部--</option>
                         <option value="1">收入</option>
                         <option value="2">支出</option></select>
+                    </td>
+                    <td style="padding-left:10px;">
+                        费用类别:</label>
+                        <input class="easyui-combobox" name="HouseCostTypeID" data-options="
+                            loader: ys.loaders.houseCostTypeLoader,
+                            valueField:'HouseCostTypeID',
+                            textField:'HouseCostTypeName',
+                            required: true,
+                            panelHeight:'auto'
+                    ">
                     </td>
                     <td><input type="button" value="查询" onclick="ys.modules.OtherPay.loadMainData()"></td>
                 </tr>

@@ -1,5 +1,10 @@
 $(function(){
 
+	//hack to reload combo when dialog opened
+	$.fn.dialog.defaults.onOpen = function(){
+		$(this).find('.easyui-combobox').combobox('reload');
+	};
+
 	var today = new Date();
 	var leftMenu = $('#leftMainMenu');
 	var leftMenuList = $($('#left-menu-tpl').html()).appendTo($('#leftMainMenu'));
@@ -100,7 +105,7 @@ $(function(){
 			case 'sendeeTab': $('#editSendeeDlg').dialog('destroy');break;
 			case 'serviceCenterTab': $('#editServiceCenterDlg').dialog('destroy');break;
 			case 'signRoomTab': $('#signRoomRenterDlg').dialog('destroy');$('#signRoomEditRenterDlg').dialog('destroy');$('#signRoomTabDiscountDlg').dialog('destroy');break;
-			case 'tenantContractTab': $('#cancelTenantContractDlg').dialog('destroy');$('#addTenantPaymentDlg').dialog('destroy');$('#editTenantPayInfoDlg').dialog('destroy');break;
+			case 'tenantContractTab': $('#cancelTenantContractDlg').dialog('destroy');$('#addTenantPaymentDlg').dialog('destroy');$('#editTenantPayInfoDlg').dialog('destroy');$('#viewTenantContractDlg').dialog('destroy');break;
 			case 'usersTab': $('#editUserDlg').dialog('destroy');$('#usersEditRolesDlg').dialog('destroy');break;
 			case 'villageTab': $('#editVillageDlg').dialog('destroy');break;
 		}
