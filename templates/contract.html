@@ -761,7 +761,13 @@
                 var end = new Date();
                 end.setFullYear(end.getFullYear() + 1);
                 end = $.jsDate2jsDateStr(end);
-                form.form('load', { ContractID: 0, ContractStatus: 1, DepositCout: 1, PayCout: 3, BeginDate: start, EndDate: end });
+                form.form('load', {
+                    ContractID: 0, ContractStatus: 1, DepositCout: 1, PayCout: 3, BeginDate: start, EndDate: end,
+                    FreeDate: 0, AdvanceDays: 10, IsAdd:1, AddNumber: 0, Nexus: 1});
+                var isAddInput = form.find('input[name=IsAdd]');
+                if(isAddInput.length > 0){
+                    isAddInput[0].checked = true;
+                }
             }
         }, "-", {
             text: '合同详情',

@@ -20,9 +20,9 @@
                              " style="width:200px;">
                                 <label style="margin-left:10px;">区:</label>
                                 <input class="easyui-combobox"
-                                       name="lArea"
+                                       name="Aare"
                                        data-options="
-                                    data:ys.Constant.SH_AREAS,
+                                    data:[{id: '', text: '全部'}].concat(ys.Constant.SH_AREAS),
                                     method:'get',
                                     valueField:'id',
                                     textField:'text',

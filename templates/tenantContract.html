@@ -280,11 +280,12 @@
         };
 
         function cancelContract(){
-            var data = $.form2Json($('#cancelTenantContractDlg').find('form'));
+            //var data = $.form2Json($('#cancelTenantContractDlg').find('form'));
+            var data = $('#tenantContractTab').find('table.main').datagrid('getSelected');
             $.ajax({
                 url: '/YSService/TenantContractService/CancelContract',
                 method: 'POST',
-                data: JSON.stringify(data),
+                data: JSON.stringify({TenantContractID:data.TenantContractID, ReturnCount:0}),
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
                 success: function (resp) {
@@ -533,12 +534,14 @@ window.grid.cfg.tenantContract = {
             if(mainTbl.datagrid('getSelections').length < 1){
                 $.messager.alert('提示','请先选择要编辑的数据','info');
                 return;
-            }
+            }/*
             var data = mainTbl.datagrid('getSelected');
             var dlg = $('#cancelTenantContractDlg'), form = dlg.find('form');
             dlg.dialog('open').dialog('center').dialog('setTitle','临时退房');
             form.form('clear')
             form.form('load', {TenantContractID: data.TenantContractID});
+            */
+            ys.modules.TenantContract.cancelContract();
         }
     }, "-", {
         text: '正常退房',

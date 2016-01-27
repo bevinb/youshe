@@ -1,9 +1,7 @@
 <div class="easyui-layout" data-options="fit:true">
     <div class="chart-wrapper" data-options="region:'center'">
-        <div class="chart-container">
-        </div>
-        <div class="tips-container">
-        </div>
+        <div class="chart-container"></div>
+        <div class="tips-container"></div>
     </div>
 </div>
 <script>
@@ -24,12 +22,12 @@
                         });
                     }
                     var tips = '<div>' +
-                        '<p><strong>本月应收：</strong>' + resp.Income_CurrentMonth + '</p>' +
-                        '<p><strong>本月实收：</strong>' + resp.Income_Actual_CurrentMonth + '</p>' +
-                         '<p><strong>本月应支：</strong>' + resp.Expenditure_CurrentMonth + '</p>' +
-                        '<p><strong>本月已支：</strong>' + resp.Expenditure_Actual_CurrentMonth + '</p>' +
-                        '<p><strong>历史收入：</strong>' + resp.Income_Actual_Total + '</p>' +
-                        '<p><strong>历史支出：</strong>' + resp.Expenditure_Actual_Total + '</p>';
+                            '<p><strong>本月应收：</strong>' + resp.Income_CurrentMonth + '</p>' +
+                            '<p><strong>本月实收：</strong>' + resp.Income_Actual_CurrentMonth + '</p>' +
+                            '<p><strong>本月应支：</strong>' + resp.Expenditure_CurrentMonth + '</p>' +
+                            '<p><strong>本月已支：</strong>' + resp.Expenditure_Actual_CurrentMonth + '</p>' +
+                            '<p><strong>历史收入：</strong>' + resp.Income_Actual_Total + '</p>' +
+                            '<p><strong>历史支出：</strong>' + resp.Expenditure_Actual_Total + '</p>';
                     $('#yysjTab .chart-container').highcharts({
                         title: {
                             text: '运营数据',
@@ -65,8 +63,7 @@
                     alert("Error Occured!");
                 }
             });
-        };
-
+        }
         return {
             initReport: initReport
         };

@@ -314,7 +314,7 @@ ys.modules.HouseOnline =  (function(){
                 });
             },
             error: function (XMLHttpRequest, textStatus, thrownError) {
-                alert("Error Occured!");
+                alert("加载数据失败!");
             }
         });
     };
@@ -353,7 +353,7 @@ ys.modules.HouseOnline =  (function(){
                 dlg.dialog('close');
             },
             error: function (XMLHttpRequest, textStatus, thrownError) {
-                alert("Error Occured!");
+                alert("保存失败!");
             }
         });
     };
@@ -391,7 +391,7 @@ ys.modules.HouseOnline =  (function(){
                 });
             },
             error: function (XMLHttpRequest, textStatus, thrownError) {
-                alert("Error Occured!");
+                alert("加载房屋图片列表失败!");
             }
         });
     };
@@ -667,7 +667,7 @@ ys.modules.HouseOnline =  (function(){
                 dlg.dialog('close');
             },
             error: function (XMLHttpRequest, textStatus, thrownError) {
-                alert("Error Occured!");
+                alert("保存装修方案时发生错误!");
             }
         });
     };
@@ -727,7 +727,7 @@ ys.modules.HouseOnline =  (function(){
                         loadHouseRenovation($('#houseOnlineTab').find('table.main').datagrid('getSelected'));
                     },
                     error: function (XMLHttpRequest, textStatus, thrownError) {
-                        alert("Error Occured!");
+                        alert("删除失败!");
                     }
                 });
             }
@@ -769,7 +769,7 @@ ys.modules.HouseOnline =  (function(){
                             panel.remove();
                         },
                         error: function (XMLHttpRequest, textStatus, thrownError) {
-                            alert("Error Occured!");
+                            alert("删除房间失败!");
                         }
                     });
                 } else {
@@ -798,7 +798,7 @@ ys.modules.HouseOnline =  (function(){
                         $.messager.alert('提示','已提交装修方案！','success');
                     },
                     error: function (XMLHttpRequest, textStatus, thrownError) {
-                        alert("Error Occured!");
+                        alert("提交装修方案时发生错误!");
                     }
                 });
             }
@@ -824,7 +824,7 @@ ys.modules.HouseOnline =  (function(){
                         $.messager.alert('提示','已完成拍照上传！','success');
                     },
                     error: function (XMLHttpRequest, textStatus, thrownError) {
-                        alert("Error Occured!");
+                        alert("完成拍照上传时发生错误!");
                     }
                 });
             }
@@ -850,7 +850,7 @@ ys.modules.HouseOnline =  (function(){
                         $.messager.alert('提示','已完成房源上线！','success');
                     },
                     error: function (XMLHttpRequest, textStatus, thrownError) {
-                        alert("Error Occured!");
+                        alert("完成房源上线时发生错误!");
                     }
                 });
             }
@@ -876,7 +876,7 @@ ys.modules.HouseOnline =  (function(){
                         $.messager.alert('提示','已完成房源下线！','success');
                     },
                     error: function (XMLHttpRequest, textStatus, thrownError) {
-                        alert([XMLHttpRequest, textStatus, thrownError]);
+                        alert("完成房源下线时发生错误!");
                     }
                 });
             }
@@ -904,7 +904,7 @@ ys.modules.HouseOnline =  (function(){
                 //dlg.dialog('close');
             },
             error: function (XMLHttpRequest, textStatus, thrownError) {
-                alert("Error Occured!");
+                alert("完成房间上线时发生错误!");
             }
         });
     };
@@ -923,7 +923,7 @@ ys.modules.HouseOnline =  (function(){
                 //loadHouseRenovation($('#houseOnlineTab').find('table.main').datagrid('getSelected'));
             },
             error: function (XMLHttpRequest, textStatus, thrownError) {
-                alert("Error Occured!");
+                alert("完成房间下线时发生错误!");
             }
         });
     };
@@ -1199,7 +1199,7 @@ window.grid.cfg.houseOnline.roomPrice = {
             $('#editHouseRenovationDlg .renovation-list').append(str);
         },
         error: function (XMLHttpRequest, textStatus, thrownError) {
-            alert("Error Occured!");
+            alert("获取房间配套基础信息时发生错误!");
         }
     });
 })();

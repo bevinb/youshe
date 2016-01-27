@@ -176,12 +176,31 @@ ys.modules.Users =  (function(){
         });
     };
 
+    function resetPwd(userId){
+        $.messager.confirm('确认','确认重置用户密码?',function(r){
+            if (r){
+                $.ajax({
+                    url: '/YSLoginService/User/ResetUserPWD/' + userId,
+                    type: "GET",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (msg) {
+                        alert("密码重置成功!");
+                    },
+                    error: function (XMLHttpRequest, textStatus, thrownError) {
+                        alert("密码重置失败!");
+                    }
+                });
+            }
+        });
+    };
+
     return {
         loadMainData: loadMainData,
         saveMainItem: saveMainItem,
         editRoles: editRoles,
         saveRoles: saveRoles,
-        enableUser: enableUser
+        enableUser: enableUser,
+        resetPwd: resetPwd
     };
 })();
 
@@ -194,9 +213,10 @@ window.grid.cfg.users = {
         {field:'UserName',title:'用户名',width:100},
         {field:'UserAccountName',title:'账号',width:100},
         {field:'IsEnable',title:'启用',width:40, formatter: function(v){return v? '是' : '否'}},
-        {field:'UserID',title:'',width:120, formatter: function (v,r){
+        {field:'UserID',title:'',width:180, formatter: function (v,r){
             return '<a onclick="ys.modules.Users.editRoles('+v+')">角色设置</a>' + (r.IsEnable? ('<a onclick="ys.modules.Users.enableUser('+v+
-                    ', false)">禁用</a>') : ('<a onclick="ys.modules.Users.enableUser('+v+',true)">启用</a>'));
+                    ', false)">禁用</a>') : ('<a onclick="ys.modules.Users.enableUser('+v+',true)">启用</a>'))+
+                    '<a onclick="ys.modules.Users.resetPwd('+v+')">重置密码</a>';
         }}
     ]],
     toolbar: [{
