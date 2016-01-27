@@ -108,13 +108,13 @@ window.ys.Constant = {
 	ROOM_STATUS: [{
 		id: -2, text: '全部'
 	}, {
-		id: 0, text: '待租'
-	}, {
 		id: 1, text: '预约'
 	}, {
 		id: 2, text: '入住'
 	}, {
 		id: 3, text: '维修'
+	}, {
+		id: 4, text: '待租'
 	}, {
 		id: -1, text: '拆除'
 	}],

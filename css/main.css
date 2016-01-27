@@ -119,6 +119,22 @@ span.label {
     height: auto; 
 }
 
+.chart-wrapper {
+  position:relative;
+}
+.chart-wrapper .chart-container{
+  width:80%;
+  width:  -webkit-calc(100% - 150px);
+  width: -moz-calc(100% - 150px);
+  width: calc(100% - 150px);
+  height:100%;
+}
+.chart-wrapper .tips-container{
+  position:absolute;
+  right:10px;
+  top:10px;
+}
+
 .easyui-linkbutton {
 	min-width:90px;
 }

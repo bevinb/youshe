@@ -6,7 +6,14 @@ ys.modules.Workbench =  (function() {
 			dataType: "json",
 			contentType: "application/json; charset=utf-8",
 			success: function (resp) {
-				$('#workbenchRoomReport').highcharts({
+				var tips = '<div>' +
+					'<p><strong>所有房间：</strong>' + resp.RoomCount + '</p>' +
+					'<p><strong>可租房间：</strong>' + resp.WaitCount + '</p>' +
+					'<p><strong>已租房间：</strong>' + resp.CheckCount + '</p>' +
+					'<p><strong>预定房间：</strong>' + resp.OrderCount + '</p>' +
+					'<p><strong>平均租金：</strong>' + resp.AvgRent + '</p>'+
+					'<p><strong>出租率：</strong>' + resp.RentalRate + '</p></div>';
+				$('#workbenchRoomReport .chart-container').highcharts({
 					chart: {
 						type: 'pie'
 					},
@@ -30,6 +37,7 @@ ys.modules.Workbench =  (function() {
 						}]
 					}]
 				});
+				$('#workbenchRoomReport .tips-container').html(tips);
 			},
 			error: function (XMLHttpRequest, textStatus, thrownError) {
 				alert("Error Occured!");
@@ -43,12 +51,19 @@ ys.modules.Workbench =  (function() {
 			type: "GET",
 			success: function (resp) {
 				var categories = [], income = [], expenditure = [];
-				$.each(resp, function(i, o){
-					categories.push(o.StringDate);
-					income.push(o.Income);
-					expenditure.push(o.Expenditure);
-				});
-				$('#workbenchFineInfoReport').highcharts({
+				if(resp.list_FineInfo) {
+					$.each(resp.list_FineInfo, function (i, o) {
+						categories.push(o.StringDate);
+						income.push(o.Income);
+						expenditure.push(o.Expenditure);
+					});
+				}
+				var tips = '<div>' +
+					'<p><strong>本月应收：</strong>' + resp.Income_Actual_CurrentMonth + '</p>' +
+					'<p><strong>本月已收：</strong>' + resp.Expenditure_Actual_CurrentMonth + '</p>' +
+					'<p><strong>总计应收：</strong>' + resp.Income_Actual_Total + '</p>' +
+					'<p><strong>总计已收：</strong>' + resp.Expenditure_Actual_Total + '</p>';
+				$('#workbenchFineInfoReport .chart-container').highcharts({
 					title: {
 						text: '流水统计',
 						x: -20 //center
@@ -83,6 +98,7 @@ ys.modules.Workbench =  (function() {
 						data: expenditure
 					}]
 				});
+				$('#workbenchFineInfoReport .tips-container').html(tips);
 			},
 			error: function (XMLHttpRequest, textStatus, thrownError) {
 				alert("Error Occured!");

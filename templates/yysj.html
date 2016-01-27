@@ -1,5 +1,8 @@
 <div class="easyui-layout" data-options="fit:true">
-    <div class="chart-ct" data-options="region:'center'"></div>
+    <div class="chart-wrapper" data-options="region:'center'">
+        <div class="chart-container"></div>
+        <div class="tips-container"></div>
+    </div>
 </div>
 
 <script>
@@ -12,21 +15,19 @@ ys.modules.Yysj =  (function(){
             contentType: "application/json; charset=utf-8",
             success: function (resp) {
                 var categories = [], income = [], expenditure = [];
-                $.each(resp, function(i, o){
-                    categories.push(o.StringDate);
-                    income.push(o.Income);
-                    expenditure.push(o.Expenditure);
-                });
-                $('#yysjTab .chart-ct').highcharts({
-                    legend: {
-                        layout: 'vertical',
-                        backgroundColor: '#FFFFFF',
-                        align: 'right',
-                        verticalAlign: 'top',
-                        labelFormatter: function () {
-                            return this.name + ' (click to hide)';
-                        }
-                    },
+                if(resp.list_FineInfo) {
+                    $.each(resp.list_FineInfo, function (i, o) {
+                        categories.push(o.StringDate);
+                        income.push(o.Income);
+                        expenditure.push(o.Expenditure);
+                    });
+                }
+                var tips = '<div>' +
+                        '<p><strong>本月应收：</strong>' + resp.Income_Actual_CurrentMonth + '</p>' +
+                        '<p><strong>本月已收：</strong>' + resp.Expenditure_Actual_CurrentMonth + '</p>' +
+                        '<p><strong>总计应收：</strong>' + resp.Income_Actual_Total + '</p>' +
+                        '<p><strong>总计已收：</strong>' + resp.Expenditure_Actual_Total + '</p>';
+                $('#yysjTab .chart-container').highcharts({
                     title: {
                         text: '运营数据',
                         x: -20 //center
@@ -55,6 +56,7 @@ ys.modules.Yysj =  (function(){
                         data: expenditure
                     }]
                 });
+                $('#yysjTab .tips-container').html(tips);
             },
             error: function (XMLHttpRequest, textStatus, thrownError) {
                 alert("Error Occured!");
