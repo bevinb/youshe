@@ -1,5 +1,8 @@
 <div class="easyui-layout" data-options="fit:true">
-    <div class="chart-ct" data-options="region:'center'"></div>
+    <div class="chart-wrapper" data-options="region:'center'">
+        <div class="chart-container"></div>
+        <div class="tips-container"></div>
+    </div>
 </div>
 
 <script>
@@ -11,7 +14,14 @@ ys.modules.Yyfx =  (function(){
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             success: function (resp) {
-                $('#yyfxTab .chart-ct').highcharts({
+                var tips = '<div>' +
+                        '<p><strong>所有房间：</strong>' + resp.RoomCount + '</p>' +
+                        '<p><strong>可租房间：</strong>' + resp.WaitCount + '</p>' +
+                        '<p><strong>已租房间：</strong>' + resp.CheckCount + '</p>' +
+                        '<p><strong>预定房间：</strong>' + resp.OrderCount + '</p>' +
+                        '<p><strong>平均租金：</strong>' + resp.AvgRent + '</p>'+
+                        '<p><strong>出租率：</strong>' + resp.RentalRate + '</p></div>';
+                $('#yyfxTab .chart-container').highcharts({
                     legend: {
                         align: 'right',
                         layout: 'vertical',
@@ -44,6 +54,7 @@ ys.modules.Yyfx =  (function(){
                         }]
                     }]
                 });
+                $('#yyfxTab .tips-container').html(tips);
             },
             error: function (XMLHttpRequest, textStatus, thrownError) {
                 alert("Error Occured!");

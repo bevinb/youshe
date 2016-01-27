@@ -104,7 +104,7 @@ ys.modules.PreserveRoom =  (function(){
     function loadMainData(){
         var params = $.form2JsonNotNull($('#preserveRoomTab').find('.top-search-form'));
         $.ajax({
-            url: '/YSService/OnLineService/GetRoomInfo',
+            url: '/YSService/RoomService/GetRoom',
             method: 'POST',
             data: JSON.stringify(params),
             dataType: "json",
