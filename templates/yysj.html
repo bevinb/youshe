@@ -1,75 +1,78 @@
 <div class="easyui-layout" data-options="fit:true">
     <div class="chart-wrapper" data-options="region:'center'">
-        <div class="chart-container"></div>
-        <div class="tips-container"></div>
+        <div class="chart-container">
+        </div>
+        <div class="tips-container">
+        </div>
     </div>
 </div>
-
 <script>
-ys.modules.Yysj =  (function(){
-    function initReport(){
-        $.ajax({
-            url: '/YSService/ReportService/GetFineInfo',
-            type: "GET",
-            dataType: "json",
-            contentType: "application/json; charset=utf-8",
-            success: function (resp) {
-                var categories = [], income = [], expenditure = [];
-                if(resp.list_FineInfo) {
-                    $.each(resp.list_FineInfo, function (i, o) {
-                        categories.push(o.StringDate);
-                        income.push(o.Income);
-                        expenditure.push(o.Expenditure);
-                    });
-                }
-                var tips = '<div>' +
-                        '<p><strong>本月应收：</strong>' + resp.Income_Actual_CurrentMonth + '</p>' +
-                        '<p><strong>本月已收：</strong>' + resp.Expenditure_Actual_CurrentMonth + '</p>' +
-                        '<p><strong>总计应收：</strong>' + resp.Income_Actual_Total + '</p>' +
-                        '<p><strong>总计已收：</strong>' + resp.Expenditure_Actual_Total + '</p>';
-                $('#yysjTab .chart-container').highcharts({
-                    title: {
-                        text: '运营数据',
-                        x: -20 //center
-                    },
-                    xAxis: {
-                        categories: categories
-                    },
-                    yAxis: {
+    ys.modules.Yysj = (function () {
+        function initReport() {
+            $.ajax({
+                url: '/YSService/ReportService/GetFineInfo',
+                type: "GET",
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (resp) {
+                    var categories = [], income = [], expenditure = [];
+                    if (resp.list_FineInfo) {
+                        $.each(resp.list_FineInfo, function (i, o) {
+                            categories.push(o.StringDate);
+                            income.push(o.Income);
+                            expenditure.push(o.Expenditure);
+                        });
+                    }
+                    var tips = '<div>' +
+                        '<p><strong>本月应收：</strong>' + resp.Income_CurrentMonth + '</p>' +
+                        '<p><strong>本月实收：</strong>' + resp.Income_Actual_CurrentMonth + '</p>' +
+                         '<p><strong>本月应支：</strong>' + resp.Expenditure_CurrentMonth + '</p>' +
+                        '<p><strong>本月已支：</strong>' + resp.Expenditure_Actual_CurrentMonth + '</p>' +
+                        '<p><strong>历史收入：</strong>' + resp.Income_Actual_Total + '</p>' +
+                        '<p><strong>历史支出：</strong>' + resp.Expenditure_Actual_Total + '</p>';
+                    $('#yysjTab .chart-container').highcharts({
                         title: {
-                            text: '金额 (元)'
+                            text: '运营数据',
+                            x: -20 //center
                         },
-                        plotLines: [{
-                            value: 0,
-                            width: 1,
-                            color: '#808080'
+                        xAxis: {
+                            categories: categories
+                        },
+                        yAxis: {
+                            title: {
+                                text: '金额 (元)'
+                            },
+                            plotLines: [{
+                                value: 0,
+                                width: 1,
+                                color: '#808080'
+                            }]
+                        },
+                        tooltip: {
+                            valueSuffix: '元'
+                        },
+                        series: [{
+                            name: '收入',
+                            data: income
+                        }, {
+                            name: '支出',
+                            data: expenditure
                         }]
-                    },
-                    tooltip: {
-                        valueSuffix: '元'
-                    },
-                    series: [{
-                        name: '收入',
-                        data: income
-                    }, {
-                        name: '支出',
-                        data: expenditure
-                    }]
-                });
-                $('#yysjTab .tips-container').html(tips);
-            },
-            error: function (XMLHttpRequest, textStatus, thrownError) {
-                alert("Error Occured!");
-            }
-        });
-    };
+                    });
+                    $('#yysjTab .tips-container').html(tips);
+                },
+                error: function (XMLHttpRequest, textStatus, thrownError) {
+                    alert("Error Occured!");
+                }
+            });
+        };
 
-    return {
-        initReport: initReport
-    };
-})();
+        return {
+            initReport: initReport
+        };
+    })();
 
-(function(){
-    ys.modules.Yysj.initReport();
-})();
+    (function () {
+        ys.modules.Yysj.initReport();
+    })();
 </script>

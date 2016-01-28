@@ -1,5 +1,6 @@
 ﻿<div class="easyui-layout" data-options="fit:true">
-    <div data-options="region:'north',split:true" style="height:56px;padding:10px;">
+    <div data-options="region:'north',split:true" style="height:100px;padding:10px;">
+        <div class="info-container clearfix"></div>
         <form class="top-search-form">
             <input type="hidden" name="CommunityID">
             <input type="hidden" name="VillageID">
@@ -111,6 +112,21 @@ window.grid.cfg.otherPay = {
         SDate: start,
         EDate: end,
         MoneyType: 0
+    });
+
+    $.ajax({
+        url: '/YSService/ReportService/GetFineInfo',
+        type: "GET",
+        dataType: "json",
+        contentType: "application/json; charset=utf-8",
+        success: function (resp) {
+            var tips = '<div>' +
+                    '<p class="pull-left m-r-10"><strong>本月应收：</strong>' + resp.Income_Actual_CurrentMonth + '</p>' +
+                    '<p class="pull-left m-r-10"><strong>本月已收：</strong>' + resp.Expenditure_Actual_CurrentMonth + '</p>' +
+                    '<p class="pull-left m-r-10"><strong>总计应收：</strong>' + resp.Income_Actual_Total + '</p>' +
+                    '<p class="pull-left m-r-10"><strong>总计已收：</strong>' + resp.Expenditure_Actual_Total + '</p>';
+            $('#otherPayTab').find('.info-container').html(tips);
+        }
     });
 
     ys.modules.OtherPay.loadMainData();

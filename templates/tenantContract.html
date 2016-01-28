@@ -282,19 +282,23 @@
         function cancelContract(){
             //var data = $.form2Json($('#cancelTenantContractDlg').find('form'));
             var data = $('#tenantContractTab').find('table.main').datagrid('getSelected');
-            $.ajax({
-                url: '/YSService/TenantContractService/CancelContract',
-                method: 'POST',
-                data: JSON.stringify({TenantContractID:data.TenantContractID, ReturnCount:0}),
-                dataType: "json",
-                contentType: "application/json; charset=utf-8",
-                success: function (resp) {
-                    $.messager.alert('提示','已完成临时退房！','success');
-                    loadMainData();
-                    $('#cancelTenantContractDlg').dialog('close');
-                },
-                error: function (XMLHttpRequest, textStatus, thrownError) {
-                    alert("Error Occured!");
+            $.messager.confirm('确认','确认进行正常退房操作?',function(r) {
+                if (r) {
+                    $.ajax({
+                        url: '/YSService/TenantContractService/CancelContract',
+                        method: 'POST',
+                        data: JSON.stringify({TenantContractID: data.TenantContractID, ReturnCount: 0}),
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (resp) {
+                            $.messager.alert('提示', '已完成临时退房！', 'success');
+                            loadMainData();
+                            $('#cancelTenantContractDlg').dialog('close');
+                        },
+                        error: function (XMLHttpRequest, textStatus, thrownError) {
+                            alert("Error Occured!");
+                        }
+                    });
                 }
             });
         };

@@ -51,7 +51,7 @@ ys.modules.Workbench =  (function() {
 			type: "GET",
 			success: function (resp) {
 				var categories = [], income = [], expenditure = [];
-				if(resp.list_FineInfo) {
+				if (resp.list_FineInfo) {
 					$.each(resp.list_FineInfo, function (i, o) {
 						categories.push(o.StringDate);
 						income.push(o.Income);
@@ -59,13 +59,15 @@ ys.modules.Workbench =  (function() {
 					});
 				}
 				var tips = '<div>' +
-					'<p><strong>本月应收：</strong>' + resp.Income_Actual_CurrentMonth + '</p>' +
-					'<p><strong>本月已收：</strong>' + resp.Expenditure_Actual_CurrentMonth + '</p>' +
-					'<p><strong>总计应收：</strong>' + resp.Income_Actual_Total + '</p>' +
-					'<p><strong>总计已收：</strong>' + resp.Expenditure_Actual_Total + '</p>';
+					'<p><strong>本月应收：</strong>' + resp.Income_CurrentMonth + '</p>' +
+					'<p><strong>本月实收：</strong>' + resp.Income_Actual_CurrentMonth + '</p>' +
+					'<p><strong>本月应支：</strong>' + resp.Expenditure_CurrentMonth + '</p>' +
+					'<p><strong>本月已支：</strong>' + resp.Expenditure_Actual_CurrentMonth + '</p>' +
+					'<p><strong>历史收入：</strong>' + resp.Income_Actual_Total + '</p>' +
+					'<p><strong>历史支出：</strong>' + resp.Expenditure_Actual_Total + '</p>';
 				$('#workbenchFineInfoReport .chart-container').highcharts({
 					title: {
-						text: '流水统计',
+						text: '运营数据',
 						x: -20 //center
 					},
 					xAxis: {
@@ -83,12 +85,6 @@ ys.modules.Workbench =  (function() {
 					},
 					tooltip: {
 						valueSuffix: '元'
-					},
-					legend: {
-						layout: 'vertical',
-						align: 'right',
-						verticalAlign: 'middle',
-						borderWidth: 0
 					},
 					series: [{
 						name: '收入',
