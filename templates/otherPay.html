@@ -1,134 +1,149 @@
 ﻿<div class="easyui-layout" data-options="fit:true">
-    <div data-options="region:'north',split:true" style="height:100px;padding:10px;">
-        <div class="info-container clearfix"></div>
+    <div data-options="region:'north',split:true" style="height: 100px; padding: 10px;">
+        <div class="info-container clearfix">
+        </div>
         <form class="top-search-form">
-            <input type="hidden" name="CommunityID">
-            <input type="hidden" name="VillageID">
-            <table>
-                <tr>
-                    <td>
-                        状态：
-                        <select name="PayStatus" class="f1 easyui-combobox">
-                            <option value="">-全部-</option>
-                            <option value="1">未付</option>
-                            <option value="2">已付</option>
-                            <option value="3">未付,已作废</option>
-                        </select>
-                    </td>
-                    <td style="padding-left:10px;">
-                        时间范围:
-                        <input name="SDate" class="easyui-datebox" > -
-                        <input name="EDate" class="easyui-datebox" >
-                    </td>
-                    <td style="padding-left:10px;"> 收支类型：<select name="MoneyType" >
+        <input type="hidden" name="CommunityID">
+        <input type="hidden" name="VillageID">
+        <table>
+            <tr>
+                <td>
+                    状态：
+                    <select name="PayStatus" class="f1 easyui-combobox" style="width: 80px;">
+                        <option value="">-全部-</option>
+                        <option value="1">未付</option>
+                        <option value="2">已付</option>
+                        <option value="3">未付,已作废</option>
+                    </select>
+                </td>
+                <td style="padding-left: 10px;">
+                    时间范围:
+                    <input name="SDate" class="easyui-datebox" style="width: 100px;">
+                    -
+                    <input name="EDate" class="easyui-datebox" style="width: 100px;">
+                </td>
+                <td style="padding-left: 10px;">
+                    收支类型：<select name="MoneyType">
                         <option value="0">--全部--</option>
                         <option value="1">收入</option>
-                        <option value="2">支出</option></select>
-                    </td>
-                    <td style="padding-left:10px;">
-                        费用类别:</label>
-                        <input class="easyui-combobox" name="HouseCostTypeID" data-options="
+                        <option value="2">支出</option>
+                    </select>
+                </td>
+                <td style="padding-left: 10px;">
+                    费用类别:</label>
+                    <input class="easyui-combobox" name="HouseCostTypeID" data-options="
                             loader: ys.loaders.houseCostTypeLoader,
                             valueField:'HouseCostTypeID',
                             textField:'HouseCostTypeName',
                             required: true,
                             panelHeight:'auto'
-                    ">
-                    </td>
-                    <td><input type="button" value="查询" onclick="ys.modules.OtherPay.loadMainData()"></td>
-                </tr>
-            </table>
+                    " style="width: 80px;">
+                </td>
+                <td>
+                    关键词：<input class="easyui-textbox" name="HouseNoOrRoomNo" data-options="prompt:'房源编号或房间编号'"
+                        style="width: 120px;">
+                </td>
+                <td>
+                    收款人：<input class="easyui-textbox" name="Name" style="width: 80px;">
+                </td>
+                <td>
+                    <input type="button" value="查询" onclick="ys.modules.OtherPay.loadMainData()">
+                </td>
+            </tr>
+        </table>
         </form>
     </div>
-    <div data-options="region:'center'"><table class="main"></table></div>
+    <div data-options="region:'center'">
+        <table class="main">
+        </table>
+    </div>
 </div>
-
 <script>
-ys.modules.OtherPay =  (function(){
-    function loadMainData(){
-        var mainTb = $('#otherPayTab');
-        var form = mainTb.find('.top-search-form');
-        if(!form.form('validate'))return;
-        var params = $.form2JsonNotNull(form);
-        params['SDate'] = $.jsDateStr2WcfDate(params['SDate']);
-        params['EDate'] = $.jsDateStr2WcfDate(params['EDate']);
+    ys.modules.OtherPay = (function () {
+        function loadMainData() {
+            var mainTb = $('#otherPayTab');
+            var form = mainTb.find('.top-search-form');
+            if (!form.form('validate')) return;
+            var params = $.form2JsonNotNull(form);
+            params['SDate'] = $.jsDateStr2WcfDate(params['SDate']);
+            params['EDate'] = $.jsDateStr2WcfDate(params['EDate']);
+            $.ajax({
+                url: '/YSService/ReportService/GetFineDetail',
+                method: 'POST',
+                data: JSON.stringify(params),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (resp) {
+                    $.each(resp, function (i, item) {
+                        //item['PayDate'] = $.wcfDate2JsDateStr(item['PayDate']);
+                        //item['ActualPayDate'] = $.wcfDate2JsDateStr(item['ActualPayDate']);
+                    });
+                    $('#otherPayTab').find('table.main').datagrid('loadData', {
+                        total: resp.length,
+                        rows: resp
+                    });
+                },
+                error: function (XMLHttpRequest, textStatus, thrownError) {
+                    alert("Error Occured!");
+                }
+            });
+        };
+
+        return {
+            loadMainData: loadMainData
+        };
+    })();
+
+    window.grid.cfg.otherPay = {
+        singleSelect: true,
+        rownumbers: true,
+        pagination: true,
+        fit: true,
+        columns: [[
+        { field: 'MoneyType', title: '资金流向', width: 70 },
+        { field: 'Amount', title: '应付(元)', width: 70 },
+        { field: 'PayDate', title: '应付日期', width: 100 },
+        { field: 'ActualAmount', title: '实付(元)', width: 70 },
+        { field: 'ActualPayDate', title: '实付日期', width: 100 },
+        { field: 'PayNo', title: '摘要', width: 150 },
+        { field: 'Subject', title: '科目', width: 70 },
+        { field: 'PayStatus', title: '状态', width: 70 },
+        { field: 'HouseNo', title: '房源编号', width: 100 },
+        { field: 'RoomNo', title: '房间编号', width: 100 },
+        { field: 'PayObjectName', title: '支付对象', width: 100 },
+        { field: 'Remark', title: '备注', width: 100 }
+    ]]
+    };
+
+    (function () {
+        var start = new Date();
+        start.setMonth(start.getMonth() - 3);
+        start = $.jsDate2jsDateStr(start);
+        var end = new Date();
+        end.setDate(end.getDate() + 1);
+        end = $.jsDate2jsDateStr(end);
+
+        $('#otherPayTab').find('.top-search-form').form('load', {
+            SDate: start,
+            EDate: end,
+            MoneyType: 0
+        });
+
         $.ajax({
-            url: '/YSService/ReportService/GetFineDetail',
-            method: 'POST',
-            data: JSON.stringify(params),
+            url: '/YSService/ReportService/GetFineInfo',
+            type: "GET",
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             success: function (resp) {
-                $.each(resp, function(i,item){
-                    //item['PayDate'] = $.wcfDate2JsDateStr(item['PayDate']);
-                    //item['ActualPayDate'] = $.wcfDate2JsDateStr(item['ActualPayDate']);
-                });
-                $('#otherPayTab').find('table.main').datagrid('loadData', {
-                    total: resp.length,
-                    rows: resp
-                });
-            },
-            error: function (XMLHttpRequest, textStatus, thrownError) {
-                alert("Error Occured!");
-            }
-        });
-    };
-
-    return {
-        loadMainData: loadMainData
-    };
-})();
-
-window.grid.cfg.otherPay = {
-    singleSelect:true,
-    rownumbers: true,
-    pagination: true,
-    fit: true,
-    columns:[[
-        {field:'MoneyType',title:'资金流向',width:70},
-        {field:'Amount',title:'应付(元)',width:70},
-        {field:'PayDate',title:'应付日期',width:100},
-        {field:'ActualAmount',title:'实付(元)',width:70},
-        {field:'ActualPayDate',title:'实付日期',width:100},
-        {field:'PayNo',title:'摘要',width:150},
-        {field:'Subject',title:'科目',width:70},
-        {field:'PayStatus',title:'状态',width:70},       
-        {field:'HouseNo',title:'房源编号',width:100},
-        {field:'RoomNo',title:'房间编号',width:100},
-        {field:'PayObjectName',title:'支付对象',width:100},
-        {field:'Remark',title:'备注',width:100}
-    ]]
-};
-
-(function(){
-    var start = new Date();
-    start.setMonth(start.getMonth() - 3);
-    start = $.jsDate2jsDateStr(start);
-    var end = new Date();
-    end.setDate(end.getDate() + 1);
-    end = $.jsDate2jsDateStr(end);
-
-    $('#otherPayTab').find('.top-search-form').form('load', {
-        SDate: start,
-        EDate: end,
-        MoneyType: 0
-    });
-
-    $.ajax({
-        url: '/YSService/ReportService/GetFineInfo',
-        type: "GET",
-        dataType: "json",
-        contentType: "application/json; charset=utf-8",
-        success: function (resp) {
-            var tips = '<div>' +
+                var tips = '<div>' +
                     '<p class="pull-left m-r-10"><strong>本月应收：</strong>' + resp.Income_Actual_CurrentMonth + '</p>' +
                     '<p class="pull-left m-r-10"><strong>本月已收：</strong>' + resp.Expenditure_Actual_CurrentMonth + '</p>' +
                     '<p class="pull-left m-r-10"><strong>总计应收：</strong>' + resp.Income_Actual_Total + '</p>' +
                     '<p class="pull-left m-r-10"><strong>总计已收：</strong>' + resp.Expenditure_Actual_Total + '</p>';
-            $('#otherPayTab').find('.info-container').html(tips);
-        }
-    });
+                $('#otherPayTab').find('.info-container').html(tips);
+            }
+        });
 
-    ys.modules.OtherPay.loadMainData();
-})();
+        ys.modules.OtherPay.loadMainData();
+    })();
 </script>

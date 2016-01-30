@@ -66,8 +66,8 @@
                     <td><input name="VillNong" class="easyui-textbox" data-options="required:true"></td>
                 </tr>
                 <tr>
-                    <td>小区地址:</td>
-                    <td><input name="VillageAddress" class="easyui-textbox" data-options="required:true"></td>
+                    <td>百度坐标:</td>
+                    <td><input name="GpsPosition" class="easyui-textbox" data-options="required:true" readonly></td>
                 </tr>
                 <tr>
                     <td>地铁:</td>
@@ -171,6 +171,7 @@ ys.modules.Village =  (function(){
         }
         dlg.dialog('open').dialog('center').dialog('setTitle','编辑小区');
         var data = mainTbl.datagrid('getSelected');
+        data.GpsPosition = data.Lng + ', ' + data.Lat;
         form.form('load', data);
     };
 

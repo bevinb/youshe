@@ -34,12 +34,13 @@
                     loader: ys.loaders.idTypeLoader,
                     valueField:'IDTypeID',
                     textField:'IDTypeIDName',
-                    panelHeight:'auto'
+                    panelHeight:'auto',
+                    required:true
             ">
         </div>
         <div class="fitem">
             <label>证件号码:</label>
-            <input name="IDNo" class="easyui-textbox">
+            <input name="IDNo" class="easyui-textbox"  data-options="required:true">
         </div>
         <div class="fitem">
             <label>职业:</label>
@@ -59,7 +60,7 @@
         </div>
         <div class="fitem">
             <label>出生日期:</label>
-            <input name="DateOfBirth" class="easyui-datebox">
+            <input name="DateOfBirth" class="easyui-datebox" data-options="required:true">
         </div>
         <div class="fitem">
             <label>星座:</label>
@@ -70,7 +71,8 @@
 					method:'get',
 					valueField:'id',
 					textField:'text',
-					panelHeight:'auto'
+					panelHeight:'auto',
+                    required:true
 			">
         </div>
         <div class="fitem">
@@ -94,7 +96,8 @@
 					method:'get',
 					valueField:'id',
 					textField:'text',
-					panelHeight:'auto'
+					panelHeight:'auto',
+                    required:true
 			">
         </div>
     </form>

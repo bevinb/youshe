@@ -458,6 +458,7 @@
                         'HouseInfo.HouseDetail': house.HouseDetail,
                         'HouseInfo.Floor': house.Floor,
                         'HouseInfo.FloorCount': house.FloorCount,
+                        'HouseInfo.FloorCount': house.ContractState,                        
                         'OwnerInfo.OwnerName': house.OwnerName,
                         'OwnerInfo.Phone': house.Phone
                     });
@@ -881,6 +882,14 @@
                 $('#editOwnerPayInfoDlg').dialog('open').dialog('center').dialog('setTitle', '付款');
                 form.form('load', tbl.datagrid('getSelected'));
             }
+        }, {
+            text: '审核通过',
+            iconCls: 'icon-ok',
+            handler: ys.modules.Contract.auditPay
+        }, {
+            text: '取消审核',
+            iconCls: 'icon-cancel',
+            handler: ys.modules.Contract.unauditPay
         }]
     };
 

@@ -45,6 +45,7 @@ span.label {
   width:22.5%;
   margin:1%;
   border: 1px solid #95B8E7;
+  border-radius: 6px;
 }
 .card > h5{
   padding:0 10px;
@@ -75,7 +76,19 @@ span.label {
   width:-moz-calc(100% - 100px);
   overflow: hidden;
 }
-.card .card-content .item-head.status0 {
+.card .card-content .item-head.status1 {
+  background: gray;
+}
+
+.card .card-content .item-head.status2 {
+  background: gray;
+}
+
+.card .card-content .item-head.status3 {
+  background: gray;
+}
+
+.card .card-content .item-head.status4 {
   background: green;
 }
 

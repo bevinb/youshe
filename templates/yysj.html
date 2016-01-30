@@ -1,78 +1,186 @@
 <div class="easyui-layout" data-options="fit:true">
-    <div class="chart-wrapper" data-options="region:'center'">
-        <div class="chart-container">
+    <div class="clearfix" style="height:50%;width:100%;">
+        <div class="pull-left" style="width:40%;height:100%;padding:10px;">
+            <div class="chart-wrapper easyui-panel yysj-chart" title="运营数据" >
+                <div class="chart-container"></div>
+                <div class="tips-container"></div>
+            </div>
         </div>
-        <div class="tips-container">
+        <div class="pull-left" style="width:40%;height:100%;padding:10px;">
+            <div class="chart-wrapper easyui-panel qdfx-chart" title="渠道分析">
+                <div class="chart-container"></div>
+                <div class="tips-container"></div>
+            </div>
+        </div>
+    </div>
+    <div class="pull-left" style="width:80%;height:50%;padding:10px;">
+        <div class="chart-wrapper easyui-panel yyfx-chart" title="营业分析">
+            <div class="chart-container"></div>
+            <div class="tips-container"></div>
         </div>
     </div>
 </div>
+
 <script>
-    ys.modules.Yysj = (function () {
-        function initReport() {
-            $.ajax({
-                url: '/YSService/ReportService/GetFineInfo',
-                type: "GET",
-                dataType: "json",
-                contentType: "application/json; charset=utf-8",
-                success: function (resp) {
-                    var categories = [], income = [], expenditure = [];
-                    if (resp.list_FineInfo) {
-                        $.each(resp.list_FineInfo, function (i, o) {
-                            categories.push(o.StringDate);
-                            income.push(o.Income);
-                            expenditure.push(o.Expenditure);
-                        });
-                    }
-                    var tips = '<div>' +
+ys.modules.Yysj =  (function(){
+    function initYysj(){
+        $.ajax({
+            url: '/YSService/ReportService/GetFineInfo',
+            type: "GET",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (resp) {
+                var categories = [], income = [], expenditure = [];
+                if (resp.list_FineInfo) {
+                    $.each(resp.list_FineInfo, function (i, o) {
+                        categories.push(o.StringDate);
+                        income.push(o.Income);
+                        expenditure.push(o.Expenditure);
+                    });
+                }
+                var tips = '<div>' +
                         '<p><strong>本月应收：</strong>' + resp.Income_CurrentMonth + '</p>' +
                         '<p><strong>本月实收：</strong>' + resp.Income_Actual_CurrentMonth + '</p>' +
-                         '<p><strong>本月应支：</strong>' + resp.Expenditure_CurrentMonth + '</p>' +
+                        '<p><strong>本月应支：</strong>' + resp.Expenditure_CurrentMonth + '</p>' +
                         '<p><strong>本月已支：</strong>' + resp.Expenditure_Actual_CurrentMonth + '</p>' +
                         '<p><strong>历史收入：</strong>' + resp.Income_Actual_Total + '</p>' +
                         '<p><strong>历史支出：</strong>' + resp.Expenditure_Actual_Total + '</p>';
-                    $('#yysjTab .chart-container').highcharts({
+                $('#yysjTab .chart-container').highcharts({
+                    title: {
+                        text: '运营数据',
+                        x: -20 //center
+                    },
+                    xAxis: {
+                        categories: categories
+                    },
+                    yAxis: {
                         title: {
-                            text: '运营数据',
-                            x: -20 //center
+                            text: '金额 (元)'
                         },
-                        xAxis: {
-                            categories: categories
-                        },
-                        yAxis: {
-                            title: {
-                                text: '金额 (元)'
-                            },
-                            plotLines: [{
-                                value: 0,
-                                width: 1,
-                                color: '#808080'
-                            }]
-                        },
-                        tooltip: {
-                            valueSuffix: '元'
-                        },
-                        series: [{
-                            name: '收入',
-                            data: income
-                        }, {
-                            name: '支出',
-                            data: expenditure
+                        plotLines: [{
+                            value: 0,
+                            width: 1,
+                            color: '#808080'
                         }]
+                    },
+                    tooltip: {
+                        valueSuffix: '元'
+                    },
+                    series: [{
+                        name: '收入',
+                        data: income
+                    }, {
+                        name: '支出',
+                        data: expenditure
+                    }]
+                });
+                $('#yysjTab .yysj-chart .tips-container').html(tips);
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
+
+    function initQdfx(){
+        $.ajax({
+            url: '/YSService/ReportService/GetTenantSource',
+            type: "GET",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (resp) {
+                var data = [];
+                $.each(resp, function(i, v){
+                    data.push({
+                        name: v.SourceName,
+                        y: v.SourceTenantCount
                     });
-                    $('#yysjTab .tips-container').html(tips);
-                },
-                error: function (XMLHttpRequest, textStatus, thrownError) {
-                    alert("Error Occured!");
-                }
-            });
-        };
+                });
+                $('#yysjTab .qdfx-chart .chart-container').highcharts({
+                    chart: {
+                        type: 'pie'
+                    },
+                    title: {
+                        text: '渠道分析'
+                    },
+                    series: [{
+                        name: '数量',
+                        colorByPoint: true,
+                        data: data
+                    }]
+                });
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
 
-        return {
-            initReport: initReport
-        };
-    })();
+    function initYyfx(){
+        $.ajax({
+            url: '/YSService/ReportService/GetRoomReportInfo',
+            type: "GET",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (resp) {
+                var tips = '<div>' +
+                        '<p><strong>所有房间：</strong>' + resp.RoomCount + '</p>' +
+                        '<p><strong>可租房间：</strong>' + resp.WaitCount + '</p>' +
+                        '<p><strong>已租房间：</strong>' + resp.CheckCount + '</p>' +
+                        '<p><strong>预定房间：</strong>' + resp.OrderCount + '</p>' +
+                        '<p><strong>平均租金：</strong>' + resp.AvgRent + '</p>'+
+                        '<p><strong>出租率：</strong>' + resp.RentalRate + '</p></div>';
+                $('#yysjTab .yyfx-chart .chart-container').highcharts({
+                    legend: {
+                        align: 'right',
+                        layout: 'vertical',
+                        backgroundColor: '#FFFFFF',
+                        verticalAlign: 'top',
+                        labelFormatter: function () {
+                            return this.name;
+                        }
+                    },
+                    chart: {
+                        type: 'pie'
+                    },
+                    title: {
+                        text: '运营分析'
+                    },
+                    series: [{
+                        name: '数量',
+                        colorByPoint: true,
+                        data: [{
+                            name: '已租房间',
+                            y: resp.CheckCount
+                        }, {
+                            name: '未租房间',
+                            y: resp.WaitCount,
+                            sliced: true,
+                            selected: true
+                        }, {
+                            name: '预订房间',
+                            y: resp.OrderCount
+                        }]
+                    }]
+                });
+                $('#yysjTab .yyfx-chart .tips-container').html(tips);
+            },
+            error: function (XMLHttpRequest, textStatus, thrownError) {
+                alert("Error Occured!");
+            }
+        });
+    };
 
-    (function () {
-        ys.modules.Yysj.initReport();
-    })();
+    return {
+        initYysj: initYysj,
+        initQdfx: initQdfx,
+        initYyfx: initYyfx
+    };
+})();
+
+(function(){
+    ys.modules.Yysj.initYysj();
+    ys.modules.Yysj.initQdfx();
+    ys.modules.Yysj.initYyfx();
+})();
 </script>

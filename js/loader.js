@@ -26,7 +26,7 @@ window.ys.loaders = {
 			dataType: "json",
 			contentType: "application/json; charset=utf-8",
 			success: function ( resp) {
-				success(resp);
+				success([{PropertyID:'',PropertyName:'----'}].concat(resp));
 			},
 			error: function (XMLHttpRequest, textStatus, thrownError) {
 				error.apply(this, arguments);
@@ -42,7 +42,7 @@ window.ys.loaders = {
 			dataType: "json",
 			contentType: "application/json; charset=utf-8",
 			success: function ( resp) {
-				success(resp);
+				success([{CommunityID:'',CommunityName:'----'}].concat(resp));
 			},
 			error: function (XMLHttpRequest, textStatus, thrownError) {
 				error.apply(this, arguments);
